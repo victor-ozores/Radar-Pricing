@@ -1,0 +1,26 @@
+# Arquivos internos de trabalho: ficam só neste computador
+CLAUDE.md
+docs/ESTADO.md
+docs/PLANO.md
+docs/decisoes.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Segredos: nunca versionar
+.env
+.env.*
+!.env.example
+
+# Site
+site/node_modules/
+site/dist/
+
+# Dados de trabalho local (o histórico oficial vive na branch `data`)
+data/
+data_local/
