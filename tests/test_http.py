@@ -23,15 +23,18 @@ def abre_com(*respostas):
     """Devolve um `urlopen` falso que entrega as respostas em ordem (exceção = erro; bytes = corpo)."""
     fila = list(respostas)
     chamadas = []
+    tempos = []
 
     def abre(pedido, timeout=None):
         chamadas.append(pedido.full_url)
+        tempos.append(timeout)
         item = fila.pop(0)
         if isinstance(item, Exception):
             raise item
         return Resposta(item)
 
     abre.chamadas = chamadas
+    abre.tempos = tempos
     return abre
 
 
@@ -96,6 +99,23 @@ def test_erro_de_rede_e_tentado_de_novo_e_esgota():
     with pytest.raises(Falha, match="3 tentativas"):
         c.bytes("http://x")
     assert len(abre.chamadas) == 3
+
+
+def test_com_limites_muda_a_copia_e_nao_o_cliente_original():
+    c, abre, dormiu = cliente(TimeoutError("lento"), TimeoutError("lento"), TimeoutError("lento"))
+    rapido = c.com_limites(tentativas=2, timeout_s=20)
+    with pytest.raises(Falha, match="2 tentativas"):
+        rapido.bytes("http://x")
+    assert abre.tempos == [20, 20] and len(dormiu) == 1  # usa o mesmo urlopen e o mesmo dormir
+    assert (c.tentativas, c.timeout_s) == (3, 90)  # o original não mudou
+    assert (rapido.tentativas, rapido.timeout_s) == (2, 20)
+
+
+def test_com_limites_sem_argumento_mantem_o_que_ja_tinha():
+    c, _, _ = cliente()
+    igual = c.com_limites(timeout_s=30)
+    assert (igual.tentativas, igual.timeout_s) == (3, 30)
+    assert c.com_limites(tentativas=0).tentativas == 1  # nunca zero tentativas
 
 
 def test_texto_usa_a_codificacao_pedida():

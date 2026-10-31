@@ -7,6 +7,9 @@ from datetime import date
 import pytest
 
 from radar_pricing import coleta
+from radar_pricing.config import Limite
+from radar_pricing.fontes import ibge
+from radar_pricing.http import Cliente
 from radar_pricing.modelo import Registro, ResultadoFonte
 
 PAPEIS = {
@@ -110,6 +113,62 @@ def test_filtro_de_fontes_e_fonte_inexistente(hoje, agora):
     assert [f.id for f in roda(coletores, papeis, hoje, agora, so=["b"]).fontes] == ["b"]
     with pytest.raises(ValueError, match="nenhuma fonte"):
         roda(coletores, papeis, hoje, agora, so=["nao_existe"])
+
+
+class ClienteQueAnota:
+    """Só anota com que limites cada fonte pediu o cliente."""
+
+    def __init__(self, limites=()):
+        self.limites = limites
+        self.pedidos = []
+
+    def com_limites(self, tentativas, timeout_s):
+        self.pedidos.append((tentativas, timeout_s))
+        return ClienteQueAnota((tentativas, timeout_s))
+
+
+def test_limites_so_valem_para_a_fonte_que_pediu(hoje, agora):
+    vistos = {}
+
+    def coletor(nome):
+        def coletar(cli, hoje):
+            vistos[nome] = cli.limites
+            return ResultadoFonte(registros=[reg(serie=nome)])
+
+        return coletar
+
+    cli = ClienteQueAnota()
+    coleta.coletar_tudo(
+        cli,
+        hoje,
+        agora,
+        {"a": "essencial", "b": "complementar"},
+        coletores={"a": coletor("a"), "b": coletor("b")},
+        limites={"b": Limite(tentativas=2, timeout_s=20)},
+    )
+    assert vistos == {"a": (), "b": (2, 20)} and cli.pedidos == [(2, 20)]
+
+
+def test_fonte_que_nao_responde_gasta_so_o_tempo_do_seu_limite(hoje, agora):
+    """O caso real do IBGE a partir do GitHub: não responde. Com limite próprio, são 2 x 20 s e não 3 x 90 s."""
+    chamadas = []
+
+    def abre(pedido, timeout=None):
+        chamadas.append(timeout)
+        raise TimeoutError("sem resposta")
+
+    cli = Cliente(abre=abre, dormir=lambda s: None)
+    foto = coleta.coletar_tudo(
+        cli,
+        hoje,
+        agora,
+        {"a": "essencial", "ibge": "complementar"},
+        coletores={"a": coletor_que_devolve([reg()]), "ibge": ibge.coletar},
+        limites={"ibge": Limite(tentativas=2, timeout_s=20)},
+    )
+    assert chamadas == [20, 20]
+    assert {f.id: f.situacao for f in foto.fontes} == {"a": "ok", "ibge": "falhou"}
+    assert foto.status == "ok"  # complementar não estraga o dia
 
 
 def test_conferencia_do_ipca_acusa_diferenca_entre_ibge_e_bcb():

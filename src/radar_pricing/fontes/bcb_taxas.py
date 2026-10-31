@@ -18,6 +18,9 @@ MODALIDADE_IMOBILIARIO = "Financiamento imobiliário com taxas de mercado - Pref
 CODIGO_VEICULOS = "401101"  # Aquisição de veículos - Prefixado
 MESES_GUARDADOS = 3
 SEMANAS_GUARDADAS = 6
+# A janela mais nova que o BCB publica começa ~3 semanas antes de hoje (em 30/10/2026: início em 09/10 e
+# fim em 16/10; em 31/10, pelo relógio do GitHub, já eram 22 dias). Só vira atraso depois de 4 semanas.
+MAX_DIAS_VEICULOS = 28
 
 
 def _imobiliario(cli: Cliente, hoje: date, res: ResultadoFonte) -> None:
@@ -73,7 +76,7 @@ def _veiculos(cli: Cliente, hoje: date, res: ResultadoFonte) -> None:
         if r["InicioPeriodo"] in semanas
     ]
     res.registros += novos
-    confere_idade(res, "taxa_financiamento_veiculos", date.fromisoformat(semanas[0]), hoje, 21)
+    confere_idade(res, "taxa_financiamento_veiculos", date.fromisoformat(semanas[0]), hoje, MAX_DIAS_VEICULOS)
 
 
 def coletar(cli: Cliente, hoje: date) -> ResultadoFonte:

@@ -16,6 +16,11 @@ tesouro = "essencial"
 ibge = "complementar"
 abac = "complementar"
 
+# regra própria de uma fonte (o que não aparece aqui usa [geral])
+# IBGE: nos servidores do GitHub não respondeu em 90 s x 3 tentativas (275 s perdidos); é só conferência do BCB
+[limites]
+ibge = { tentativas = 2, timeout_s = 20 }
+
 [derivados]
 valor_face = 1000                    # valor recebido no futuro que a tabela traz a valor presente (R$)
 prazos_meses = [6, 12, 24, 36, 48]   # prazos da tabela de valor presente

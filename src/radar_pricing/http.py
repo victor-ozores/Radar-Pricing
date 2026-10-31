@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import gzip
 import json
 import time
@@ -46,6 +47,15 @@ class Cliente:
         self.esperas = esperas
         self._dormir = dormir
         self._abre = abre
+
+    def com_limites(self, tentativas: int | None = None, timeout_s: int | None = None) -> Cliente:
+        """Cópia com outros limites de tentativas e de tempo, para uma fonte que precisa de regra própria."""
+        outro = copy.copy(self)
+        if tentativas is not None:
+            outro.tentativas = max(1, tentativas)
+        if timeout_s is not None:
+            outro.timeout_s = timeout_s
+        return outro
 
     def _uma_vez(self, url: str) -> bytes:
         pedido = urllib.request.Request(url, headers={"User-Agent": UA})

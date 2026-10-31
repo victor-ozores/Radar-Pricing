@@ -3,7 +3,7 @@ resposta (não valores fixos de mercado), para continuarem válidos quando as am
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
@@ -146,6 +146,17 @@ def test_taxas_por_banco_sem_repeticao(cli, hoje):
         assert len({(r.data_ref, r.dimensao) for r in regs}) == len(regs)  # um valor por banco e período
         assert all(r.dimensao.startswith("banco=") and 0 < r.valor < 200 for r in regs)
     sem_data_futura(res, hoje)
+
+
+def test_taxas_veiculos_so_atrasam_depois_de_quatro_semanas(cli, hoje):
+    """Caso real de 31/10/2026: a janela mais nova tinha 22 dias e o limite de 21 acusou atraso à toa."""
+    res = bcb_taxas.coletar(cli, hoje)
+    mais_nova = max(r.data_ref for r in res.registros if r.serie == "taxa_financiamento_veiculos")
+    no_limite = mais_nova + timedelta(days=bcb_taxas.MAX_DIAS_VEICULOS)
+    assert bcb_taxas.MAX_DIAS_VEICULOS >= 28
+    assert bcb_taxas.coletar(cli, no_limite).atrasos == []
+    atrasos = bcb_taxas.coletar(cli, no_limite + timedelta(days=1)).atrasos
+    assert len(atrasos) == 1 and "taxa_financiamento_veiculos" in atrasos[0]
 
 
 def test_taxas_veiculos_sao_semanais_e_o_imobiliario_mensal(cli, hoje):

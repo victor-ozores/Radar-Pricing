@@ -10,7 +10,7 @@ from typing import Any
 
 from . import derivados as contas
 from . import mudancas as regras
-from .config import ParamsDerivados, ParamsMudancas
+from .config import Limite, ParamsDerivados, ParamsMudancas
 from .fontes import COLETORES, Coletor
 from .modelo import Foto, Registro, SituacaoFonte
 
@@ -18,10 +18,12 @@ TOLERANCIA_IPCA = 0.011  # o IBGE e o BCB arredondam em duas casas: diferença m
 
 
 def _roda_uma(
-    id_: str, coletor: Coletor, cli: Any, hoje: date, papel: str
+    id_: str, coletor: Coletor, cli: Any, hoje: date, papel: str, limite: Limite | None = None
 ) -> tuple[SituacaoFonte, list[Registro]]:
     t0 = time.perf_counter()
     try:
+        if limite is not None:
+            cli = cli.com_limites(limite.tentativas, limite.timeout_s)
         res = coletor(cli, hoje)
     except Exception as e:  # uma fonte nunca derruba as outras, qualquer que seja o erro
         erro = f"{type(e).__name__}: {e}"[:300]
@@ -84,17 +86,19 @@ def coletar_tudo(
     derivados: ParamsDerivados | None = None,
     mudancas: ParamsMudancas | None = None,
     anterior: dict[str, Any] | None = None,
+    limites: dict[str, Limite] | None = None,
 ) -> Foto:
     coletores = coletores if coletores is not None else COLETORES
+    limites = limites or {}
     ids = [i for i in papeis if i in coletores and (not so or i in so)]
     if not ids:
         raise ValueError("nenhuma fonte para rodar (confira o config.toml e --fontes)")
-    tarefas = [(i, coletores[i], papeis[i]) for i in ids]
+    tarefas = [(i, coletores[i], papeis[i], limites.get(i)) for i in ids]
     if paralelo:
         with ThreadPoolExecutor(max_workers=4) as pool:
-            saidas = list(pool.map(lambda t: _roda_uma(t[0], t[1], cli, hoje, t[2]), tarefas))
+            saidas = list(pool.map(lambda t: _roda_uma(t[0], t[1], cli, hoje, t[2], t[3]), tarefas))
     else:
-        saidas = [_roda_uma(i, c, cli, hoje, p) for i, c, p in tarefas]
+        saidas = [_roda_uma(i, c, cli, hoje, p, lim) for i, c, p, lim in tarefas]
     fontes = [s for s, _ in saidas]
     registros = sorted(
         (r for _, regs in saidas for r in regs), key=lambda r: (r.fonte, r.serie, r.dimensao, r.data_ref)

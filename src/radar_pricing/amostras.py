@@ -43,6 +43,10 @@ class ClienteGravado:
         self.pasta = pasta
         self.indice: dict[str, str] = json.loads((pasta / "index.json").read_text(encoding="utf-8"))
 
+    def com_limites(self, tentativas: int | None = None, timeout_s: int | None = None) -> ClienteGravado:
+        """Amostras não têm rede, então os limites não mudam nada."""
+        return self
+
     def bytes(self, url: str) -> bytes:
         if url not in self.indice:
             raise Falha(f"sem amostra gravada para {url}")

@@ -92,7 +92,15 @@ def _coletar(args: argparse.Namespace) -> int:
     so = [f.strip() for f in args.fontes.split(",")] if args.fontes else None
     anterior = carrega_anterior(pasta, hoje)
     foto = coletar_tudo(
-        cli, hoje, agora, cfg.papeis, so=so, derivados=cfg.derivados, mudancas=cfg.mudancas, anterior=anterior
+        cli,
+        hoje,
+        agora,
+        cfg.papeis,
+        so=so,
+        derivados=cfg.derivados,
+        mudancas=cfg.mudancas,
+        anterior=anterior,
+        limites=cfg.limites,
     )
 
     print(f"Radar Pricing: coleta de {hoje.isoformat()} ({foto.gerado_em})")

@@ -75,6 +75,34 @@ def test_config_com_papel_invalido_e_recusada(tmp_path):
         config.carrega(arquivo)
 
 
+def test_config_real_da_ao_ibge_um_limite_curto():
+    cfg = config.carrega(RAIZ / "config.toml")
+    assert cfg.limites == {"ibge": config.Limite(tentativas=2, timeout_s=20)}
+
+
+def test_limite_parcial_deixa_o_outro_campo_para_o_padrao(tmp_path):
+    arquivo = tmp_path / "config.toml"
+    arquivo.write_text(
+        '[geral]\n[fontes]\nibge = "complementar"\n[limites]\nibge = { timeout_s = 5 }\n', "utf-8"
+    )
+    assert config.carrega(arquivo).limites == {"ibge": config.Limite(tentativas=None, timeout_s=5)}
+
+
+@pytest.mark.parametrize(
+    ("limites", "erro"),
+    [
+        ("outra = { timeout_s = 5 }", "não está em \\[fontes\\]"),
+        ("ibge = { timeout_s = 0 }", "números positivos"),
+        ("ibge = { tentativas = -1 }", "números positivos"),
+    ],
+)
+def test_limite_invalido_e_recusado(tmp_path, limites, erro):
+    arquivo = tmp_path / "config.toml"
+    arquivo.write_text(f'[geral]\n[fontes]\nibge = "complementar"\n[limites]\n{limites}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match=erro):
+        config.carrega(arquivo)
+
+
 def test_trimestres_para_tras():
     assert datas.trimestres_para_tras(date(2026, 10, 30), 3) == ["202609", "202606", "202603"]
     assert datas.trimestres_para_tras(date(2026, 2, 10), 3) == ["202512", "202509", "202506"]
@@ -104,6 +132,21 @@ def test_comando_coletar_grava_e_a_segunda_vez_recusa(principal_com_amostras, tm
     assert (tmp_path / f"{hoje.isoformat()}.json").exists()
     assert principal_com_amostras(argumentos) == 1  # a foto do dia já existe
     assert "já existe" in capsys.readouterr().err
+
+
+def test_comando_passa_os_limites_do_config_para_a_coleta(monkeypatch, agora):
+    pedidos = []
+
+    class Anota(ClienteGravado):
+        def com_limites(self, tentativas=None, timeout_s=None):
+            pedidos.append((tentativas, timeout_s))
+            return self
+
+    monkeypatch.setattr(cli_principal, "Cliente", lambda **kw: Anota(PASTA))
+    monkeypatch.setattr(cli_principal, "agora_brt", lambda: agora)
+    argumentos = ["coletar", "--config", str(RAIZ / "config.toml"), "--sem-gravar"]
+    assert cli_principal.principal(argumentos) == 0
+    assert pedidos == [(2, 20)]  # só o IBGE tem limite próprio
 
 
 def test_comando_sem_gravar_nao_escreve_nada(principal_com_amostras, tmp_path, capsys):

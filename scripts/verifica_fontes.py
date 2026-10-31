@@ -25,14 +25,15 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124 Safari/537.36"
 RAIZ = Path(__file__).resolve().parent.parent
-HOJE = date.today()
+# Data de Brasília, como o robô: o servidor do GitHub usa UTC e, depois das 21h daqui, já está no dia seguinte
+HOJE = datetime.now(timezone(timedelta(hours=-3))).date()
 EM_ACTIONS = os.environ.get("GITHUB_ACTIONS") == "true"
 CODIFICA = lambda q: urllib.parse.urlencode(q, quote_via=urllib.parse.quote)  # noqa: E731
 
@@ -281,7 +282,8 @@ def _():
         raise Falha("sem linhas")
     ini = linhas[0]["InicioPeriodo"]
     idade = (HOJE - date.fromisoformat(ini)).days
-    if idade > 21:
+    # mesmo limite do robô (bcb_taxas.MAX_DIAS_VEICULOS): a janela mais nova começa ~3 semanas atrás
+    if idade > 28:
         raise Falha(f"última semana é de {ini} ({idade} dias)")
     sem = [r["TaxaJurosAoAno"] for r in linhas if r["InicioPeriodo"] == ini]
     return f"semana {ini}, {len(sem)} bancos; mediana {statistics.median(sem):.2f}% a.a. (de {min(sem)} a {max(sem)})"
@@ -392,8 +394,10 @@ def _():
 # ----------------------------------------------------------------------------------------------------- IBGE (conferência do IPCA)
 @teste("ibge_ipca", "IBGE SIDRA: IPCA mensal (conferência do BCB)", "complementar")
 def _():
+    # 25 s: a partir dos servidores do GitHub o IBGE não respondeu em 120 s; é só conferência, não prende o teste
     j = pega_json(
-        "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/-2/variaveis/63?localidades=N1[all]"
+        "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/-2/variaveis/63?localidades=N1[all]",
+        timeout=25,
     )
     serie = j[0]["resultados"][0]["series"][0]["serie"]
     ult = max(serie)

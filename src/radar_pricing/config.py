@@ -26,6 +26,14 @@ class ParamsMudancas:
 
 
 @dataclass(frozen=True)
+class Limite:
+    """Regra própria de uma fonte; o campo que ficar `None` usa o valor de `[geral]`."""
+
+    tentativas: int | None = None
+    timeout_s: int | None = None
+
+
+@dataclass(frozen=True)
 class Config:
     saida: Path
     tentativas: int
@@ -33,6 +41,7 @@ class Config:
     papeis: dict[str, str]  # fonte -> essencial | complementar
     derivados: ParamsDerivados = field(default_factory=ParamsDerivados)
     mudancas: ParamsMudancas = field(default_factory=ParamsMudancas)
+    limites: dict[str, Limite] = field(default_factory=dict)  # fonte -> limites próprios
 
 
 def carrega(caminho: Path) -> Config:
@@ -67,4 +76,21 @@ def carrega(caminho: Path) -> Config:
         papeis=papeis,
         derivados=derivados,
         mudancas=mudancas,
+        limites=_limites(dados.get("limites", {}), papeis),
     )
+
+
+def _limites(tabela: dict, papeis: dict[str, str]) -> dict[str, Limite]:
+    desconhecidas = sorted(set(tabela) - set(papeis))
+    if desconhecidas:
+        raise ValueError(f"[limites] do config.toml cita fonte que não está em [fontes]: {desconhecidas}")
+    limites = {}
+    for fonte, valores in tabela.items():
+        limite = Limite(
+            tentativas=int(valores["tentativas"]) if "tentativas" in valores else None,
+            timeout_s=int(valores["timeout_s"]) if "timeout_s" in valores else None,
+        )
+        if any(v is not None and v <= 0 for v in (limite.tentativas, limite.timeout_s)):
+            raise ValueError(f"[limites] de {fonte} no config.toml precisa de números positivos")
+        limites[fonte] = limite
+    return limites
