@@ -51,7 +51,7 @@ Todas as linhas abaixo foram conferidas com chamada real em **30/10/2026** por [
 Os servidores do GitHub têm outros IPs, e as fontes poderiam tratar tráfego de nuvem de outro jeito. Por isso o workflow [`verifica-fontes.yml`](../.github/workflows/verifica-fontes.yml) roda o teste de fontes e uma coleta completa (sem gravar) dentro do GitHub Actions.
 
 - **1ª rodada (30/10/2026 à noite, 31/10 em UTC, `ubuntu-latest`):** 23 de 25 testes OK. BCB (SGS, Focus, taxas, Panorama), Tesouro (catálogo e CSV de 14,6 MB, 22 s) e ABAC responderam como no meu computador, e a coleta do pacote fechou com status OK (1.238 registros). As duas falhas foram o IBGE (defeito 14) e o alarme falso de atraso dos veículos (defeito 15), ambos tratados nas correções que vieram depois.
-- **2ª rodada (com as correções):** ainda não rodou.
+- **2ª rodada (30/10/2026 à noite, 31/10 em UTC, com as correções):** **passou**, em 3 min 7 s (a 1ª levou 8 min). 24 de 25 testes OK, nenhuma falha essencial, coleta com status OK (1.238 registros) e veículos OK com 21 dias. O IBGE falhou de novo: tempo esgotado em 25 s no teste e 41 s na coleta (antes 275 s). Foram duas rodadas seguidas sem resposta do IBGE.
 
 ## Ainda **não testado**
 - **Revisões de dados antigos** (o BCB pode corrigir um número já publicado). Começa a ser medido na fase 1, guardando a foto de cada dia.
