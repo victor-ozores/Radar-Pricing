@@ -1,0 +1,55 @@
+name: Verificar fontes (porta de segurança)
+
+# Roda nos servidores do GitHub para ver se o BCB, o IBGE, o Tesouro e a ABAC respondem a eles do mesmo jeito
+# que respondem no meu computador. Dispara à mão ou quando este arquivo ou o script de verificação mudam
+# (o primeiro envio ao repositório conta). Não grava nada no repositório.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verifica-fontes.yml"
+      - "scripts/verifica_fontes.py"
+
+permissions:
+  contents: read
+
+jobs:
+  fontes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verificar as fontes com chamadas reais
+        run: python scripts/verifica_fontes.py
+
+      - name: Coletar sem gravar (o pacote, sem instalar nada)
+        if: always()
+        env:
+          PYTHONPATH: src
+          PYTHONIOENCODING: utf-8
+        run: |
+          set -o pipefail
+          python -m radar_pricing coletar --sem-gravar | tee saida-coleta.txt
+          grep -E "^  (OK|ATRASADO|PARCIAL|FALHOU)" saida-coleta.txt | while IFS= read -r linha; do
+            case "$linha" in
+              "  OK"*) echo "::notice title=Fonte::${linha}" ;;
+              *) echo "::error title=Fonte com problema::${linha}" ;;
+            esac
+          done
+          grep "Status do dia" saida-coleta.txt | sed 's/^/::notice title=Resultado da coleta::/'
+          grep -q "Status do dia: OK" saida-coleta.txt
+
+      - name: Guardar o relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-verificacao-fontes
+          path: |
+            docs/auditoria/
+            saida-coleta.txt

@@ -16,6 +16,7 @@ import html
 import io
 import itertools
 import json
+import os
 import re
 import statistics
 import sys
@@ -32,6 +33,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124 Safari/537.36"
 RAIZ = Path(__file__).resolve().parent.parent
 HOJE = date.today()
+EM_ACTIONS = os.environ.get("GITHUB_ACTIONS") == "true"
 CODIFICA = lambda q: urllib.parse.urlencode(q, quote_via=urllib.parse.quote)  # noqa: E731
 
 
@@ -514,11 +516,11 @@ def principal() -> int:
         "",
         f"**Total:** {sum(r.ok for r in resultados)} OK de {len(resultados)}; falhas essenciais: {len(falhas_essenciais)}; outras falhas: {len(falhas_outras)}.",
         "",
-        "## Não dá para testar daqui",
+        "## Onde esta verificação rodou",
         "",
-        "- **GitHub Actions:** esta verificação rodou no meu computador. O robô vai rodar nos servidores do GitHub "
-        "(outros endereços de rede), e o BCB, o IBGE ou o Tesouro podem tratá-los de outro jeito. "
-        "Falta rodar este mesmo script lá, antes de montar o robô diário.",
+        f"- Esta verificação rodou {'nos servidores do GitHub Actions' if EM_ACTIONS else 'no meu computador'}. "
+        "O robô diário roda nos servidores do GitHub (outros endereços de rede), e o BCB, o IBGE ou o Tesouro "
+        "podem tratá-los de outro jeito: o que vale para o robô é o resultado de uma execução lá.",
     ]
     (RAIZ / "docs" / "auditoria").mkdir(parents=True, exist_ok=True)
     caminho = RAIZ / "docs" / "auditoria" / f"verificacao_fontes_{HOJE.isoformat()}.md"
@@ -526,6 +528,14 @@ def principal() -> int:
     for r in resultados:
         print(
             f"{'OK   ' if r.ok else 'FALHA'} [{r.papel[:5]}] {r.fonte} ({r.ms / 1000:.1f} s)\n        {r.detalhe}"
+        )
+    if EM_ACTIONS:  # anotações do GitHub: aparecem no job e podem ser lidas pela API pública, sem token
+        for r in (r for r in resultados if not r.ok):
+            texto = r.detalhe.replace("%", "%25").replace("\r", "").replace("\n", " ")
+            print(f"::error title=FALHA {r.fonte} ({r.papel})::{texto}")
+        total_ok = sum(r.ok for r in resultados)
+        print(
+            f"::notice title=Verificação das fontes::{total_ok} OK de {len(resultados)}; falhas essenciais: {len(falhas_essenciais)}"
         )
     print(
         f"\n{sum(r.ok for r in resultados)} OK de {len(resultados)}; essenciais com falha: {len(falhas_essenciais)}; relatório: {caminho}"
