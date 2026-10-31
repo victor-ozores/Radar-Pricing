@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 dependencies = []  # só biblioteca padrão: nada para instalar no robô
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff==0.17.3"]  # ruff fixo: regra nova de uma versão futura não pode derrubar o CI
+dev = ["pytest>=8", "ruff==0.17.3", "openpyxl>=3.1"]  # ruff fixo: regra nova de uma versão futura não pode derrubar o CI; openpyxl só confere o Excel do painel
 
 [tool.setuptools.packages.find]
 where = ["src"]

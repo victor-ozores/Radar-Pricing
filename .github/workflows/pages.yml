@@ -1,0 +1,54 @@
+name: Painel (GitHub Pages)
+
+# Publica a pasta `site/` no GitHub Pages quando a página muda (envio para a main com mudança em `site/`)
+# ou à mão. Os números do dia NÃO passam por aqui: a página lê as fotos da branch `data` no navegador,
+# então o robô não precisa publicar o site de novo (um envio feito com GITHUB_TOKEN não dispara este workflow).
+# Antes de usar: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publica:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Testes do painel (a página só vai ao ar se passarem)
+        run: node --test site/tests/*.test.mjs
+
+      - uses: actions/configure-pages@v6
+
+      - name: Separar o que vai ao ar (sem os testes)
+        run: |
+          mkdir _site
+          cp site/index.html site/estilo.css _site/
+          cp -r site/js _site/js
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v5

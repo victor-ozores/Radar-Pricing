@@ -1,0 +1,6 @@
+{
+  "name": "radar-pricing-site",
+  "private": true,
+  "type": "module",
+  "description": "Painel estático do Radar Pricing. Sem dependências: o Node só roda os testes (node --test)."
+}

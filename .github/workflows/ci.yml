@@ -29,5 +29,14 @@ jobs:
           python -m ruff check src tests scripts
           python -m ruff format --check src tests scripts
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Testes do painel (JavaScript, no Node)
+        run: node --test site/tests/*.test.mjs
+
       - name: Testes
+        env:
+          EXIGE_NODE: "1" # o painel contra o robô precisa do Node: aqui faltar é falha, não pulo
         run: python -m pytest -p no:cacheprovider
