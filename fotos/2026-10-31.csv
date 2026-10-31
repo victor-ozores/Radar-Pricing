@@ -1,0 +1,1237 @@
+fonte,serie,dimensao,data_ref,valor,unidade,descricao
+abac,abac_contemplacoes_no_ano,,2026-07-31,1.03,milhões,Contemplações de janeiro até o mês
+abac,abac_contemplacoes_no_ano,,2026-08-31,1.18,milhões,Contemplações de janeiro até o mês
+abac,abac_contemplacoes_no_ano,,2026-09-30,1.33,milhões,Contemplações de janeiro até o mês
+abac,abac_cotas_vendidas_no_ano,,2026-07-31,3.31,milhões,Cotas comercializadas de janeiro até o mês
+abac,abac_cotas_vendidas_no_ano,,2026-08-31,3.82,milhões,Cotas comercializadas de janeiro até o mês
+abac,abac_cotas_vendidas_no_ano,,2026-09-30,4.37,milhões,Cotas comercializadas de janeiro até o mês
+abac,abac_creditos_comercializados_no_ano,,2026-07-31,331.6,R$ bilhões,Créditos comercializados de janeiro até o mês
+abac,abac_creditos_comercializados_no_ano,,2026-08-31,389.59,R$ bilhões,Créditos comercializados de janeiro até o mês
+abac,abac_creditos_comercializados_no_ano,,2026-09-30,454.13,R$ bilhões,Créditos comercializados de janeiro até o mês
+abac,abac_creditos_disponibilizados_no_ano,,2026-07-31,74.38,R$ bilhões,Créditos disponibilizados de janeiro até o mês
+abac,abac_creditos_disponibilizados_no_ano,,2026-08-31,85.72,R$ bilhões,Créditos disponibilizados de janeiro até o mês
+abac,abac_creditos_disponibilizados_no_ano,,2026-09-30,97.83,R$ bilhões,Créditos disponibilizados de janeiro até o mês
+abac,abac_participantes_ativos,,2026-07-31,13.41,milhões,"Participantes ativos do sistema de consórcios, no fim do mês"
+abac,abac_participantes_ativos,,2026-08-31,13.55,milhões,"Participantes ativos do sistema de consórcios, no fim do mês"
+abac,abac_participantes_ativos,,2026-09-30,13.93,milhões,"Participantes ativos do sistema de consórcios, no fim do mês"
+abac,abac_ticket_medio,,2026-08-31,113.57,R$ mil,Tíquete médio do mês
+abac,abac_ticket_medio,,2026-09-30,116.76,R$ mil,Tíquete médio do mês
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-18,4.9205,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-21,4.94,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-22,4.94,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-23,4.94,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-24,4.9426,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-25,4.9915,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-28,4.9848,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-29,4.9991,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-09-30,5.0,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-01,5.0,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-02,5.0129,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-05,5.0159,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-06,5.0159,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-07,5.0159,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-08,5.0159,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-09,5.2245,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-13,5.2215,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-14,5.2215,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-15,5.2166,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-16,5.219,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-19,5.2141,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-20,5.2141,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-21,5.21,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-22,5.2141,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2026,2026-10-23,5.1891,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-18,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-21,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-22,4.3013,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-23,4.3013,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-24,4.312,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-25,4.3118,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-28,4.3013,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-29,4.3007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-09-30,4.3007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-01,4.3007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-02,4.3007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-05,4.3118,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-06,4.3118,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-07,4.3064,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-08,4.3007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-09,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-13,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-14,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-15,4.3,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-16,4.3206,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-19,4.2967,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-20,4.2956,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-21,4.2965,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-22,4.2984,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2027,2026-10-23,4.3368,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-18,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-21,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-22,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-23,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-24,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-25,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-28,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-29,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-09-30,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-01,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-02,3.8007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-05,3.8007,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-06,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-07,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-08,3.8,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-09,3.79,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-13,3.76,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-14,3.75,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-15,3.75,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-16,3.75,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-19,3.7,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-20,3.7,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-21,3.7,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-22,3.7,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2028,2026-10-23,3.75,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-18,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-21,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-22,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-23,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-24,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-25,3.5003,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-28,3.5003,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-29,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-09-30,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-01,3.5003,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-02,3.5108,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-05,3.5108,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-06,3.5005,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-07,3.5005,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-08,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-09,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-13,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-14,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-15,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-16,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-19,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-20,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-21,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-22,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_ipca_anual,ano=2029,2026-10-23,3.5,% a.a.,Focus: mediana da expectativa de IPCA para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-18,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-21,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-22,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-23,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-24,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-25,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-28,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-29,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-09-30,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-01,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-02,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-05,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-06,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-07,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-08,13.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-09,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-13,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-14,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-15,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-16,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-19,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-20,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-21,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-22,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2026,2026-10-23,13.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-18,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-21,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-22,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-23,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-24,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-25,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-28,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-29,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-09-30,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-01,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-02,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-05,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-06,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-07,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-08,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-09,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-13,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-14,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-15,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-16,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-19,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-20,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-21,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-22,12.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2027,2026-10-23,11.75,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-18,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-21,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-22,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-23,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-24,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-25,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-28,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-29,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-09-30,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-01,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-02,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-05,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-06,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-07,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-08,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-09,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-13,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-14,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-15,10.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-16,10.5,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-19,10.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-20,10.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-21,10.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-22,10.25,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2028,2026-10-23,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-18,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-21,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-22,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-23,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-24,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-25,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-28,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-29,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-09-30,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-01,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-02,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-05,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-06,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-07,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-08,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-09,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-13,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-14,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-15,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-16,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-19,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-20,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-21,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-22,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_anual,ano=2029,2026-10-23,10.0,% a.a.,Focus: mediana da expectativa de Selic para o ano
+bcb_focus,focus_selic_reuniao,reuniao=R1/2027,2026-10-23,13.0,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R1/2028,2026-10-23,11.5,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R2/2027,2026-10-23,12.75,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R2/2028,2026-10-23,11.25,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R3/2027,2026-10-23,12.5,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R3/2028,2026-10-23,11.0,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R4/2027,2026-10-23,12.25,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R4/2028,2026-10-23,10.75,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R5/2027,2026-10-23,12.0,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R5/2028,2026-10-23,10.5,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R6/2027,2026-10-23,12.0,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R6/2028,2026-10-23,10.25,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R7/2026,2026-10-23,13.5,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R7/2027,2026-10-23,11.75,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R8/2026,2026-10-23,13.25,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_focus,focus_selic_reuniao,reuniao=R8/2027,2026-10-23,11.75,% a.a.,Focus: mediana da Selic esperada ao fim de cada reunião do Copom
+bcb_panorama,panorama_1,grupo=Administradoras de Consórcio,2026-03-31,132.0,unidade,Administradoras de Consórcio Autorizadas e Ativas pelo Unicad
+bcb_panorama,panorama_1,grupo=Administradoras de Consórcio,2026-06-30,131.0,unidade,Administradoras de Consórcio Autorizadas e Ativas pelo Unicad
+bcb_panorama,panorama_10,grupo=Cotas ativas,2026-03-31,13002.1,mil,Cotas ativas - Total
+bcb_panorama,panorama_10,grupo=Cotas ativas,2026-06-30,13376.26,mil,Cotas ativas - Total
+bcb_panorama,panorama_100,grupo=Cotas Ativas por Estado,2026-03-31,1316.7,mil,Cotas Ativas por Estado - MG
+bcb_panorama,panorama_100,grupo=Cotas Ativas por Estado,2026-06-30,1355.99,mil,Cotas Ativas por Estado - MG
+bcb_panorama,panorama_101,grupo=Cotas Ativas por Estado,2026-03-31,1174.96,mil,Cotas Ativas por Estado - PR
+bcb_panorama,panorama_101,grupo=Cotas Ativas por Estado,2026-06-30,1211.02,mil,Cotas Ativas por Estado - PR
+bcb_panorama,panorama_102,grupo=Cotas Ativas por Estado,2026-03-31,885.46,mil,Cotas Ativas por Estado - BA
+bcb_panorama,panorama_102,grupo=Cotas Ativas por Estado,2026-06-30,911.85,mil,Cotas Ativas por Estado - BA
+bcb_panorama,panorama_103,grupo=Cotas Ativas por Estado,2026-03-31,785.68,mil,Cotas Ativas por Estado - RS
+bcb_panorama,panorama_103,grupo=Cotas Ativas por Estado,2026-06-30,791.18,mil,Cotas Ativas por Estado - RS
+bcb_panorama,panorama_104,grupo=Cotas Ativas por Estado,2026-03-31,625.3,mil,Cotas Ativas por Estado - SC
+bcb_panorama,panorama_104,grupo=Cotas Ativas por Estado,2026-06-30,649.43,mil,Cotas Ativas por Estado - SC
+bcb_panorama,panorama_105,grupo=Cotas Ativas por Estado,2026-03-31,515.22,mil,Cotas Ativas por Estado - GO
+bcb_panorama,panorama_105,grupo=Cotas Ativas por Estado,2026-06-30,524.76,mil,Cotas Ativas por Estado - GO
+bcb_panorama,panorama_106,grupo=Cotas Ativas por Estado,2026-03-31,503.82,mil,Cotas Ativas por Estado - RJ
+bcb_panorama,panorama_106,grupo=Cotas Ativas por Estado,2026-06-30,518.3,mil,Cotas Ativas por Estado - RJ
+bcb_panorama,panorama_107,grupo=Cotas Ativas por Estado,2026-03-31,458.77,mil,Cotas Ativas por Estado - PA
+bcb_panorama,panorama_107,grupo=Cotas Ativas por Estado,2026-06-30,465.95,mil,Cotas Ativas por Estado - PA
+bcb_panorama,panorama_108,grupo=Cotas Ativas por Estado,2026-03-31,453.96,mil,Cotas Ativas por Estado - MT
+bcb_panorama,panorama_108,grupo=Cotas Ativas por Estado,2026-06-30,471.68,mil,Cotas Ativas por Estado - MT
+bcb_panorama,panorama_109,grupo=Cotas Ativas por Estado,2026-03-31,406.74,mil,Cotas Ativas por Estado - MA
+bcb_panorama,panorama_109,grupo=Cotas Ativas por Estado,2026-06-30,422.72,mil,Cotas Ativas por Estado - MA
+bcb_panorama,panorama_11,grupo=Cotas ativas,2026-03-31,2977.54,mil,Cotas ativas - Imóveis
+bcb_panorama,panorama_11,grupo=Cotas ativas,2026-06-30,3202.55,mil,Cotas ativas - Imóveis
+bcb_panorama,panorama_110,grupo=Cotas Ativas por Estado,2026-03-31,405.12,mil,Cotas Ativas por Estado - PE
+bcb_panorama,panorama_110,grupo=Cotas Ativas por Estado,2026-06-30,417.59,mil,Cotas Ativas por Estado - PE
+bcb_panorama,panorama_111,grupo=Cotas Ativas por Estado,2026-03-31,386.19,mil,Cotas Ativas por Estado - CE
+bcb_panorama,panorama_111,grupo=Cotas Ativas por Estado,2026-06-30,397.18,mil,Cotas Ativas por Estado - CE
+bcb_panorama,panorama_112,grupo=Cotas Ativas por Estado,2026-03-31,289.49,mil,Cotas Ativas por Estado - ES
+bcb_panorama,panorama_112,grupo=Cotas Ativas por Estado,2026-06-30,298.41,mil,Cotas Ativas por Estado - ES
+bcb_panorama,panorama_113,grupo=Cotas Ativas por Estado,2026-03-31,248.56,mil,Cotas Ativas por Estado - MS
+bcb_panorama,panorama_113,grupo=Cotas Ativas por Estado,2026-06-30,257.66,mil,Cotas Ativas por Estado - MS
+bcb_panorama,panorama_114,grupo=Cotas Ativas por Estado,2026-03-31,231.63,mil,Cotas Ativas por Estado - PI
+bcb_panorama,panorama_114,grupo=Cotas Ativas por Estado,2026-06-30,241.21,mil,Cotas Ativas por Estado - PI
+bcb_panorama,panorama_115,grupo=Cotas Ativas por Estado,2026-03-31,203.24,mil,Cotas Ativas por Estado - PB
+bcb_panorama,panorama_115,grupo=Cotas Ativas por Estado,2026-06-30,211.49,mil,Cotas Ativas por Estado - PB
+bcb_panorama,panorama_116,grupo=Cotas Ativas por Estado,2026-03-31,193.92,mil,Cotas Ativas por Estado - DF
+bcb_panorama,panorama_116,grupo=Cotas Ativas por Estado,2026-06-30,199.88,mil,Cotas Ativas por Estado - DF
+bcb_panorama,panorama_117,grupo=Cotas Ativas por Estado,2026-03-31,178.55,mil,Cotas Ativas por Estado - AL
+bcb_panorama,panorama_117,grupo=Cotas Ativas por Estado,2026-06-30,184.67,mil,Cotas Ativas por Estado - AL
+bcb_panorama,panorama_118,grupo=Cotas Ativas por Estado,2026-03-31,177.38,mil,Cotas Ativas por Estado - RO
+bcb_panorama,panorama_118,grupo=Cotas Ativas por Estado,2026-06-30,183.42,mil,Cotas Ativas por Estado - RO
+bcb_panorama,panorama_119,grupo=Cotas Ativas por Estado,2026-03-31,153.83,mil,Cotas Ativas por Estado - TO
+bcb_panorama,panorama_119,grupo=Cotas Ativas por Estado,2026-06-30,156.22,mil,Cotas Ativas por Estado - TO
+bcb_panorama,panorama_12,grupo=Cotas ativas,2026-03-31,927.14,mil,Cotas ativas - Veículos Pesados
+bcb_panorama,panorama_12,grupo=Cotas ativas,2026-06-30,936.7,mil,Cotas ativas - Veículos Pesados
+bcb_panorama,panorama_120,grupo=Cotas Ativas por Estado,2026-03-31,149.53,mil,Cotas Ativas por Estado - RN
+bcb_panorama,panorama_120,grupo=Cotas Ativas por Estado,2026-06-30,153.09,mil,Cotas Ativas por Estado - RN
+bcb_panorama,panorama_121,grupo=Cotas Ativas por Estado,2026-03-31,142.14,mil,Cotas Ativas por Estado - SE
+bcb_panorama,panorama_121,grupo=Cotas Ativas por Estado,2026-06-30,147.52,mil,Cotas Ativas por Estado - SE
+bcb_panorama,panorama_122,grupo=Cotas Ativas por Estado,2026-03-31,131.62,mil,Cotas Ativas por Estado - AM
+bcb_panorama,panorama_122,grupo=Cotas Ativas por Estado,2026-06-30,135.07,mil,Cotas Ativas por Estado - AM
+bcb_panorama,panorama_123,grupo=Cotas Ativas por Estado,2026-03-31,48.58,mil,Cotas Ativas por Estado - AC
+bcb_panorama,panorama_123,grupo=Cotas Ativas por Estado,2026-06-30,50.5,mil,Cotas Ativas por Estado - AC
+bcb_panorama,panorama_124,grupo=Cotas Ativas por Estado,2026-03-31,27.54,mil,Cotas Ativas por Estado - AP
+bcb_panorama,panorama_124,grupo=Cotas Ativas por Estado,2026-06-30,27.56,mil,Cotas Ativas por Estado - AP
+bcb_panorama,panorama_125,grupo=Cotas Ativas por Estado,2026-03-31,25.62,mil,Cotas Ativas por Estado - RR
+bcb_panorama,panorama_125,grupo=Cotas Ativas por Estado,2026-06-30,26.03,mil,Cotas Ativas por Estado - RR
+bcb_panorama,panorama_13,grupo=Cotas ativas,2026-03-31,5447.07,mil,Cotas ativas - Automóveis
+bcb_panorama,panorama_13,grupo=Cotas ativas,2026-06-30,5558.34,mil,Cotas ativas - Automóveis
+bcb_panorama,panorama_14,grupo=Cotas ativas,2026-03-31,3263.31,mil,Cotas ativas - Motocicletas
+bcb_panorama,panorama_14,grupo=Cotas ativas,2026-06-30,3301.54,mil,Cotas ativas - Motocicletas
+bcb_panorama,panorama_15,grupo=Cotas ativas,2026-03-31,255.75,mil,"Cotas Ativas - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_15,grupo=Cotas ativas,2026-06-30,238.32,mil,"Cotas Ativas - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_16,grupo=Cotas ativas,2026-03-31,131.27,mil,Cotas ativas - Serviços
+bcb_panorama,panorama_16,grupo=Cotas ativas,2026-06-30,139.0,mil,Cotas ativas - Serviços
+bcb_panorama,panorama_17,grupo=Cotas ativas,2026-03-31,9.82,mil,Cotas ativas - Ônibus e Micro-ônibus (cód. 21)
+bcb_panorama,panorama_17,grupo=Cotas ativas,2026-06-30,10.68,mil,Cotas ativas - Ônibus e Micro-ônibus (cód. 21)
+bcb_panorama,panorama_18,grupo=Cotas ativas,2026-03-31,372.85,mil,Cotas Ativas - Caminhões e Caminhões-Tratores  (cód. 22)
+bcb_panorama,panorama_18,grupo=Cotas ativas,2026-06-30,382.23,mil,Cotas Ativas - Caminhões e Caminhões-Tratores  (cód. 22)
+bcb_panorama,panorama_19,grupo=Cotas ativas,2026-03-31,55.66,mil,Cotas ativas - Equipamentos Rodoviários e Agrícolas  (cód. 23)
+bcb_panorama,panorama_19,grupo=Cotas ativas,2026-06-30,56.47,mil,Cotas ativas - Equipamentos Rodoviários e Agrícolas  (cód. 23)
+bcb_panorama,panorama_2,grupo=Administradoras de Consórcio,2026-03-31,125.0,unidade,Administradoras de Consórcio om grupos e cotas ativas
+bcb_panorama,panorama_2,grupo=Administradoras de Consórcio,2026-06-30,124.0,unidade,Administradoras de Consórcio om grupos e cotas ativas
+bcb_panorama,panorama_20,grupo=Cotas ativas,2026-03-31,487.5,mil,Cotas ativas - Máquinas Agrícolas  (cód. 24)
+bcb_panorama,panorama_20,grupo=Cotas ativas,2026-06-30,486.47,mil,Cotas ativas - Máquinas Agrícolas  (cód. 24)
+bcb_panorama,panorama_21,grupo=Cotas ativas,2026-03-31,1.3,mil,Cotas Ativas - Embarcações e Aeronaves (cód. 25)
+bcb_panorama,panorama_21,grupo=Cotas ativas,2026-06-30,1.07,mil,Cotas Ativas - Embarcações e Aeronaves (cód. 25)
+bcb_panorama,panorama_22,grupo=Carteira,2026-03-31,156.95,R$ bilhões,Carteira - Total
+bcb_panorama,panorama_22,grupo=Carteira,2026-06-30,164.06,R$ bilhões,Carteira - Total
+bcb_panorama,panorama_23,grupo=Carteira,2026-03-31,66.39,R$ bilhões,Carteira - Imóveis
+bcb_panorama,panorama_23,grupo=Carteira,2026-06-30,70.39,R$ bilhões,Carteira - Imóveis
+bcb_panorama,panorama_24,grupo=Carteira,2026-03-31,49.67,R$ bilhões,Carteira - Automóveis
+bcb_panorama,panorama_24,grupo=Carteira,2026-06-30,51.43,R$ bilhões,Carteira - Automóveis
+bcb_panorama,panorama_25,grupo=Carteira,2026-03-31,10.38,R$ bilhões,Carteira - Motocicletas
+bcb_panorama,panorama_25,grupo=Carteira,2026-06-30,10.66,R$ bilhões,Carteira - Motocicletas
+bcb_panorama,panorama_26,grupo=Carteira,2026-03-31,89.78,R$ bilhões,"Carteira - Veículos Automotores (veículos pesados, veículos comerciais leves e motocicletas) -"
+bcb_panorama,panorama_26,grupo=Carteira,2026-06-30,92.9,R$ bilhões,"Carteira - Veículos Automotores (veículos pesados, veículos comerciais leves e motocicletas) -"
+bcb_panorama,panorama_27,grupo=Carteira,2026-03-31,769.56,R$ milhões,Carteira - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_27,grupo=Carteira,2026-06-30,772.81,R$ milhões,Carteira - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_28,grupo=Ativos Contemplados,2026-03-31,1826.96,mil,Cotas ativas contempladas no últimos 12 meses - Total
+bcb_panorama,panorama_28,grupo=Ativos Contemplados,2026-06-30,1855.35,mil,Cotas ativas contempladas no últimos 12 meses - Total
+bcb_panorama,panorama_29,grupo=Ativos Contemplados,2026-03-31,375.57,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Total
+bcb_panorama,panorama_29,grupo=Ativos Contemplados,2026-06-30,374.42,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Total
+bcb_panorama,panorama_3,grupo=PLA,2026-03-31,24.16,R$ bilhões,Patrimônio Líquido Ajustado - PLA - Total das Administradoras de Consórcios
+bcb_panorama,panorama_3,grupo=PLA,2026-06-30,22.71,R$ bilhões,Patrimônio Líquido Ajustado - PLA - Total das Administradoras de Consórcios
+bcb_panorama,panorama_30,grupo=Ativos Contemplados,2026-03-31,1451.39,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Total
+bcb_panorama,panorama_30,grupo=Ativos Contemplados,2026-06-30,1480.92,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Total
+bcb_panorama,panorama_31,grupo=Ativos Contemplados,2026-03-31,160.29,mil,Cotas ativas contempladas nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_31,grupo=Ativos Contemplados,2026-06-30,169.54,mil,Cotas ativas contempladas nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_32,grupo=Ativos Contemplados,2026-03-31,31.96,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Imóveis
+bcb_panorama,panorama_32,grupo=Ativos Contemplados,2026-06-30,33.18,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Imóveis
+bcb_panorama,panorama_33,grupo=Ativos Contemplados,2026-03-31,128.33,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Imóveis
+bcb_panorama,panorama_33,grupo=Ativos Contemplados,2026-06-30,136.36,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Imóveis
+bcb_panorama,panorama_34,grupo=Ativos Contemplados,2026-03-31,811.71,mil,Cotas ativas contempladas nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_34,grupo=Ativos Contemplados,2026-06-30,818.74,mil,Cotas ativas contempladas nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_35,grupo=Ativos Contemplados,2026-03-31,156.26,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Automóveis
+bcb_panorama,panorama_35,grupo=Ativos Contemplados,2026-06-30,157.0,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Automóveis
+bcb_panorama,panorama_36,grupo=Ativos Contemplados,2026-03-31,655.44,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Automóveis
+bcb_panorama,panorama_36,grupo=Ativos Contemplados,2026-06-30,661.74,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Automóveis
+bcb_panorama,panorama_37,grupo=Ativos Contemplados,2026-03-31,647.1,mi,Cotas ativas contempladas nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_37,grupo=Ativos Contemplados,2026-06-30,664.99,mi,Cotas ativas contempladas nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_38,grupo=Ativos Contemplados,2026-03-31,116.89,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Motocicletas
+bcb_panorama,panorama_38,grupo=Ativos Contemplados,2026-06-30,120.68,mil,Cotas ativas contempladas no últimos 12 meses - por Sorteio - Motocicletas
+bcb_panorama,panorama_39,grupo=Ativos Contemplados,2026-03-31,530.21,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Motocicletas
+bcb_panorama,panorama_39,grupo=Ativos Contemplados,2026-06-30,544.31,mil,Cotas ativas contempladas no últimos 12 meses - por Lance - Motocicletas
+bcb_panorama,panorama_4,grupo=DT,2026-03-31,23.26,R$ bilhões,Disponibilidade Total - DT - Total das Administradoras de Consórcios
+bcb_panorama,panorama_4,grupo=DT,2026-06-30,24.82,R$ bilhões,Disponibilidade Total - DT - Total das Administradoras de Consórcios
+bcb_panorama,panorama_40,grupo=Ativos Contemplados,2026-03-31,207.87,mil,Cotas ativas contempladas nos últimos 12 meses - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_40,grupo=Ativos Contemplados,2026-06-30,202.07,mil,Cotas ativas contempladas nos últimos 12 meses - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_41,grupo=Ativos Contemplados,2026-03-31,70.46,mil,Cotas ativas contempladas nos últimos 12 meses - por Sorteio - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_41,grupo=Ativos Contemplados,2026-06-30,63.56,mil,Cotas ativas contempladas nos últimos 12 meses - por Sorteio - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_42,grupo=Ativos Contemplados,2026-03-31,137.41,mil,Cotas ativas contempladas nos últimos 12 meses - por Lance - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_42,grupo=Ativos Contemplados,2026-06-30,138.51,mil,Cotas ativas contempladas nos últimos 12 meses - por Lance - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_43,grupo=Cotas excluídas,2026-03-31,12409.08,mil,Cotas excluídas - Total
+bcb_panorama,panorama_43,grupo=Cotas excluídas,2026-06-30,12751.82,mil,Cotas excluídas - Total
+bcb_panorama,panorama_44,grupo=Cotas excluídas,2026-03-31,1708.0,mil,Excluídos Contemplados - Total (Sorteio)
+bcb_panorama,panorama_44,grupo=Cotas excluídas,2026-06-30,1728.0,mil,Excluídos Contemplados - Total (Sorteio)
+bcb_panorama,panorama_45,grupo=Cotas excluídas,2026-03-31,3612.82,mil,Cotas excluídas - Total - Imóveis
+bcb_panorama,panorama_45,grupo=Cotas excluídas,2026-06-30,3808.66,mil,Cotas excluídas - Total - Imóveis
+bcb_panorama,panorama_46,grupo=Cotas excluídas,2026-03-31,4666.06,mil,Cotas excluídas - Total - Automóveis
+bcb_panorama,panorama_46,grupo=Cotas excluídas,2026-06-30,4724.69,mil,Cotas excluídas - Total - Automóveis
+bcb_panorama,panorama_47,grupo=Cotas excluídas,2026-03-31,3090.99,mil,Cotas excluídas - Total - Motocicletas
+bcb_panorama,panorama_47,grupo=Cotas excluídas,2026-06-30,3135.09,mil,Cotas excluídas - Total - Motocicletas
+bcb_panorama,panorama_48,grupo=Cotas excluídas,2026-03-31,1039.48,mil,Cotas excluídas - Total - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_48,grupo=Cotas excluídas,2026-06-30,1083.6,mil,Cotas excluídas - Total - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_49,grupo=Índice de Exclusão,2026-03-31,48.83,%,Índice de Exclusão - Total
+bcb_panorama,panorama_49,grupo=Índice de Exclusão,2026-06-30,48.8,%,Índice de Exclusão - Total
+bcb_panorama,panorama_5,grupo=Administradoras de Consórcio,2026-03-31,72.0,unidade,Administradoras com cotas ativas de imóveis
+bcb_panorama,panorama_5,grupo=Administradoras de Consórcio,2026-06-30,71.0,unidade,Administradoras com cotas ativas de imóveis
+bcb_panorama,panorama_50,grupo=Índice de Exclusão,2026-03-31,54.82,%,Índice de Exclusão - IE - Imóveis
+bcb_panorama,panorama_50,grupo=Índice de Exclusão,2026-06-30,54.32,%,Índice de Exclusão - IE - Imóveis
+bcb_panorama,panorama_51,grupo=Índice de Exclusão,2026-03-31,46.14,%,Índice de Exclusão - IE - Automóveis
+bcb_panorama,panorama_51,grupo=Índice de Exclusão,2026-06-30,45.95,%,Índice de Exclusão - IE - Automóveis
+bcb_panorama,panorama_52,grupo=Índice de Exclusão,2026-03-31,48.64,%,Índice de Exclusão - IE - Motocicletas
+bcb_panorama,panorama_52,grupo=Índice de Exclusão,2026-06-30,48.71,%,Índice de Exclusão - IE - Motocicletas
+bcb_panorama,panorama_53,grupo=Índice de Exclusão,2026-03-31,44.16,%,Índice de Exclusão - IE - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_53,grupo=Índice de Exclusão,2026-06-30,45.2,%,Índice de Exclusão - IE - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_54,grupo=Cotas Comercializadas,2026-03-31,5489.09,mil,Cotas Comercializadas nos últimos 12 meses - Total
+bcb_panorama,panorama_54,grupo=Cotas Comercializadas,2026-06-30,5723.74,mil,Cotas Comercializadas nos últimos 12 meses - Total
+bcb_panorama,panorama_55,grupo=Cotas Comercializadas,2026-03-31,1526.25,mil,Cotas comercializadas nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_55,grupo=Cotas Comercializadas,2026-06-30,1655.84,mil,Cotas comercializadas nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_56,grupo=Cotas Comercializadas,2026-03-31,194.34,mil,Cotas comercializadas nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_56,grupo=Cotas Comercializadas,2026-06-30,193.0,mil,Cotas comercializadas nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_57,grupo=Cotas Comercializadas,2026-03-31,1985.14,mil,Cotas comercializadas nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_57,grupo=Cotas Comercializadas,2026-06-30,2048.73,mil,Cotas comercializadas nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_58,grupo=Cotas Comercializadas,2026-03-31,1474.07,mil,Cotas comercializadas nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_58,grupo=Cotas Comercializadas,2026-06-30,1519.66,mil,Cotas comercializadas nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_59,grupo=Cotas Comercializadas,2026-03-31,240.26,mil,"Cotas Comercializadas nos últimos 12 meses - Eletroeletrônicos, eletrodomésticos, mobiliário e outros bens móveis duráveis"
+bcb_panorama,panorama_59,grupo=Cotas Comercializadas,2026-06-30,233.46,mil,"Cotas Comercializadas nos últimos 12 meses - Eletroeletrônicos, eletrodomésticos, mobiliário e outros bens móveis duráveis"
+bcb_panorama,panorama_6,grupo=Administradoras de Consórcio,2026-03-31,56.0,unidade,Administradoras com cotas ativas de veículos pesados
+bcb_panorama,panorama_6,grupo=Administradoras de Consórcio,2026-06-30,55.0,unidade,Administradoras com cotas ativas de veículos pesados
+bcb_panorama,panorama_60,grupo=Cotas Comercializadas,2026-03-31,69.04,mil,Cotas comercializadas nos últimos 12 meses - Serviços
+bcb_panorama,panorama_60,grupo=Cotas Comercializadas,2026-06-30,73.06,mil,Cotas comercializadas nos últimos 12 meses - Serviços
+bcb_panorama,panorama_61,grupo=Inadimplência,2026-03-31,2.25,%,Índice de Inadimplência - Total
+bcb_panorama,panorama_61,grupo=Inadimplência,2026-06-30,2.12,%,Índice de Inadimplência - Total
+bcb_panorama,panorama_62,grupo=Pré Inadimplência,2026-03-31,3.01,%,Índice de Pré Inadimplência - Total
+bcb_panorama,panorama_62,grupo=Pré Inadimplência,2026-06-30,2.82,%,Índice de Pré Inadimplência - Total
+bcb_panorama,panorama_63,grupo=Recursos Coletados,2026-03-31,148.08,R$ bilhões,Recursos Coletados nos Últimos 12 meses - Total
+bcb_panorama,panorama_63,grupo=Recursos Coletados,2026-06-30,153.38,R$ bilhões,Recursos Coletados nos Últimos 12 meses - Total
+bcb_panorama,panorama_64,grupo=Recursos Coletados,2026-03-31,40.85,R$ bilhões,Recursos Coletados nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_64,grupo=Recursos Coletados,2026-06-30,43.62,R$ bilhões,Recursos Coletados nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_65,grupo=Recursos Coletados,2026-03-31,62.99,R$ bilhões,Recursos Coletados nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_65,grupo=Recursos Coletados,2026-06-30,64.67,R$ bilhões,Recursos Coletados nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_66,grupo=Recursos Coletados,2026-03-31,14.15,R$ bilhões,Recursos Coletados nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_66,grupo=Recursos Coletados,2026-06-30,14.62,R$ bilhões,Recursos Coletados nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_67,grupo=Recursos Coletados,2026-03-31,30.09,R$ bilhões,Recursos Coletados nos últimos 12 meses - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_67,grupo=Recursos Coletados,2026-06-30,30.47,R$ bilhões,Recursos Coletados nos últimos 12 meses - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_68,grupo=Recursos a Coletar,2026-03-31,888.6,R$ milhões,Recursos a Coletar - Total
+bcb_panorama,panorama_68,grupo=Recursos a Coletar,2026-06-30,941.44,R$ milhões,Recursos a Coletar - Total
+bcb_panorama,panorama_69,grupo=Recursos a Coletar,2026-03-31,532.42,R$ bilhões,Recursos a Coletar - Imóveis
+bcb_panorama,panorama_69,grupo=Recursos a Coletar,2026-06-30,572.88,R$ bilhões,Recursos a Coletar - Imóveis
+bcb_panorama,panorama_7,grupo=Administradoras de Consórcio,2026-03-31,110.0,unidade,Administradoras com cotas ativas de automóveis
+bcb_panorama,panorama_7,grupo=Administradoras de Consórcio,2026-06-30,108.0,unidade,Administradoras com cotas ativas de automóveis
+bcb_panorama,panorama_70,grupo=Recursos a Coletar,2026-03-31,207.08,R$ bilhões,Recursos a Coletar - Automóveis
+bcb_panorama,panorama_70,grupo=Recursos a Coletar,2026-06-30,216.6,R$ bilhões,Recursos a Coletar - Automóveis
+bcb_panorama,panorama_71,grupo=Recursos a Coletar,2026-03-31,31.42,R$ bilhões,Recursos a Coletar - Motocicletas
+bcb_panorama,panorama_71,grupo=Recursos a Coletar,2026-06-30,32.81,R$ bilhões,Recursos a Coletar - Motocicletas
+bcb_panorama,panorama_72,grupo=Recursos a Coletar,2026-03-31,117.68,R$ bilhões,Recursos a Coletar - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_72,grupo=Recursos a Coletar,2026-06-30,119.15,R$ bilhões,Recursos a Coletar - Outros Bens Móveis e Serviços
+bcb_panorama,panorama_73,grupo=RNP,2026-03-31,2924.21,R$ milhões,RNP - Saldo Total
+bcb_panorama,panorama_73,grupo=RNP,2026-06-30,1943.68,R$ milhões,RNP - Saldo Total
+bcb_panorama,panorama_74,grupo=RNP,2026-03-31,2447.56,R$ milhões,"RNP - Valor ""Taxável"" -"
+bcb_panorama,panorama_74,grupo=RNP,2026-06-30,1704.89,R$ milhões,"RNP - Valor ""Taxável"" -"
+bcb_panorama,panorama_75,grupo=RNP,2026-03-31,4.55,%,RNP - Taxa Permanência Mensal Média
+bcb_panorama,panorama_75,grupo=RNP,2026-06-30,4.59,%,RNP - Taxa Permanência Mensal Média
+bcb_panorama,panorama_76,grupo=RNP,2026-03-31,1185.18,R$ milhões,RNP - Valor total de Taxa de Permanência cobrada nos últimos 12 meses
+bcb_panorama,panorama_76,grupo=RNP,2026-06-30,1155.36,R$ milhões,RNP - Valor total de Taxa de Permanência cobrada nos últimos 12 meses
+bcb_panorama,panorama_77,grupo=RNP,2026-03-31,1178.31,R$ bilhões,RNP - Valores devolvidos via SVR
+bcb_panorama,panorama_77,grupo=RNP,2026-06-30,2161.34,R$ bilhões,RNP - Valores devolvidos via SVR
+bcb_panorama,panorama_78,grupo=Taxa de Administração,2026-03-31,18.88,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_78,grupo=Taxa de Administração,2026-06-30,18.97,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_79,grupo=Taxa de Administração,2026-03-31,21.15,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_79,grupo=Taxa de Administração,2026-06-30,21.19,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_8,grupo=Administradoras de Consórcio,2026-03-31,68.0,unidade,Administradoras com cotas ativas de motocicletas
+bcb_panorama,panorama_8,grupo=Administradoras de Consórcio,2026-06-30,69.0,unidade,Administradoras com cotas ativas de motocicletas
+bcb_panorama,panorama_80,grupo=Taxa de Administração,2026-03-31,12.65,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_80,grupo=Taxa de Administração,2026-06-30,12.4,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_81,grupo=Taxa de Administração,2026-03-31,15.0,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_81,grupo=Taxa de Administração,2026-06-30,15.16,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_82,grupo=Taxa de Administração,2026-03-31,21.09,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_82,grupo=Taxa de Administração,2026-06-30,21.07,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_83,grupo=Taxa de Administração,2026-03-31,28.81,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Outros Bens Móveis
+bcb_panorama,panorama_83,grupo=Taxa de Administração,2026-06-30,23.16,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Outros Bens Móveis
+bcb_panorama,panorama_84,grupo=Taxa de Administração,2026-03-31,14.0,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_84,grupo=Taxa de Administração,2026-06-30,14.08,%,Taxa Média Adm. dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_85,grupo=Valor Médio,2026-03-31,106.65,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_85,grupo=Valor Médio,2026-06-30,103.42,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_86,grupo=Valor Médio,2026-03-31,204.26,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_86,grupo=Valor Médio,2026-06-30,192.95,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_87,grupo=Valor Médio,2026-03-31,351.29,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_87,grupo=Valor Médio,2026-06-30,363.04,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Veículos Pesados
+bcb_panorama,panorama_88,grupo=Valor Médio,2026-03-31,76.35,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_88,grupo=Valor Médio,2026-06-30,75.95,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_89,grupo=Valor Médio,2026-03-31,20.55,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_89,grupo=Valor Médio,2026-06-30,20.72,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_9,grupo=Grupos ativos,2026-03-31,16374.0,unidade,Grupos de Consórcio ativos - Total
+bcb_panorama,panorama_9,grupo=Grupos ativos,2026-06-30,16251.0,unidade,Grupos de Consórcio ativos - Total
+bcb_panorama,panorama_90,grupo=Valor Médio,2026-03-31,8.93,R$ mil,"Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_90,grupo=Valor Médio,2026-06-30,10.03,R$ mil,"Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_91,grupo=Valor Médio,2026-03-31,16.42,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_91,grupo=Valor Médio,2026-06-30,15.9,R$ mil,Valor Médio dos Créditos dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_92,grupo=Prazo Médio,2026-03-31,168.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_92,grupo=Prazo Médio,2026-06-30,167.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - TOTAL
+bcb_panorama,panorama_93,grupo=Prazo Médio,2026-03-31,217.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_93,grupo=Prazo Médio,2026-06-30,217.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Imóveis
+bcb_panorama,panorama_94,grupo=Prazo Médio,2026-03-31,111.0,meses,Prazo médio dos grupos constiotuídos no ano - Veículos Pesados
+bcb_panorama,panorama_94,grupo=Prazo Médio,2026-06-30,106.0,meses,Prazo médio dos grupos constiotuídos no ano - Veículos Pesados
+bcb_panorama,panorama_95,grupo=Prazo Médio,2026-03-31,90.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_95,grupo=Prazo Médio,2026-06-30,90.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Automóveis
+bcb_panorama,panorama_96,grupo=Prazo Médio,2026-03-31,63.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_96,grupo=Prazo Médio,2026-06-30,64.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Motocicletas
+bcb_panorama,panorama_97,grupo=Prazo Médio,2026-03-31,59.0,meses,"Prazo médio dos grupos constituídos nos últimos 12 meses - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_97,grupo=Prazo Médio,2026-06-30,61.0,meses,"Prazo médio dos grupos constituídos nos últimos 12 meses - Outros bens móveis duráveis (eletroeletrônicos, eletrodomésticos, móveis e outros)"
+bcb_panorama,panorama_98,grupo=Prazo Médio,2026-03-31,40.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_98,grupo=Prazo Médio,2026-06-30,40.0,meses,Prazo médio dos grupos constituídos nos últimos 12 meses - Serviços
+bcb_panorama,panorama_99,grupo=Cotas Ativas por Estado,2026-03-31,2882.88,mil,Cotas Ativas por Estado - SP
+bcb_panorama,panorama_99,grupo=Cotas Ativas por Estado,2026-06-30,2965.9,mil,Cotas Ativas por Estado - SP
+bcb_sgs,cdi,,2026-09-01,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-02,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-03,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-04,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-08,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-09,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-10,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-11,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-14,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-15,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-16,0.05166,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-17,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-18,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-21,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-22,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-23,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-24,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-25,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-28,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-29,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-09-30,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-01,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-02,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-05,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-06,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-07,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-08,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-09,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-13,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-14,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-15,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-16,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-19,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-20,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-21,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-22,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-23,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-26,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-27,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-28,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,cdi,,2026-10-29,0.050788,% ao dia,Taxa CDI (diária)
+bcb_sgs,ipca_12_meses,,2026-07-01,4.44,%,"IPCA, acumulado em 12 meses"
+bcb_sgs,ipca_12_meses,,2026-08-01,4.22,%,"IPCA, acumulado em 12 meses"
+bcb_sgs,ipca_12_meses,,2026-09-01,4.58,%,"IPCA, acumulado em 12 meses"
+bcb_sgs,ipca_mensal,,2026-07-01,0.07,%,"IPCA, variação mensal"
+bcb_sgs,ipca_mensal,,2026-08-01,-0.32,%,"IPCA, variação mensal"
+bcb_sgs,ipca_mensal,,2026-09-01,0.82,%,"IPCA, variação mensal"
+bcb_sgs,selic_acumulada_mes_anualizada,,2026-08-01,13.94,% a.a.,"Selic acumulada no mês, anualizada"
+bcb_sgs,selic_acumulada_mes_anualizada,,2026-09-01,13.78,% a.a.,"Selic acumulada no mês, anualizada"
+bcb_sgs,selic_acumulada_mes_anualizada,,2026-10-01,13.65,% a.a.,"Selic acumulada no mês, anualizada"
+bcb_sgs,selic_meta,,2026-09-01,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-02,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-03,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-04,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-05,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-06,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-07,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-08,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-09,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-10,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-11,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-12,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-13,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-14,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-15,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-16,14.0,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-17,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-18,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-19,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-20,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-21,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-22,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-23,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-24,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-25,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-26,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-27,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-28,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-29,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-09-30,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-01,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-02,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-03,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-04,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-05,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-06,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-07,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-08,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-09,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-10,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-11,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-12,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-13,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-14,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-15,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-16,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-17,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-18,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-19,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-20,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-21,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-22,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-23,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-24,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-25,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-26,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-27,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-28,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-29,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-30,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_meta,,2026-10-31,13.75,% a.a.,Meta Selic definida pelo Copom
+bcb_sgs,selic_over,,2026-09-01,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-02,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-03,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-04,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-08,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-09,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-10,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-11,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-14,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-15,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-16,0.05166,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-17,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-18,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-21,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-22,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-23,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-24,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-25,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-28,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-29,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-09-30,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-01,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-02,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-05,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-06,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-07,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-08,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-09,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-13,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-14,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-15,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-16,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-19,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-20,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-21,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-22,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-23,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-26,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-27,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-28,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-29,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_sgs,selic_over,,2026-10-30,0.050788,% ao dia,Taxa Selic over (diária)
+bcb_taxas,taxa_financiamento_imobiliario,banco=APE POUPEX,2026-07-01,18.15,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=APE POUPEX,2026-08-01,16.95,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=APE POUPEX,2026-09-01,18.62,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=BCO SANTANDER (BRASIL) S.A.,2026-07-01,14.61,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=BCO SANTANDER (BRASIL) S.A.,2026-08-01,15.12,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=BCO SANTANDER (BRASIL) S.A.,2026-09-01,15.04,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=BCO XP S.A.,2026-07-01,15.0,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=BCO XP S.A.,2026-09-01,14.57,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=CAIXA ECONOMICA FEDERAL,2026-08-01,10.76,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_imobiliario,banco=CAIXA ECONOMICA FEDERAL,2026-09-01,10.94,% a.a.,"Taxa de financiamento imobiliário (taxas de mercado, prefixado), por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-02,41.12,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-05,41.12,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-06,40.5,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-07,40.8,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-08,41.0,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=AGORACRED S/A SCFI,2026-10-09,40.46,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-02,7.62,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-05,2.73,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-06,2.73,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-07,7.83,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-08,8.58,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO CNH INDUSTRIAL CAPITAL S.A,2026-10-09,27.01,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-02,15.18,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-05,15.21,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-06,15.67,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-07,15.24,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-08,15.23,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO HYUNDAI CAPITAL BRASIL,2026-10-09,15.36,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-02,22.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-05,21.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-06,21.4,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-07,21.24,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-08,21.52,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO INTER,2026-10-09,21.43,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO MONEO S.A.,2026-10-02,24.22,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO MONEO S.A.,2026-10-05,24.22,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO MONEO S.A.,2026-10-06,24.66,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO MONEO S.A.,2026-10-08,22.82,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO MONEO S.A.,2026-10-09,22.82,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-02,40.0,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-05,40.07,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-06,40.09,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-07,40.11,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-08,40.13,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO PAN,2026-10-09,40.12,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-02,18.28,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-05,18.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-06,18.55,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-07,18.49,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-08,18.49,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BANCO TRATON BRASIL S.A.,2026-10-09,18.67,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-02,25.08,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-05,27.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-06,27.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-07,27.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-08,27.15,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BANESTES S.A.,2026-10-09,25.14,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-02,27.08,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-05,26.75,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-06,26.63,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-07,26.57,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-08,26.6,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO FINANC. S.A.,2026-10-09,26.54,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-02,22.35,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-05,21.87,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-06,21.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-07,21.44,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-08,21.26,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRADESCO S.A.,2026-10-09,21.1,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-02,26.8,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-05,26.52,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-06,26.41,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-07,26.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-08,26.29,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO BRASILEIRO DE CRÉDITO S.A.,2026-10-09,26.32,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-02,26.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-05,26.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-06,26.28,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-07,26.2,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-08,26.13,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO C6 S.A.,2026-10-09,26.07,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DA AMAZONIA S.A.,2026-10-02,13.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DA AMAZONIA S.A.,2026-10-05,13.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DA AMAZONIA S.A.,2026-10-06,13.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DA AMAZONIA S.A.,2026-10-08,13.77,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DA AMAZONIA S.A.,2026-10-09,13.77,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-02,46.67,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-05,46.65,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-06,46.7,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-07,46.78,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-08,46.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DAYCOVAL S.A,2026-10-09,46.77,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-02,13.46,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-05,13.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-06,13.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-07,13.56,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-08,13.65,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO BRASIL S.A.,2026-10-09,13.7,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO EST. DO PA S.A.,2026-10-09,21.61,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO ESTADO DO RS S.A.,2026-10-05,24.78,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO ESTADO DO RS S.A.,2026-10-06,24.78,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO ESTADO DO RS S.A.,2026-10-07,24.78,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO ESTADO DO RS S.A.,2026-10-08,24.14,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO DO ESTADO DO RS S.A.,2026-10-09,24.14,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-02,18.1,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-05,18.31,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-06,18.11,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-07,18.34,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-08,18.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO GM S.A.,2026-10-09,18.25,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-02,34.2,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-05,34.23,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-06,34.23,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-07,34.27,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-08,34.05,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO HONDA S.A.,2026-10-09,34.0,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-02,7.96,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-05,7.36,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-06,7.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-07,7.42,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-08,6.96,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO MERCEDES-BENZ S.A.,2026-10-09,7.65,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO PACCAR S.A.,2026-10-02,18.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO PACCAR S.A.,2026-10-05,18.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO PACCAR S.A.,2026-10-06,18.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO PACCAR S.A.,2026-10-07,18.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-02,13.37,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-05,13.86,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-06,13.98,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-07,13.94,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-08,13.5,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RCI BRASIL S.A.,2026-10-09,13.26,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-02,22.81,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-05,22.44,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-06,22.52,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-07,22.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-08,22.42,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO RODOBENS S.A.,2026-10-09,21.51,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO STELLANTIS S.A.,2026-10-02,12.43,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-02,23.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-05,23.37,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-06,23.5,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-07,23.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-08,23.34,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO TOYOTA DO BRASIL S.A.,2026-10-09,23.63,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-02,21.95,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-05,22.11,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-06,22.11,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-07,22.17,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-08,22.06,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLKSWAGEN S.A,2026-10-09,21.98,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLVO BRASIL S.A.,2026-10-02,20.29,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLVO BRASIL S.A.,2026-10-05,19.62,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLVO BRASIL S.A.,2026-10-06,20.17,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOLVO BRASIL S.A.,2026-10-07,20.17,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-02,30.17,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-05,29.88,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-06,28.94,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-07,28.77,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-08,28.65,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO VOTORANTIM S.A.,2026-10-09,28.54,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-02,36.8,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-05,37.1,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-06,37.1,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-07,37.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-08,37.16,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BCO YAMAHA MOTOR S.A.,2026-10-09,37.02,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-02,11.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-05,11.25,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-06,11.75,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-07,11.05,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-08,12.53,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BMW SA CFI,2026-10-09,11.62,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BRB - CFI S/A,2026-10-02,25.38,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BRB - CFI S/A,2026-10-05,25.38,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BRB - CFI S/A,2026-10-06,27.4,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BRB - CFI S/A,2026-10-07,27.4,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=BRB - CFI S/A,2026-10-08,27.4,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-02,12.84,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-05,12.75,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-06,12.73,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-07,12.72,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-08,12.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=CAIXA ECONOMICA FEDERAL,2026-10-09,12.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-02,43.65,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-05,43.61,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-06,47.09,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-07,45.34,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-08,44.42,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=FINAMAX S.A. CFI,2026-10-09,42.77,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-02,26.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-05,26.21,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-06,26.08,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-07,26.07,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-08,26.05,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=ITAÚ UNIBANCO HOLDING S.A.,2026-10-09,25.96,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-02,33.31,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-05,33.48,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-06,33.83,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-07,33.57,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-08,33.3,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI BANCO S.A.,2026-10-09,34.27,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-02,49.89,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-05,50.21,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-06,49.95,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-07,49.76,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-08,49.5,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=OMNI SA CFI,2026-10-09,49.42,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-02,23.94,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-05,23.62,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-06,23.12,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-07,24.83,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-08,27.15,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=PORTOSEG S.A. CFI,2026-10-09,26.7,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-02,21.66,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-05,21.64,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-06,21.49,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-07,21.41,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-08,21.37,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SAFRA SCFI S.A.,2026-10-09,21.41,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-02,24.64,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-05,24.75,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-06,24.74,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-07,24.74,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-08,24.7,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SANTANDER SCFI S.A.,2026-10-09,24.57,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SCANIA BCO S.A.,2026-10-02,19.6,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SCANIA BCO S.A.,2026-10-05,19.6,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-02,23.11,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-05,22.18,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-06,21.39,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-07,21.49,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-08,21.89,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=SINOSSERRA S/A - SCFI,2026-10-09,21.41,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-02,20.33,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-05,20.58,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-06,20.73,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-07,20.69,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-08,20.8,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+bcb_taxas,taxa_financiamento_veiculos,banco=STELLANTIS FINANCIAMENTOS CFI,2026-10-09,20.96,% a.a.,"Taxa de aquisição de veículos (prefixado), média da semana, por banco"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-09-25,7.52,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-09-28,7.54,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-09-29,7.46,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-09-30,7.37,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-01,7.43,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-02,7.39,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-05,6.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-06,6.91,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-07,6.91,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-08,6.79,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-09,6.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-13,6.66,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-14,6.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-15,6.77,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-16,6.83,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-19,6.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-20,6.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-21,6.7,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-22,6.77,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-23,6.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-26,8.16,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-27,7.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-28,7.8,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2029-05-15,2026-10-29,7.76,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-09-25,7.65,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-09-28,7.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-09-29,7.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-09-30,7.53,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-01,7.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-02,7.6,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-05,6.91,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-06,6.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-07,6.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-08,6.82,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-09,6.65,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-13,6.68,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-14,6.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-15,6.8,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-16,6.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-19,6.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-20,6.8,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-21,6.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-22,6.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-23,6.76,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-26,8.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-27,7.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-28,7.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2032-08-15,2026-10-29,7.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-09-25,7.56,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-09-28,7.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-09-29,7.54,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-09-30,7.43,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-01,7.56,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-02,7.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-05,6.86,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-06,6.92,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-07,6.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-08,6.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-09,6.66,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-13,6.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-14,6.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-15,6.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-16,6.84,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-19,6.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-20,6.85,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-21,6.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-22,6.86,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-23,6.76,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-26,8.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-27,7.9,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-28,7.82,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2035-05-15,2026-10-29,7.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-09-25,7.27,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-09-28,7.32,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-09-29,7.21,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-09-30,7.15,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-01,7.26,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-02,7.22,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-05,6.5,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-06,6.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-07,6.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-08,6.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-09,6.51,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-13,6.56,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-14,6.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-15,6.73,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-16,6.75,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-19,6.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-20,6.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-21,6.7,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-22,6.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-23,6.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-26,7.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-27,7.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-28,7.52,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2040-08-15,2026-10-29,7.45,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-09-25,7.22,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-09-28,7.26,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-09-29,7.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-09-30,6.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-01,7.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-02,7.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-05,6.45,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-06,6.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-07,6.63,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-08,6.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-09,6.49,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-13,6.56,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-14,6.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-15,6.73,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-16,6.75,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-19,6.7,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-20,6.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-21,6.67,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-22,6.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-23,6.52,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-26,7.66,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-27,7.38,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-28,7.24,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2045-05-15,2026-10-29,7.2,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-09-25,7.14,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-09-28,7.18,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-09-29,7.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-09-30,6.93,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-01,7.06,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-02,7.06,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-05,6.32,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-06,6.51,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-07,6.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-08,6.65,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-09,6.48,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-13,6.57,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-14,6.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-15,6.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-16,6.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-19,6.66,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-20,6.7,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-21,6.68,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-22,6.63,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-23,6.48,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-26,7.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-27,7.16,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-28,7.16,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro IPCA+|vencimento=2050-08-15,2026-10-29,7.13,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-09-25,13.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-09-28,13.57,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-09-29,13.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-09-30,13.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-01,13.33,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-02,13.37,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-05,13.22,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-06,13.23,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-07,13.25,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-08,13.28,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-09,13.28,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-13,13.27,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-14,13.34,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-15,13.37,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-16,13.41,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-19,13.37,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-20,13.35,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-21,13.36,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-22,13.39,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-23,13.38,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-26,13.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-27,13.54,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-28,13.48,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2027-01-01,2026-10-29,13.45,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-09-25,13.67,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-09-28,13.67,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-09-29,13.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-09-30,13.5,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-01,13.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-02,13.48,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-05,12.66,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-06,12.56,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-07,12.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-08,12.58,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-09,12.49,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-13,12.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-14,12.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-15,12.77,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-16,12.93,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-19,12.83,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-20,12.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-21,12.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-22,12.83,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-23,12.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-26,14.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-27,14.44,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-28,14.38,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2028-01-01,2026-10-29,14.28,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-09-25,13.91,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-09-28,13.93,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-09-29,13.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-09-30,13.76,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-01,13.86,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-02,13.83,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-05,12.74,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-06,12.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-07,12.55,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-08,12.53,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-09,12.3,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-13,12.4,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-14,12.54,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-15,12.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-16,12.79,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-19,12.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-20,12.69,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-21,12.61,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-22,12.75,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-23,12.77,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-26,15.4,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-27,14.88,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-28,14.88,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2029-01-01,2026-10-29,14.8,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-09-25,14.07,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-09-28,14.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-09-29,14.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-09-30,13.97,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-01,14.07,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-02,14.07,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-05,12.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-06,12.64,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-07,12.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-08,12.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-09,12.45,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-13,12.43,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-14,12.62,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-15,12.76,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-16,12.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-19,12.81,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-20,12.82,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-21,12.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-22,12.85,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-23,12.82,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-26,15.75,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-27,15.0,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-28,15.04,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2031-01-01,2026-10-29,15.11,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-09-25,14.13,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-09-28,14.15,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-09-29,14.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-09-30,14.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-01,14.12,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-02,14.15,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-05,12.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-06,12.71,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-07,12.82,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-08,12.83,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-09,12.54,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-13,12.51,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-14,12.72,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-15,12.87,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-16,12.95,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-19,12.9,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-20,12.91,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-21,12.8,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-22,12.94,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-23,12.9,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-26,15.78,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-27,15.06,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-28,15.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Prefixado|vencimento=2032-01-01,2026-10-29,15.17,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-09-25,0.0,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-09-28,0.0,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-09-29,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-09-30,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-01,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-02,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-05,0.0,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-06,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-07,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-08,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-09,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-13,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-14,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-15,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-16,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-19,0.01,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-20,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-21,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-22,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-23,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-26,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-27,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-28,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2027-03-01,2026-10-29,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-09-25,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-09-28,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-09-29,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-09-30,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-01,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-02,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-05,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-06,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-07,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-08,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-09,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-13,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-14,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-15,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-16,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-19,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-20,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-21,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-22,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-23,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-26,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-27,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-28,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2028-03-01,2026-10-29,0.02,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-09-25,0.03,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-09-28,0.04,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-09-29,0.04,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-09-30,0.04,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-01,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-02,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-05,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-06,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-07,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-08,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-09,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-13,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-14,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-15,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-16,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-19,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-20,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-21,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-22,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-23,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-26,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-27,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-28,0.05,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2029-03-01,2026-10-29,0.06,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-09-25,0.07,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-09-28,0.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-09-29,0.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-09-30,0.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-01,0.08,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-02,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-05,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-06,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-07,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-08,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-09,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-13,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-14,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-15,0.09,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-16,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-19,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-20,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-21,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-22,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-23,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-26,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-27,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-28,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
+tesouro,tesouro_taxa_compra,titulo=Tesouro Selic|vencimento=2031-03-01,2026-10-29,0.1,% a.a.,"Tesouro Direto: taxa de compra (para o Tesouro Selic, é o spread sobre a Selic)"
