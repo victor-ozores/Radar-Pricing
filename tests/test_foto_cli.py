@@ -149,6 +149,97 @@ def test_comando_passa_os_limites_do_config_para_a_coleta(monkeypatch, agora):
     assert pedidos == [(2, 20)]  # só o IBGE tem limite próprio
 
 
+class Instavel(ClienteGravado):
+    """Cliente de amostras em que as fontes cujo endereço contém um dos trechos de `quebrados` não respondem."""
+
+    def __init__(self, quebrados: list[str]):
+        super().__init__(PASTA)
+        self.quebrados = quebrados
+
+    def bytes(self, url: str) -> bytes:
+        if any(trecho in url for trecho in self.quebrados):
+            raise Falha("sem resposta")
+        return super().bytes(url)
+
+
+@pytest.fixture
+def coleta_instavel(monkeypatch, agora):
+    """Devolve (cliente instável, lista dos tempos de espera pedidos). A espera não demora de verdade."""
+    cliente = Instavel(["Expectativas"])  # o Focus (essencial) não responde
+    esperas: list[int] = []
+    monkeypatch.setattr(cli_principal, "Cliente", lambda **kw: cliente)
+    monkeypatch.setattr(cli_principal, "agora_brt", lambda: agora)
+    monkeypatch.setattr(cli_principal, "dormir", esperas.append)
+    return cliente, esperas
+
+
+ARGS = ["coletar", "--config", str(RAIZ / "config.toml"), "--sem-gravar", "--repetir-se-parcial", "20"]
+
+
+def test_dia_parcial_espera_e_coleta_de_novo(coleta_instavel, monkeypatch, capsys):
+    cliente, esperas = coleta_instavel
+
+    def volta_a_funcionar(segundos):
+        esperas.append(segundos)
+        cliente.quebrados = []  # o problema era passageiro
+
+    monkeypatch.setattr(cli_principal, "dormir", volta_a_funcionar)
+    assert cli_principal.principal(ARGS) == 0
+    saida = capsys.readouterr().out
+    assert esperas == [1200]
+    assert "1ª tentativa" in saida and "saiu PARCIAL" in saida
+    assert "Status do dia: OK" in saida and "Status do dia: PARCIAL" not in saida
+
+
+def test_dia_que_continua_parcial_repete_so_uma_vez(coleta_instavel, capsys):
+    _, esperas = coleta_instavel
+    assert cli_principal.principal(ARGS) == 0
+    saida = capsys.readouterr().out
+    assert esperas == [1200]
+    assert "Status do dia: PARCIAL" in saida and "FALHOU   bcb_focus" in saida
+
+
+def test_segunda_tentativa_pior_nao_substitui_a_primeira(coleta_instavel, monkeypatch, capsys):
+    cliente, esperas = coleta_instavel
+
+    def piora(segundos):
+        esperas.append(segundos)
+        cliente.quebrados = ["Expectativas", "taxaJuros"]  # agora falham duas fontes essenciais
+
+    monkeypatch.setattr(cli_principal, "dormir", piora)
+    assert cli_principal.principal(ARGS) == 0
+    final = capsys.readouterr().out.split("Radar Pricing: coleta de")[1]
+    assert "OK       bcb_taxas" in final and "FALHOU   bcb_focus" in final  # ficou a 1ª, que era melhor
+
+
+def test_dia_ok_nao_espera_nem_repete(principal_com_amostras, monkeypatch, capsys):
+    monkeypatch.setattr(cli_principal, "dormir", lambda s: pytest.fail("não devia esperar"))
+    assert principal_com_amostras(ARGS) == 0
+    assert "Status do dia: OK" in capsys.readouterr().out
+
+
+def test_sem_a_opcao_dia_parcial_nao_repete(coleta_instavel, capsys):
+    _, esperas = coleta_instavel
+    sem_opcao = [a for a in ARGS if a not in ("--repetir-se-parcial", "20")]
+    assert cli_principal.principal(sem_opcao) == 0
+    assert esperas == [] and "Status do dia: PARCIAL" in capsys.readouterr().out
+
+
+def test_pular_se_a_foto_de_hoje_ja_existe(principal_com_amostras, monkeypatch, tmp_path, capsys, hoje):
+    argumentos = ["coletar", "--config", str(RAIZ / "config.toml"), "--saida", str(tmp_path)]
+    assert principal_com_amostras(argumentos) == 0  # grava a foto de hoje
+    foto_gravada = (tmp_path / f"{hoje.isoformat()}.json").read_bytes()
+    capsys.readouterr()
+
+    def nao_devia_coletar(**kw):
+        raise AssertionError("não devia nem criar o cliente")
+
+    monkeypatch.setattr(cli_principal, "Cliente", nao_devia_coletar)
+    assert cli_principal.principal([*argumentos, "--pular-se-ja-existe"]) == 0
+    assert "já existe; nada a fazer" in capsys.readouterr().out
+    assert [p.read_bytes() for p in tmp_path.glob("*.json")] == [foto_gravada]  # a foto não foi tocada
+
+
 def test_comando_sem_gravar_nao_escreve_nada(principal_com_amostras, tmp_path, capsys):
     argumentos = ["coletar", "--config", str(RAIZ / "config.toml"), "--saida", str(tmp_path), "--sem-gravar"]
     assert principal_com_amostras(argumentos) == 0

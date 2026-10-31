@@ -1,0 +1,80 @@
+name: Coleta diária
+
+# Todo dia útil coleta as premissas públicas de mercado e publica a foto do dia na branch `data`.
+# O horário é UTC. No Radar PNCP medi atrasos de 3 a 5 horas nos agendamentos do GitHub, por isso o horário
+# é cedo (10:17 em Brasília) e o Healthchecks tem 8 horas de tolerância. A foto leva a data de Brasília.
+on:
+  schedule:
+    - cron: "17 13 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write # só para publicar a foto na branch `data`
+
+concurrency:
+  group: coleta-diaria
+  cancel-in-progress: false
+
+jobs:
+  coleta:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONPATH: src
+      PYTHONIOENCODING: utf-8
+      HC_URL: ${{ secrets.HEALTHCHECKS_URL }} # vazio até eu cadastrar o segredo; sem ele os avisos são pulados
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Avisar o Healthchecks que começou
+        run: |
+          if [ -n "$HC_URL" ]; then curl -fsS -m 15 --retry 3 -o /dev/null "$HC_URL/start" || true; fi
+
+      - name: Preparar a branch data
+        run: python -m radar_pricing dados preparar
+
+      - name: Coletar (se o dia sair parcial, espera 20 min e tenta uma vez mais)
+        run: |
+          set -o pipefail
+          python -m radar_pricing coletar --saida dados/fotos --pular-se-ja-existe --repetir-se-parcial 20 | tee saida-coleta.txt
+
+      - name: Publicar a foto na branch data
+        run: python -m radar_pricing dados publicar
+
+      - name: Resumo da coleta
+        if: always()
+        run: |
+          [ -f saida-coleta.txt ] || exit 0
+          {
+            echo '### Coleta de hoje'
+            echo '```'
+            grep -E "^(Radar Pricing|  (OK|ATRASADO|PARCIAL|FALHOU)|Status do dia)" saida-coleta.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Marcar o dia parcial como falha (a foto já foi publicada)
+        run: |
+          if grep -q "Status do dia: PARCIAL" saida-coleta.txt; then
+            echo "::error title=Dia parcial::Uma fonte essencial não veio, nem na segunda tentativa. A foto foi publicada com status parcial."
+            exit 1
+          fi
+
+      - name: Avisar o Healthchecks que deu certo
+        if: success()
+        run: |
+          if [ -n "$HC_URL" ]; then curl -fsS -m 15 --retry 3 -o /dev/null --data-binary @saida-coleta.txt "$HC_URL" || true; fi
+
+      - name: Avisar o Healthchecks que falhou
+        if: failure()
+        run: |
+          if [ -n "$HC_URL" ]; then
+            if [ -f saida-coleta.txt ]; then
+              curl -fsS -m 15 --retry 3 -o /dev/null --data-binary @saida-coleta.txt "$HC_URL/fail" || true
+            else
+              curl -fsS -m 15 --retry 3 -o /dev/null "$HC_URL/fail" || true
+            fi
+          fi

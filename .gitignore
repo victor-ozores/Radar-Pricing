@@ -24,3 +24,5 @@ site/dist/
 # Dados de trabalho local (o histórico oficial vive na branch `data`)
 data/
 data_local/
+# Pasta onde o robô monta a branch `data` (worktree)
+dados/

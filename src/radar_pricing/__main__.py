@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
+from . import dados_branch
 from .coleta import coletar_tudo
 from .config import carrega
 from .datas import agora_brt
@@ -83,25 +85,46 @@ def _imprime_mudancas(foto: Any, tem_anterior: bool) -> None:
         )
 
 
+dormir = time.sleep  # os testes trocam por uma função que não espera
+
+
+def _n_ok(foto: Any) -> int:
+    return sum(1 for f in foto.fontes if f.situacao == "ok")
+
+
 def _coletar(args: argparse.Namespace) -> int:
     cfg = carrega(Path(args.config))
     agora = agora_brt()
     hoje = agora.date()
     pasta = Path(args.saida) if args.saida else cfg.saida
+    if args.pular_se_ja_existe and (pasta / f"{hoje.isoformat()}.json").exists():
+        print(f"Radar Pricing: a foto de {hoje.isoformat()} já existe; nada a fazer.")
+        return 0
     cli = Cliente(tentativas=cfg.tentativas, timeout_s=cfg.timeout_s)
     so = [f.strip() for f in args.fontes.split(",")] if args.fontes else None
     anterior = carrega_anterior(pasta, hoje)
-    foto = coletar_tudo(
-        cli,
-        hoje,
-        agora,
-        cfg.papeis,
-        so=so,
-        derivados=cfg.derivados,
-        mudancas=cfg.mudancas,
-        anterior=anterior,
-        limites=cfg.limites,
-    )
+
+    def coleta(quando: Any) -> Any:
+        return coletar_tudo(
+            cli,
+            hoje,
+            quando,
+            cfg.papeis,
+            so=so,
+            derivados=cfg.derivados,
+            mudancas=cfg.mudancas,
+            anterior=anterior,
+            limites=cfg.limites,
+        )
+
+    foto = coleta(agora)
+    if foto.status != "ok" and args.repetir_se_parcial:
+        print(f"Radar Pricing: 1ª tentativa de {hoje.isoformat()} saiu {foto.status.upper()}")
+        _imprime_fontes(foto)
+        print(f"\nNova tentativa em {args.repetir_se_parcial} min (problema passageiro costuma passar).\n")
+        dormir(args.repetir_se_parcial * 60)
+        segunda = coleta(agora_brt())
+        foto = max((segunda, foto), key=_n_ok)  # a que tem mais fontes OK; em empate, a mais nova
 
     print(f"Radar Pricing: coleta de {hoje.isoformat()} ({foto.gerado_em})")
     _imprime_fontes(foto)
@@ -121,6 +144,16 @@ def _coletar(args: argparse.Namespace) -> int:
     return 0
 
 
+def _dados(args: argparse.Namespace) -> int:
+    acao = dados_branch.preparar if args.acao == "preparar" else dados_branch.publicar
+    try:
+        print(f"Branch {args.branch}: {acao(Path(args.repo), args.pasta, args.branch, args.remoto)}")
+    except Falha as e:
+        print(f"ERRO: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def principal(argv: list[str] | None = None) -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(
@@ -135,7 +168,26 @@ def principal(argv: list[str] | None = None) -> int:
     c.add_argument(
         "--sem-gravar", action="store_true", help="coleta e mostra o resultado sem escrever arquivos"
     )
+    c.add_argument(
+        "--repetir-se-parcial",
+        type=int,
+        default=0,
+        metavar="MINUTOS",
+        help="se o dia sair parcial, espera e coleta de novo uma vez (fica com a melhor das duas)",
+    )
+    c.add_argument(
+        "--pular-se-ja-existe",
+        action="store_true",
+        help="se a foto de hoje já foi gravada, sai sem coletar e sem erro (para rodar de novo sem medo)",
+    )
     c.set_defaults(funcao=_coletar)
+    d = sub.add_parser("dados", help="prepara ou publica a branch `data` (onde ficam as fotos oficiais)")
+    d.add_argument("acao", choices=("preparar", "publicar"))
+    d.add_argument("--repo", default=".", help="pasta do repositório (padrão: a atual)")
+    d.add_argument("--pasta", default="dados", help="pasta do worktree da branch de dados")
+    d.add_argument("--branch", default=dados_branch.BRANCH)
+    d.add_argument("--remoto", default=dados_branch.REMOTO)
+    d.set_defaults(funcao=_dados)
     args = ap.parse_args(argv)
     return args.funcao(args)
 

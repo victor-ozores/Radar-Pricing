@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 dependencies = []  # só biblioteca padrão: nada para instalar no robô
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "ruff==0.17.3"]  # ruff fixo: regra nova de uma versão futura não pode derrubar o CI
 
 [tool.setuptools.packages.find]
 where = ["src"]
