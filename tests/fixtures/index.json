@@ -1,0 +1,20 @@
+{
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=31/08/2026&dataFinal=30/10/2026": "02a45f8f6e7a.bin",
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados?formato=json&dataInicial=31/08/2026&dataFinal=30/10/2026": "c6770082b665.bin",
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13522/dados/ultimos/3?formato=json": "0a9636051a4a.bin",
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4189/dados/ultimos/3?formato=json": "f27ab79b6377.bin",
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=31/08/2026&dataFinal=30/10/2026": "fa836076c9cd.bin",
+ "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados/ultimos/3?formato=json": "c26ff5e0044c.bin",
+ "https://blog.abac.org.br/wp-json/wp/v2/posts?per_page=30&search=Sistema%20de%20Cons%C3%B3rcios%20em&_fields=id%2Cdate%2Cslug%2Clink%2Ctitle%2Ccontent": "6e92ecd92a0c.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24format=json&%24top=500&%24orderby=Data%20desc&%24filter=Indicador%20eq%20%27IPCA%27%20and%20baseCalculo%20eq%200": "627dab666b40.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24format=json&%24top=500&%24orderby=Data%20desc&%24filter=Indicador%20eq%20%27Selic%27%20and%20baseCalculo%20eq%200": "5d2863940dda.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoSelic?%24format=json&%24top=300&%24orderby=Data%20desc&%24filter=baseCalculo%20eq%200": "f9744f37c556.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/PANORAMA_DE_CONSORCIOS/versao/v1/odata/Metricas(DataBase=@DataBase)?@DataBase=202603&$format=json&$top=2000": "883ba6c14273.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/PANORAMA_DE_CONSORCIOS/versao/v1/odata/Metricas(DataBase=@DataBase)?@DataBase=202606&$format=json&$top=2000": "666e9a719c72.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/PANORAMA_DE_CONSORCIOS/versao/v1/odata/Metricas(DataBase=@DataBase)?@DataBase=202609&$format=json&$top=2000": "a1f63d38dfd1.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/ConsultaUnificada?%24format=json&%24top=320&%24orderby=InicioPeriodo%20desc&%24filter=codigoModalidade%20eq%20%27401101%27": "30a0b866d4d2.bin",
+ "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24format=json&%24top=120&%24orderby=anoMes%20desc%2CPosicao%20asc&%24filter=Modalidade%20eq%20%27Financiamento%20imobili%C3%A1rio%20com%20taxas%20de%20mercado%20-%20Prefixado%27": "1796c04394ac.bin",
+ "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/-3/variaveis/63?localidades=N1[all]": "59b6e2893e8a.bin",
+ "https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show?id=df56aa42-484a-4a59-8184-7676580c81e3": "6f916f1801d1.bin",
+ "https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80c9-2d9e30b405c1/download/precotaxatesourodireto.csv": "ecc520b32237.bin"
+}

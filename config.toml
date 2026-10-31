@@ -1,0 +1,29 @@
+# Configuração do Radar Pricing. Perfil e parâmetros de exemplo são DE DEMONSTRAÇÃO.
+
+[geral]
+saida = "data_local"   # onde a foto do dia é gravada (o histórico oficial vai para a branch `data`)
+tentativas = 3         # tentativas por chamada (erro de rede, HTTP 5xx/429 ou corpo que não é JSON)
+timeout_s = 90         # algumas chamadas do BCB levam de 9 a 11 s
+
+# essencial: se faltar ou estiver atrasada, o dia sai como "parcial"
+# complementar: pode faltar sem estragar o dia (o painel mostra "sem dado novo")
+[fontes]
+bcb_sgs = "essencial"
+bcb_focus = "essencial"
+bcb_taxas = "essencial"
+bcb_panorama = "essencial"
+tesouro = "essencial"
+ibge = "complementar"
+abac = "complementar"
+
+[derivados]
+valor_face = 1000                    # valor recebido no futuro que a tabela traz a valor presente (R$)
+prazos_meses = [6, 12, 24, 36, 48]   # prazos da tabela de valor presente
+spread_demonstracao_pp = 5.0         # DEMONSTRAÇÃO: nenhuma empresa usa este número; taxa de desconto = âncora + spread
+
+[mudancas]                           # limiares das "mudanças do dia" (em pontos percentuais)
+tesouro_pp_7d = 0.25                 # Tesouro Prefixado e IPCA+: variação da taxa em 7 dias
+focus_selic_pp = 0.25                # Focus, Selic esperada por ano: variação em 7 dias
+focus_ipca_pp = 0.20                 # Focus, IPCA esperado por ano: variação em 7 dias
+financiamento_pp = 1.0               # mediana das taxas dos bancos (imobiliário: mês; veículos: semana)
+max_por_regra = 3                    # no máximo quantas linhas cada regra mostra

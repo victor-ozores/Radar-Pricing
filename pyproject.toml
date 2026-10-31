@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "radar-pricing"
+version = "0.1.0"
+description = "Robô diário que coleta as premissas públicas de mercado usadas no pricing de cotas de consórcio"
+requires-python = ">=3.11"
+dependencies = []  # só biblioteca padrão: nada para instalar no robô
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # acentos e símbolos em português são intencionais
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E501", "E741"]  # frases reais de fontes e mensagens longas nos testes
+"scripts/verifica_fontes.py" = ["E501", "RUF059"]  # ferramenta de conferência: mensagens longas e legíveis
