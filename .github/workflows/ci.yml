@@ -33,8 +33,21 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Testes do painel (JavaScript, no Node)
-        run: node --test site/tests/*.test.mjs
+      - name: Instalar as dependências do painel
+        working-directory: site
+        run: npm ci --ignore-scripts
+
+      - name: Painel (tipos, testes de contas e de telas, e a construção)
+        working-directory: site
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+
+      - name: Avisos de segurança das dependências do painel (só informa)
+        working-directory: site
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Testes
         env:

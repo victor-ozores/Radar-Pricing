@@ -21,6 +21,22 @@ if (comando === "calc") {
 } else if (comando === "excel") {
   const { excelDaFoto } = await carrega("excel.js");
   writeFileSync(args[1], excelDaFoto(le(args[0])));
+} else if (comando === "cenarios") {
+  // Resultados do calc.js para vários cenários de entrada (stdin ou arquivo); `-` lê do stdin.
+  const { cotaAtiva, cotaCancelada, retornoDaOferta } = await carrega("calc.js");
+  const foto = le(args[0]);
+  const modeloJs = await carrega("modelo.js");
+  const lista = modeloJs.curvas(foto);
+  const curvas = { nominal: lista.find((c) => c.id === "nominal"), real: lista.find((c) => c.id === "real") };
+  const cdi = foto.derivados.ancoras.cdi_anualizado?.taxa;
+  const cenarios = JSON.parse(args[1] === "-" ? readFileSync(0, "utf-8") : readFileSync(args[1], "utf-8"));
+  const saida = cenarios.map(({ calc, entrada }) => {
+    if (calc === "cancelada") return cotaCancelada(entrada, curvas);
+    if (calc === "retorno") return retornoDaOferta({ ...entrada, alvoPct: entrada.alvoPct ?? undefined }, curvas, cdi);
+    if (calc === "ativa") return cotaAtiva(entrada, curvas.real);
+    throw new Error(`calculadora desconhecida: ${calc}`);
+  });
+  process.stdout.write(JSON.stringify(saida));
 } else if (comando === "modelo") {
   const m = await carrega("modelo.js");
   const foto = le(args[0]);

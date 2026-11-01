@@ -1,8 +1,8 @@
 name: Painel (GitHub Pages)
 
-# Publica a pasta `site/` no GitHub Pages quando a página muda (envio para a main com mudança em `site/`)
-# ou à mão. Os números do dia NÃO passam por aqui: a página lê as fotos da branch `data` no navegador,
-# então o robô não precisa publicar o site de novo (um envio feito com GITHUB_TOKEN não dispara este workflow).
+# Constrói o painel (`site/`, React + Vite) e publica no GitHub Pages quando a página muda (envio para a main com
+# mudança em `site/`) ou à mão. Os números do dia NÃO passam por aqui: a página lê as fotos da branch `data` no
+# navegador, então o robô não precisa publicar o site de novo (um envio feito com GITHUB_TOKEN não dispara este workflow).
 # Antes de usar: Settings > Pages > Build and deployment > Source = "GitHub Actions".
 on:
   push:
@@ -24,31 +24,40 @@ concurrency:
 jobs:
   publica:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: site
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      # `npm ci` instala exatamente as versões do package-lock.json; sem scripts de instalação dos pacotes.
+      - name: Instalar as dependências
+        run: npm ci --ignore-scripts
+
+      - name: Conferir os tipos
+        run: npm run typecheck
 
       - name: Testes do painel (a página só vai ao ar se passarem)
-        run: node --test site/tests/*.test.mjs
+        run: npm test
 
       - uses: actions/configure-pages@v6
 
-      - name: Separar o que vai ao ar (sem os testes)
-        run: |
-          mkdir _site
-          cp site/index.html site/estilo.css _site/
-          cp -r site/js _site/js
+      - name: Construir
+        run: npm run build
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: _site
+          path: site/dist
 
       - id: deploy
         uses: actions/deploy-pages@v5

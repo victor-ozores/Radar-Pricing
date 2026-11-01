@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/fraunces/opsz.css";
+
+/* ------------------------------------------------------------------------------------------------ cores
+   Duas paletas com os mesmos nomes. As cores dos gráficos (--s1..--s4) foram validadas com o validador de paleta
+   (separação para daltônicos, contraste contra a superfície) uma vez para o claro e outra para o escuro. */
+:root,
+[data-tema="claro"] {
+  color-scheme: light;
+  --papel: #f3efe6;
+  --folha: #fffdf8;
+  --folha-2: #f8f3e7;
+  --tinta: #15211e;
+  --tinta-2: #424f4a;
+  --tinta-3: #5d6a64;
+  --linha: #e0d9c8;
+  --linha-2: #cdc4ad;
+  --marca: #0b5d4b;
+  --marca-2: #e1eee8;
+  --marca-sobre: #ffffff;
+  --ouro: #8f6314;
+  --ouro-2: #f6ead0;
+  --sobe: #b4440f;
+  --sobe-2: #fbeadf;
+  --cai: #1757ac;
+  --cai-2: #e3edfa;
+  --ok: #17724f;
+  --ok-2: #e1f1e9;
+  --aviso: #8a5a00;
+  --aviso-2: #fbefd2;
+  --erro: #b42318;
+  --erro-2: #fbe4e1;
+  --s1: #1f6fd1;
+  --s2: #d95926;
+  --s3: #7a56c2;
+  --s4: #1b8a6b;
+  --sombra: 0 1px 0 rgb(21 33 30 / 0.04), 0 14px 32px -18px rgb(21 33 30 / 0.28);
+  --sombra-balao: 0 10px 30px -8px rgb(21 33 30 / 0.35);
+}
+
+[data-tema="escuro"] {
+  color-scheme: dark;
+  --papel: #0b1211;
+  --folha: #121a19;
+  --folha-2: #17211f;
+  --tinta: #e8eeeb;
+  --tinta-2: #b0bdb7;
+  --tinta-3: #8d9b95;
+  --linha: #243230;
+  --linha-2: #364743;
+  --marca: #4cc9a6;
+  --marca-2: #123a30;
+  --marca-sobre: #05201a;
+  --ouro: #e0b04a;
+  --ouro-2: #3a2e12;
+  --sobe: #f0885a;
+  --sobe-2: #3a2218;
+  --cai: #6aa8f0;
+  --cai-2: #15283f;
+  --ok: #4cc9a6;
+  --ok-2: #123a30;
+  --aviso: #e0b04a;
+  --aviso-2: #3a2e12;
+  --erro: #f0827a;
+  --erro-2: #3d1b18;
+  --s1: #4e91ea;
+  --s2: #e2662f;
+  --s3: #9a7de0;
+  --s4: #2fa883;
+  --sombra: 0 1px 0 rgb(0 0 0 / 0.3), 0 14px 32px -18px rgb(0 0 0 / 0.7);
+  --sombra-balao: 0 10px 30px -8px rgb(0 0 0 / 0.8);
+}
+
+@theme inline {
+  --color-papel: var(--papel);
+  --color-folha: var(--folha);
+  --color-folha2: var(--folha-2);
+  --color-tinta: var(--tinta);
+  --color-tinta2: var(--tinta-2);
+  --color-tinta3: var(--tinta-3);
+  --color-linha: var(--linha);
+  --color-linha2: var(--linha-2);
+  --color-marca: var(--marca);
+  --color-marca2: var(--marca-2);
+  --color-ouro: var(--ouro);
+  --color-ouro2: var(--ouro-2);
+  --color-sobe: var(--sobe);
+  --color-sobe2: var(--sobe-2);
+  --color-cai: var(--cai);
+  --color-cai2: var(--cai-2);
+  --color-ok: var(--ok);
+  --color-ok2: var(--ok-2);
+  --color-aviso: var(--aviso);
+  --color-aviso2: var(--aviso-2);
+  --color-erro: var(--erro);
+  --color-erro2: var(--erro-2);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+}
+
+/* ------------------------------------------------------------------------------------------------ base */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  font-feature-settings: "cv11", "ss03";
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  /* um véu bem leve de cor no alto da página, para o papel não ficar chapado */
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 28rem;
+  background: radial-gradient(60rem 22rem at 18% -6rem, color-mix(in srgb, var(--marca) 11%, transparent), transparent 70%),
+    radial-gradient(48rem 20rem at 92% -4rem, color-mix(in srgb, var(--ouro) 10%, transparent), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+h1, h2, h3 { font-family: var(--font-display); font-optical-sizing: auto; letter-spacing: -0.012em; }
+.num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum", "lnum"; }
+.display { font-family: var(--font-display); font-optical-sizing: auto; font-variation-settings: "SOFT" 0; }
+:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; border-radius: 4px; }
+::selection { background: color-mix(in srgb, var(--marca) 28%, transparent); }
+button { cursor: pointer; }
+table { border-collapse: separate; border-spacing: 0; }
+
+.rotulo { font-size: 0.72rem; font-weight: 650; letter-spacing: 0.09em; text-transform: uppercase; color: var(--tinta-3); }
+.folha {
+  background: var(--folha);
+  border: 1px solid var(--linha);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
+}
+.regua { border: 0; border-top: 1px solid var(--linha); }
+.sublinhado-ouro {
+  background-image: linear-gradient(transparent 62%, color-mix(in srgb, var(--ouro) 38%, transparent) 62%);
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+}
+
+/* balão de dica (Radix) */
+.balao {
+  z-index: 60;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+  background: var(--tinta);
+  color: var(--papel);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  box-shadow: var(--sombra-balao);
+  animation: surge 0.14s ease-out;
+}
+.balao-claro {
+  background: var(--folha);
+  color: var(--tinta);
+  border: 1px solid var(--linha-2);
+}
+@keyframes surge { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+/* barras de rolagem discretas nas tabelas */
+.rolagem { scrollbar-width: thin; scrollbar-color: var(--linha-2) transparent; }
+
+/* entrada suave das seções */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ------------------------------------------------------------------------------------------------ impressão
+   O briefing vira uma folha só: sem menu, sem controles, em preto sobre branco. */
+@media print {
+  :root, [data-tema="escuro"] {
+    --papel: #fff; --folha: #fff; --folha-2: #f6f6f6; --tinta: #111; --tinta-2: #333; --tinta-3: #555;
+    --linha: #ddd; --linha-2: #bbb; --sombra: none; --marca: #0b5d4b;
+  }
+  body::before, .nao-imprime { display: none !important; }
+  body { font-size: 11pt; }
+  .folha { box-shadow: none; break-inside: avoid; }
+  .quebra { break-before: page; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* ------------------------------------------------------------------------------------------------ animações pequenas */
+@keyframes desenha { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.spark-desenha { stroke-dasharray: 1; animation: desenha 0.9s ease-out both; }
+@keyframes enche { from { stroke-dasharray: 0 400; } }
+.rosca-enche { animation: enche 1s ease-out both; }

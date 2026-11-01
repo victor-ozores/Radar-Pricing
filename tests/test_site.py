@@ -146,25 +146,150 @@ def test_o_painel_enxerga_as_curvas_e_o_panorama_da_foto(foto_json):
     assert len(js["manchetes"]) >= 6 and all(m["valor"] is not None for m in js["manchetes"])
 
 
+# ------------------------------------------------------------------------------------------ calculadoras
+def _taxa(curva: dict, meses: float) -> float:
+    return interpola(curva["pontos"], meses / 12)[0]
+
+
+def _cancelada(e: dict, curvas: dict) -> dict:
+    ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
+    desconto = ancora + e["spreadPP"]
+    vp = valor_presente(e["valor"], desconto, e["meses"])
+    return {
+        "taxa_ancora": ancora,
+        "taxa_desconto": desconto,
+        "valor_presente": vp,
+        "pct_do_valor": vp / e["valor"] * 100,
+    }
+
+
+def _retorno(e: dict, curvas: dict) -> dict:
+    ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
+    alvo = e["alvoPct"] if e.get("alvoPct") is not None else ancora + e["spreadPP"]
+    maximo = valor_presente(e["valor"], alvo, e["meses"])
+    return {
+        "retorno_aa": ((e["valor"] / e["preco"]) ** (12 / e["meses"]) - 1) * 100,
+        "retorno_total": (e["valor"] / e["preco"] - 1) * 100,
+        "taxa_ancora": ancora,
+        "alvo": alvo,
+        "preco_maximo": maximo,
+        "folga": maximo - e["preco"],
+    }
+
+
+def _ativa(e: dict, curvas: dict) -> dict:
+    spread, k = e["spreadPP"], e["contemplacao"]
+
+    def desconto(meses: int) -> float:
+        return _taxa(curvas["real"], meses) + spread
+
+    vp_parcelas = sum(valor_presente(e["parcela"], desconto(t), t) for t in range(1, e["parcelas"] + 1))
+    vp_credito = e["credito"] if k == 0 else valor_presente(e["credito"], desconto(k), k)
+    return {
+        "vp_credito": vp_credito,
+        "vp_parcelas": vp_parcelas,
+        "valor_da_cota": vp_credito - vp_parcelas,
+        "pct_do_credito": (vp_credito - vp_parcelas) / e["credito"] * 100,
+        "total_das_parcelas": e["parcela"] * e["parcelas"],
+    }
+
+
+def _cenarios() -> list[dict]:
+    casos = []
+    for valor in (1000, 50000.55):
+        for meses in (1, 7, 24, 36, 121, 360):
+            for corrigido in (True, False):
+                for spread in (0, 5, 12.5):
+                    entrada = {"valor": valor, "meses": meses, "corrigido": corrigido, "spreadPP": spread}
+                    casos.append({"calc": "cancelada", "entrada": entrada})
+    for preco, valor in ((800, 1000), (38000, 50000), (100, 99)):
+        for meses in (1, 18, 60, 300):
+            for corrigido in (True, False):
+                for alvo in (None, 17.5):
+                    entrada = {"preco": preco, "valor": valor, "meses": meses, "corrigido": corrigido}
+                    casos.append({"calc": "retorno", "entrada": {**entrada, "alvoPct": alvo, "spreadPP": 5}})
+    for credito in (30000, 100000):
+        for parcela in (900, 1900):
+            for parcelas in (12, 60, 200):
+                for k in (0, parcelas // 2, parcelas):
+                    for spread in (0, 5):
+                        entrada = {"credito": credito, "parcela": parcela, "parcelas": parcelas}
+                        casos.append(
+                            {"calc": "ativa", "entrada": {**entrada, "contemplacao": k, "spreadPP": spread}}
+                        )
+    return casos
+
+
+def test_calculadoras_do_painel_batem_com_uma_conta_feita_em_python(foto_json):
+    """As três calculadoras (JavaScript) contra a mesma conta escrita de novo em Python, usando a
+    interpolação e o valor presente do próprio robô, em 192 combinações de entrada."""
+    foto = json.loads(foto_json.read_text(encoding="utf-8"))
+    a = foto["derivados"]["ancoras"]
+    curvas = {"nominal": a["curva_nominal"], "real": a["curva_real"]}
+    casos = _cenarios()
+    r = subprocess.run(
+        [NODE, str(AJUDA), "cenarios", str(foto_json), "-"],
+        input=json.dumps(casos),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    assert r.returncode == 0, r.stderr
+    do_js = json.loads(r.stdout)
+    assert len(do_js) == len(casos) == 192
+    conta = {"cancelada": _cancelada, "retorno": _retorno, "ativa": _ativa}
+    for caso, js in zip(casos, do_js, strict=True):
+        esperado = conta[caso["calc"]](caso["entrada"], curvas)
+        for campo, valor in esperado.items():
+            assert js[campo] == pytest.approx(valor, rel=1e-9, abs=1e-9), (caso, campo)
+
+
 # ------------------------------------------------------------------------------------------ excel
+ABAS_DO_EXCEL = [
+    "Leia-me",
+    "Hoje",
+    "Cota cancelada",
+    "Retorno da oferta",
+    "Cota ativa",
+    "Cota ativa (cálculo)",
+    "Custo do dinheiro",
+    "Crédito concorrente",
+    "Setor",
+    "Mudanças",
+    "Fontes",
+    "Observações",
+]
+
+
+def _linha_do_cabecalho(ws, texto: str) -> int:
+    return next(c.row for c in ws["B"] if c.value == texto)
+
+
 def test_excel_abre_no_openpyxl_com_os_numeros_da_foto(foto_json, tmp_path):
     openpyxl = _openpyxl()
     saida = tmp_path / "foto.xlsx"
     node("excel", str(foto_json), str(saida))
     foto = json.loads(foto_json.read_text(encoding="utf-8"))
     wb = openpyxl.load_workbook(saida)
+    guardados = openpyxl.load_workbook(saida, data_only=True)
+    assert wb.sheetnames == ABAS_DO_EXCEL
 
-    assert wb.sheetnames == [
-        "Resumo", "Mudanças do dia", "Custo do dinheiro", "Crédito concorrente",
-        "Setor", "Valor presente", "Fontes", "Observações",
-    ]  # fmt: skip
+    # todas as abas seguem o padrão: título na B1, subtítulo com a data da foto, sem grade
+    dia = f"{foto['data'][8:10]}/{foto['data'][5:7]}/{foto['data'][:4]}"
+    for ws in wb.worksheets:
+        assert ws["B1"].value and dia in ws["B2"].value, ws.title
+        assert ws.sheet_view.showGridLines is False, ws.title
 
+    # observações: uma linha por registro, com filtro e cabeçalho congelado
     obs = wb["Observações"]
     registros = foto["registros"]
-    assert obs.max_row == len(registros) + 1
-    assert obs.freeze_panes == "A2" and obs.auto_filter.ref == f"A1:G{len(registros) + 1}"
+    cab = _linha_do_cabecalho(obs, "Fonte")
+    assert obs.max_row == cab + len(registros)
+    assert obs.freeze_panes == f"A{cab + 1}"
+    assert obs.auto_filter.ref == f"B{cab}:H{cab + len(registros)}"
     for i in (0, 1, len(registros) // 2, len(registros) - 1):
-        fonte, serie, dimensao, data, valor, unidade, _ = (c.value for c in obs[i + 2])
+        fonte, serie, dimensao, data, valor, unidade, _ = (c.value for c in obs[cab + 1 + i][1:8])
         r = registros[i]
         assert (fonte, serie, dimensao or "", unidade) == (
             r["fonte"],
@@ -174,21 +299,78 @@ def test_excel_abre_no_openpyxl_com_os_numeros_da_foto(foto_json, tmp_path):
         )
         assert data.date().isoformat() == r["data_ref"] and valor == pytest.approx(r["valor"])
 
-    resumo = {linha[0].value: linha for linha in wb["Resumo"].iter_rows(min_row=9)}
-    selic = next(v for v in foto["derivados"]["variacoes"] if v["serie"] == "selic_meta")
-    assert resumo["Meta Selic"][1].value == pytest.approx(selic["valor"])
-    assert resumo["Meta Selic"][3].value.date().isoformat() == selic["data"]
-
-    vp = wb["Valor presente"]
-    valores = [c.value for linha in vp.iter_rows(min_row=9) for c in linha if isinstance(c.value, float)]
-    esperados = [
-        v[chave]
-        for linha in foto["derivados"]["valor_presente"]
-        for ch in ("nominal", "real")
-        if (v := linha[ch])
-        for chave in ("taxa_ancora", "taxa_demonstracao", "vp_ancora", "vp_demonstracao")
+    # fórmulas: todas com valor guardado e sem erro; os nomes que elas usam existem
+    formulas = [
+        (ws.title, c.coordinate)
+        for ws in wb.worksheets
+        for linha in ws.iter_rows()
+        for c in linha
+        if c.data_type == "f"
     ]
-    assert valores == pytest.approx(esperados)
+    assert len(formulas) > 1000
+    for aba, endereco in formulas:
+        valor = guardados[aba][endereco].value
+        assert valor is not None and not (isinstance(valor, str) and valor.startswith("#")), (aba, endereco)
+    assert wb.defined_names["Spread"].attr_text.startswith("'Hoje'!$C$")
+    assert wb.defined_names["ValorRef"].attr_text.startswith("'Hoje'!$C$")
+
+    # as tabelas da aba Hoje saem iguais às que o robô grava na foto (valor de face e spread da foto)
+    prazos = foto["derivados"]["parametros"]["prazos_meses"]
+    linhas = [
+        r
+        for r in guardados["Hoje"].iter_rows(min_col=2, max_col=9)
+        if r[0].value in prazos and isinstance(r[1].value, float)
+    ]
+    assert len(linhas) == 2 * len(prazos)
+    esperadas = [linha[ch] for ch in ("nominal", "real") for linha in foto["derivados"]["valor_presente"]]
+    for r, esperada in zip(linhas, esperadas, strict=True):
+        assert r[1].value == pytest.approx(esperada["taxa_ancora"], abs=6e-5)
+        assert r[5].value == pytest.approx(esperada["vp_demonstracao"], abs=0.006)
+
+    # calculadoras: células de digitar com validação; Leia-me com um link por aba
+    for nome in ("Cota cancelada", "Retorno da oferta", "Cota ativa"):
+        assert len(wb[nome].data_validations.dataValidation) >= 3, nome
+    links = [c.hyperlink for linha in wb["Leia-me"].iter_rows() for c in linha if c.hyperlink]
+    assert sorted(l.location for l in links) == sorted(f"'{nome}'!A1" for nome in ABAS_DO_EXCEL[1:])
 
     fontes = wb["Fontes"]
-    assert fontes.max_row == len(foto["fontes"]) + 1
+    assert fontes.max_row == _linha_do_cabecalho(fontes, "Fonte") + len(foto["fontes"])
+
+
+def test_toda_formula_aponta_para_celulas_que_existem_e_tem_numero(foto_json, tmp_path):
+    """Sem o Excel por perto (CI), ao menos confere que cada faixa e cada nome usado por uma fórmula cai em
+    células preenchidas com número: pega linha errada, aba errada e nome apontando para o lugar errado."""
+    openpyxl = _openpyxl()
+    from openpyxl.formula import Tokenizer
+    from openpyxl.utils import range_boundaries
+
+    saida = tmp_path / "foto.xlsx"
+    node("excel", str(foto_json), str(saida))
+    wb = openpyxl.load_workbook(saida)
+
+    def celulas(referencia: str, aba_padrao: str):
+        aba, _, faixa = referencia.rpartition("!")
+        ws = wb[aba.strip("'").replace("''", "'")] if aba else wb[aba_padrao]
+        c0, l0, c1, l1 = range_boundaries(faixa.replace("$", ""))
+        return [ws.cell(row=linha, column=col) for linha in range(l0, l1 + 1) for col in range(c0, c1 + 1)]
+
+    verificadas = 0
+    for ws in wb.worksheets:
+        for linha in ws.iter_rows():
+            for c in linha:
+                if c.data_type != "f":
+                    continue
+                for t in Tokenizer(c.value).items:
+                    if not (t.type == "OPERAND" and t.subtype == "RANGE"):
+                        continue
+                    ref = wb.defined_names[t.value].attr_text if t.value in wb.defined_names else t.value
+                    if "!" not in ref and ":" not in ref:
+                        continue  # célula da própria aba (algumas, como o retorno-alvo, podem ficar em branco)
+                    for alvo in celulas(ref, ws.title):
+                        assert isinstance(alvo.value, (int, float)) or alvo.data_type == "f", (
+                            ws.title,
+                            c.coordinate,
+                            ref,
+                        )
+                    verificadas += 1
+    assert verificadas > 1000

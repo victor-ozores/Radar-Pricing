@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { comUnidade, dataBR, deltaComUnidade, diaDaSemana, horaBRT, idade, mesAno, num, pct, pp, reais, sinal } from "../js/formato.js";
+import { comUnidade, dataBR, deltaComUnidade, diaDaSemana, horaBRT, idade, lerNumero, mesAno, num, pct, pp, prazoEmTexto, reais, sinal } from "../js/formato.js";
 
 test("números em português do Brasil", () => {
   assert.equal(num(13.75), "13,75");
@@ -74,4 +74,30 @@ test("diferença na unidade da série", () => {
   assert.equal(deltaComUnidade(64.54, "R$ bilhões"), "+R$ 64,54 bilhões");
   assert.equal(deltaComUnidade(-3.19, "R$ mil"), "−R$ 3,19 mil");
   assert.equal(deltaComUnidade(undefined, "%"), "—");
+});
+
+test("lê o número como a pessoa digita em português", () => {
+  assert.equal(lerNumero("50.000,50"), 50000.5);
+  assert.equal(lerNumero("1,5"), 1.5);
+  assert.equal(lerNumero("R$ 1.000"), 1000);
+  assert.equal(lerNumero("1.500"), 1500); // grupo de 3 dígitos: milhar
+  assert.equal(lerNumero("12.5"), 12.5); // ponto decimal
+  assert.equal(lerNumero("0.5"), 0.5);
+  assert.equal(lerNumero(" 7 % "), 7);
+  assert.equal(lerNumero("-3,25"), -3.25);
+  assert.equal(lerNumero(42), 42);
+  assert.equal(lerNumero("1.234.567,89"), 1234567.89);
+});
+
+test("o que não é número vira null, nunca NaN", () => {
+  for (const ruim of ["", "   ", "-", "abc", "1,2,3", "1..2", "12a", null, undefined, Number.NaN, Infinity, {}]) {
+    assert.equal(lerNumero(ruim), null, String(ruim));
+  }
+});
+
+test("prazo em palavras", () => {
+  assert.equal(prazoEmTexto(6), "6 meses");
+  assert.equal(prazoEmTexto(12), "1 ano");
+  assert.equal(prazoEmTexto(36), "3 anos");
+  assert.equal(prazoEmTexto(30), "30 meses");
 });

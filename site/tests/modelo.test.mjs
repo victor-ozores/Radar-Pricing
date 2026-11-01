@@ -1,8 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { escalas, passoDoEixo } from "../js/grafico.js";
-import { abac, creditos, curvas, focus, manchetes, mediana, panorama, percentil, problemas } from "../js/modelo.js";
+import { abac, creditos, curvas, focus, manchetes, mediana, movimentos, panorama, percentil, problemas, textoDaMudanca } from "../js/modelo.js";
 
 const registro = (serie, dimensao, data_ref, valor, unidade = "% a.a.") => ({ fonte: "x", serie, dimensao, data_ref, valor, unidade, descricao: "" });
 
@@ -84,6 +83,9 @@ test("curvas: junta a variação de cada vencimento e ignora a curva que a foto 
   assert.equal(lista.length, 1);
   assert.equal(lista[0].nome, "Prefixado");
   assert.equal(lista[0].pontos[0].d7, 2.05);
+  assert.equal(lista[0].pontos[0].ref7, 12.75); // a taxa deste vencimento 7 dias atrás
+  assert.equal(lista[0].pontos[0].dias7, 7);
+  assert.equal(lista[0].pontos[1].ref7, null);
   assert.equal(lista[0].pontos[0].d1, null);
   assert.equal(lista[0].pontos[1].d7, null); // vencimento sem entrada de variação
 });
@@ -120,12 +122,50 @@ test("problemas: fonte que não está OK, com o nome legível", () => {
   assert.match(p[0].nome, /IBGE/);
 });
 
-test("gráfico: passo do eixo e escalas", () => {
-  assert.equal(passoDoEixo(1.9), 0.5);
-  assert.equal(passoDoEixo(8), 2);
-  assert.equal(passoDoEixo(0), 0.5);
-  const e = escalas([{ pontos: [{ anos: 0.2, taxa: 7.1 }, { anos: 23.7, taxa: 7.8 }] }, { pontos: [{ anos: 5.2, taxa: 15.2 }] }]);
-  assert.equal(e.xmax, 24);
-  assert.ok(e.ymin <= 7.1 && e.ymax >= 15.2);
-  assert.equal(e.passo, 2);
+test("mudança de fonte que falhou perde o miolo técnico", () => {
+  const m = { texto: "Fonte ibge (complementar): FALHOU (IBGE IPCA: URLError: <urlopen error timed out> em https://x (depois de 2 tentativas))" };
+  assert.equal(textoDaMudanca(m), "IBGE: IPCA (conferência do BCB): fonte complementar sem resposta");
+  assert.equal(textoDaMudanca({ texto: "Focus: Selic esperada para 2028 foi de 10,50% para 10,00%" }), "Focus: Selic esperada para 2028 foi de 10,50% para 10,00%");
+  assert.equal(textoDaMudanca({}), "");
+});
+
+test("movimentos: vencimentos do mesmo título viram uma linha, os maiores primeiro", () => {
+  const t = (venc, delta, titulo = "Tesouro Prefixado") => ({ regra: "tesouro", severidade: "media", serie: "tesouro_taxa_compra", dimensao: `titulo=${titulo}|vencimento=${venc}-01-01`, delta, texto: `${titulo} ${venc}: taxa (+${delta} p.p. em 7 dias)` });
+  const lista = movimentos({
+    mudancas: [
+      t(2029, 2.05), t(2031, 2.26), t(2032, 2.23),
+      t(2032, 1.03, "Tesouro IPCA+"),
+      { severidade: "media", serie: "focus", delta: -0.5, texto: "Focus: Selic esperada para 2028 foi de 10,50% para 10,00% (-0,50 p.p. em 7 dias)" },
+      { severidade: "info", texto: "Fonte ibge (complementar): FALHOU (timeout)" },
+    ],
+  });
+  assert.equal(lista[0].texto, "Tesouro Prefixado subiu de +2,05 p.p. a +2,26 p.p. em 7 dias (vencimentos 2029 a 2032)");
+  assert.equal(lista[1].texto, "Tesouro IPCA+ subiu +1,03 p.p. em 7 dias (vencimento 2032)");
+  assert.match(lista[2].texto, /^Focus: Selic esperada para 2028/);
+  assert.equal(lista.at(-1).texto, "IBGE: IPCA (conferência do BCB): fonte complementar sem resposta");
+  assert.equal(lista.length, 4);
+  assert.deepEqual(movimentos({}), []);
+});
+
+test("movimentos: título que sobe em um vencimento e cai em outro 'mexeu'", () => {
+  const t = (venc, delta) => ({ severidade: "media", serie: "tesouro_taxa_compra", dimensao: `titulo=Tesouro IPCA+|vencimento=${venc}-05-15`, delta, texto: "x em 7 dias" });
+  assert.match(movimentos({ mudancas: [t(2029, 0.3), t(2035, -0.4)] })[0].texto, /^Tesouro IPCA\+ mexeu de \+0,30 p\.p\. a −0,40 p\.p\. em 7 dias/);
+});
+
+import { fontes, resumoDoErro } from "../js/modelo.js";
+
+test("o erro de uma fonte vira uma frase curta, sem endereço nem exceção de rede", () => {
+  assert.equal(resumoDoErro("IBGE IPCA: URLError: <urlopen error timed out> em https://x/y (depois de 2 tentativas)"), "Sem resposta no tempo limite");
+  assert.equal(resumoDoErro("BCB: HTTP 503 em https://x"), "A fonte respondeu com erro 503");
+  assert.equal(resumoDoErro("a".repeat(200)).length, 120);
+  assert.equal(resumoDoErro(null), "");
+  const lista = fontes({ fontes: [{ id: "ibge", papel: "complementar", situacao: "falhou", erro: "timed out em https://x", falhas: [], atrasos: [], avisos: [] }] });
+  assert.equal(lista[0].erroCurto, "Sem resposta no tempo limite");
+});
+
+test("observações da fonte: o erro vem em uma frase e não repete o texto cru; sem erro, valem as falhas", () => {
+  const com = fontes({ fontes: [{ id: "ibge", papel: "complementar", situacao: "falhou", erro: "timed out em https://x", falhas: ["IBGE IPCA: URLError timed out em https://x"], atrasos: [], avisos: ["aviso"] }] });
+  assert.deepEqual(com[0].observacoes, ["Sem resposta no tempo limite", "aviso"]);
+  const sem = fontes({ fontes: [{ id: "abac", papel: "complementar", situacao: "ok", erro: null, falhas: ["faltou uma série"], atrasos: ["atrasou"], avisos: [] }] });
+  assert.deepEqual(sem[0].observacoes, ["faltou uma série", "atrasou"]);
 });

@@ -1,6 +1,8 @@
 // Tira da foto o que cada bloco do painel e cada aba do Excel mostra. Só lê a foto: não calcula nada novo
 // além de medianas e percentis dos bancos, que o robô não grava por banco.
 
+import { pp } from "./formato.js";
+
 export const NOMES_DAS_FONTES = {
   bcb_sgs: "Banco Central: séries do SGS (Selic, CDI, IPCA)",
   bcb_focus: "Banco Central: expectativas do Focus",
@@ -132,7 +134,15 @@ export function curvas(foto) {
       base: curva.base,
       pontos: curva.pontos.map((p) => {
         const e = entradaDeVariacao(foto, "tesouro", "tesouro_taxa_compra", `titulo=${curva.titulo}|vencimento=${p.vencimento}`);
-        return { ...p, d1: variacaoDe(e, 1)?.delta ?? null, d7: variacaoDe(e, 7)?.delta ?? null, d30: variacaoDe(e, 30)?.delta ?? null };
+        const sete = variacaoDe(e, 7);
+        return {
+          ...p,
+          d1: variacaoDe(e, 1)?.delta ?? null,
+          d7: sete?.delta ?? null,
+          d30: variacaoDe(e, 30)?.delta ?? null,
+          ref7: sete?.valor_ref ?? null, // a taxa deste vencimento 7 dias atrás
+          dias7: sete?.dias ?? null,
+        };
       }),
     });
   }
@@ -252,10 +262,100 @@ export function panorama(foto) {
 }
 
 // --------------------------------------------------------------------------------------------- fontes
+/** O erro de uma fonte em uma frase curta (o texto cru traz o endereço e a exceção de rede). */
+export function resumoDoErro(erro) {
+  if (!erro) return "";
+  if (/timed out|timeout|tempo/i.test(erro)) return "Sem resposta no tempo limite";
+  const http = /HTTP (\d{3})/i.exec(erro);
+  if (http) return `A fonte respondeu com erro ${http[1]}`;
+  return erro.length > 120 ? `${erro.slice(0, 117)}...` : erro;
+}
+
+/** O que dizer de cada fonte: o erro em uma frase (sem repetir o texto cru que vem em `falhas`) e os avisos. */
+export function observacoesDaFonte(f) {
+  const erro = resumoDoErro(f.erro);
+  return [...(erro ? [erro] : f.falhas ?? []), ...(f.atrasos ?? []), ...(f.avisos ?? [])].filter(Boolean);
+}
+
 export function fontes(foto) {
-  return foto.fontes.map((f) => ({ ...f, nome: NOMES_DAS_FONTES[f.id] ?? f.id, link: LINKS_DAS_FONTES[f.id] ?? null }));
+  return foto.fontes.map((f) => ({ ...f, nome: NOMES_DAS_FONTES[f.id] ?? f.id, link: LINKS_DAS_FONTES[f.id] ?? null, erroCurto: resumoDoErro(f.erro), observacoes: observacoesDaFonte(f) }));
 }
 
 export function problemas(foto) {
   return fontes(foto).filter((f) => f.situacao !== "ok");
+}
+
+// --------------------------------------------------------------------------------------------- o que mexeu
+const SITUACAO_FALADA = { FALHOU: "sem resposta", ATRASADO: "com dado atrasado", PARCIAL: "só em parte" };
+
+/** O texto de uma mudança do dia sem o miolo técnico (por exemplo, o erro cru de rede de uma fonte que falhou). */
+export function textoDaMudanca(m) {
+  const t = /^Fonte (\w+) \((essencial|complementar)\): (FALHOU|ATRASADO|PARCIAL)/.exec(m.texto ?? "");
+  if (!t) return m.texto ?? "";
+  return `${NOMES_DAS_FONTES[t[1]] ?? t[1]}: fonte ${t[2]} ${SITUACAO_FALADA[t[3]]}`;
+}
+
+/**
+ * As mudanças do dia em linguagem simples, as maiores primeiro. Os vencimentos do mesmo título do Tesouro viram uma
+ * linha só ("Tesouro Prefixado subiu de +2,05 a +2,26 p.p. em 7 dias").
+ * @returns {{ texto: string, severidade: string, peso: number }[]}
+ */
+export function movimentos(foto) {
+  const grupos = new Map();
+  const itens = [];
+  for (const m of mudancas(foto)) {
+    const t = m.serie === "tesouro_taxa_compra" && /^titulo=(.+?)\|vencimento=(\d{4})/.exec(m.dimensao ?? "");
+    if (!t) {
+      itens.push({ texto: textoDaMudanca(m), severidade: m.severidade, peso: Math.abs(m.delta ?? 0) });
+      continue;
+    }
+    const g = grupos.get(t[1]) ?? { titulo: t[1], deltas: [], anos: [], severidade: m.severidade, dias: /em (\d+) dias/.exec(m.texto ?? "")?.[1] ?? "7" };
+    g.deltas.push(m.delta);
+    g.anos.push(Number(t[2]));
+    grupos.set(t[1], g);
+  }
+  for (const g of grupos.values()) {
+    const sobe = g.deltas.every((d) => d > 0);
+    const desce = g.deltas.every((d) => d < 0);
+    const ordenados = [...g.deltas].sort((a, b) => Math.abs(a) - Math.abs(b));
+    const faixa = g.deltas.length === 1 ? pp(ordenados[0]) : `de ${pp(ordenados[0])} a ${pp(ordenados.at(-1))}`;
+    const anos = [...g.anos].sort();
+    const quando = anos[0] === anos.at(-1) ? `vencimento ${anos[0]}` : `vencimentos ${anos[0]} a ${anos.at(-1)}`;
+    itens.push({
+      texto: `${g.titulo} ${sobe ? "subiu" : desce ? "caiu" : "mexeu"} ${faixa} em ${g.dias} dias (${quando})`,
+      severidade: g.severidade,
+      peso: Math.max(...g.deltas.map(Math.abs)),
+    });
+  }
+  return itens.sort((a, b) => b.peso - a.peso);
+}
+
+// --------------------------------------------------------------------------------------------- cotas do setor
+const SEGMENTOS_EXCLUIDOS = [
+  [/^Cotas exclu[ií]das - Total - Im[oó]veis/i, "Imóveis"],
+  [/^Cotas exclu[ií]das - Total - Autom[oó]veis/i, "Automóveis"],
+  [/^Cotas exclu[ií]das - Total - Motocicletas/i, "Motocicletas"],
+  [/^Cotas exclu[ií]das - Total - Outros/i, "Outros bens e serviços"],
+];
+
+/**
+ * Cotas ativas e excluídas (canceladas) do Panorama do Banco Central, em milhares: o total, a mudança no trimestre
+ * e a mudança por segmento. O índice de exclusão do próprio Panorama é excluídas ÷ (ativas + excluídas); confere
+ * com estes números (12.751,82 ÷ 26.128,08 = 48,80% no Panorama de jun/2026).
+ */
+export function cotasDoSetor(foto) {
+  const linhas = foto.derivados.setor ?? [];
+  const acha = (re) => linhas.find((l) => re.test(l.descricao)) ?? null;
+  const resume = (l) => l && { valor: l.valor, anterior: l.anterior, delta: l.delta, data: l.data, dataAnterior: l.data_anterior, unidade: l.unidade };
+  const ativas = resume(acha(/^Cotas ativas - Total$/i));
+  const excluidas = resume(acha(/^Cotas exclu[ií]das - Total$/i));
+  const porSegmento = SEGMENTOS_EXCLUIDOS.map(([re, segmento]) => {
+    const l = acha(re);
+    return l && { segmento, valor: l.valor, delta: l.delta, unidade: l.unidade };
+  })
+    .filter(Boolean)
+    .sort((a, b) => b.delta - a.delta);
+  const indice = resume(acha(/Índice de Exclusão - Total/i));
+  if (!ativas && !excluidas && porSegmento.length === 0) return null;
+  return { ativas, excluidas, porSegmento, indice, calculado: ativas && excluidas ? (excluidas.valor / (ativas.valor + excluidas.valor)) * 100 : null };
 }

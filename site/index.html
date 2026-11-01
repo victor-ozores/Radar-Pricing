@@ -4,55 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Radar Pricing: premissas públicas de mercado</title>
-  <meta name="description" content="Painel diário das premissas públicas de mercado usadas para precificar cotas de consórcio: Selic, CDI, Tesouro Direto, Focus, crédito concorrente e setor. Projeto independente, só dados públicos.">
-  <meta name="color-scheme" content="dark light">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self' https://raw.githubusercontent.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1a19'/%3E%3Cpath d='M5 22 L12 14 L18 18 L27 8' fill='none' stroke='%233987e5' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='27' cy='8' r='3' fill='%23d95926'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="estilo.css">
-  <script type="module" src="js/app.js"></script>
+  <meta name="description" content="Painel diário das premissas públicas de mercado para precificar cotas de consórcio: o que mudou nos juros, quanto isso pesa no valor de um crédito a receber, o crédito concorrente e o setor. Dados oficiais, com a data de cada número.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230b5d4b'/%3E%3Cpath d='M8 29C14 28 17 20 22 19S31 12 33 9' fill='none' stroke='%23fffdf8' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='33' cy='9' r='3.2' fill='%23e0a52c'/%3E%3C/svg%3E">
+  <script src="./tema.js"></script>
 </head>
 <body>
-  <a class="pular" href="#principal">Pular para o conteúdo</a>
-
-  <header class="topo">
-    <div class="largura">
-      <h1>Radar Pricing</h1>
-      <p class="subtitulo">As premissas públicas de mercado de que o preço de uma cota de consórcio depende, coletadas todo dia útil e guardadas em fotos datadas.</p>
-      <p class="aviso-fixo" id="aviso-fixo" role="note"></p>
-    </div>
-  </header>
-
-  <nav class="menu" aria-label="Seções da página">
-    <div class="largura">
-      <a href="#resumo">Resumo</a>
-      <a href="#custo">Custo do dinheiro</a>
-      <a href="#credito">Crédito concorrente</a>
-      <a href="#setor">Setor</a>
-      <a href="#calculadora">Calculadora</a>
-      <a href="#fontes">Fontes e Excel</a>
-    </div>
-  </nav>
-
-  <div class="largura" id="barra-dia"></div>
-
-  <main class="largura" id="principal">
-    <div id="estado"><p class="carregando" role="status">Baixando a foto do dia…</p></div>
-    <noscript><p class="erro">Esta página precisa de JavaScript para mostrar os números do dia. Os dados também estão no repositório, na branch <code>data</code>.</p></noscript>
-
-    <section id="resumo" aria-labelledby="t-resumo"><h2 id="t-resumo">Resumo do dia</h2><div id="c-resumo"></div></section>
-    <section id="custo" aria-labelledby="t-custo"><h2 id="t-custo">Custo do dinheiro</h2><div id="c-custo"></div></section>
-    <section id="credito" aria-labelledby="t-credito"><h2 id="t-credito">Crédito concorrente</h2><div id="c-credito"></div></section>
-    <section id="setor" aria-labelledby="t-setor"><h2 id="t-setor">Setor de consórcio</h2><div id="c-setor"></div></section>
-    <section id="calculadora" aria-labelledby="t-calculadora"><h2 id="t-calculadora">Calculadora de valor presente</h2><div id="c-calculadora"></div></section>
-    <section id="fontes" aria-labelledby="t-fontes"><h2 id="t-fontes">Fontes e frescor dos dados</h2><div id="c-fontes"></div></section>
-  </main>
-
-  <footer class="rodape">
-    <div class="largura">
-      <p>Projeto de portfólio de Victor Ozores. Todo número vem de uma fonte oficial, com a data ao lado; as contas feitas aqui (interpolação das curvas, valor presente, medianas e quartis) estão explicadas onde aparecem.</p>
-      <p><a href="https://github.com/victor-ozores/Radar-Pricing" target="_blank" rel="noopener noreferrer">Código e documentação no GitHub</a> ·
-         <a href="https://github.com/victor-ozores/Radar-Pricing/tree/data" target="_blank" rel="noopener noreferrer">As fotos diárias (branch data)</a></p>
-    </div>
-  </footer>
+  <div id="raiz"></div>
+  <noscript>O painel precisa de JavaScript para ler as fotos diárias. Os mesmos números estão na pasta fotos/ da branch data, no GitHub.</noscript>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

@@ -86,3 +86,26 @@ export function deltaComUnidade(delta, unidade) {
   const temSinal = texto.startsWith("+") || texto.startsWith("−");
   return `${temSinal ? texto[0] : ""}R$ ${temSinal ? texto.slice(1) : texto} ${unidade.slice(3)}`;
 }
+
+/**
+ * Lê um número digitado em português: "50.000,50", "1,5", "R$ 1.000", "12.5". Devolve null se não for número.
+ * Sem vírgula, pontos em grupos de 3 dígitos ("1.500") valem como separador de milhar.
+ */
+export function lerNumero(texto) {
+  if (typeof texto === "number") return Number.isFinite(texto) ? texto : null;
+  if (typeof texto !== "string") return null;
+  let t = texto.replace(/R\$|%|\s/g, "").replace(/^\+/, "");
+  if (t === "" || t === "-") return null;
+  if (t.includes(",")) t = t.replace(/\./g, "").replace(",", ".");
+  else if (/^-?\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, "");
+  if (!/^-?\d+(\.\d+)?$/.test(t)) return null;
+  const n = Number(t);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** "6 meses", "1 ano", "3 anos". */
+export function prazoEmTexto(meses) {
+  if (meses % 12 !== 0) return `${meses} meses`;
+  const anos = meses / 12;
+  return `${anos} ${anos === 1 ? "ano" : "anos"}`;
+}
