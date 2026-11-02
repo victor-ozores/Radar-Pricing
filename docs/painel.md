@@ -8,7 +8,7 @@ Para quem precifica cotas de consórcio. Ele responde, todo dia útil, quatro pe
 
 1. **O que aconteceu hoje, em uma frase?** A manchete diz quanto mudou, em 7 dias, o valor de hoje de um dinheiro a receber em 3 anos.
 2. **De onde vem isso?** Cinco capítulos contam a história na ordem em que o preço é formado: o custo do dinheiro, a curva de juros do Tesouro, quanto isso pesa no valor, o crédito que concorre e o setor.
-3. **Quanto vale ou rende esta cota?** Três calculadoras: cota cancelada, retorno de uma oferta e cota ativa.
+3. **Quanto vale ou rende esta cota?** Quatro calculadoras: cota cancelada, cota ativa, retorno de uma oferta e precatório.
 4. **Dá para confiar?** O robô está em dia, de onde vem cada número e o que cada termo quer dizer.
 
 ## As quatro telas
@@ -20,10 +20,10 @@ Para quem precifica cotas de consórcio. Ele responde, todo dia útil, quatro pe
   4. *O crédito que concorre*: a taxa de cada banco no financiamento de imóveis e de veículos, na mesma escala.
   5. *O setor*: o índice de exclusão, cotas ativas e excluídas, onde saíram mais cotas, inadimplência e custo no Panorama do Banco Central e o volume de vendas da ABAC.
 - **Mercado** tem os números por trás da história: o Tesouro vencimento a vencimento (gráfico de 5 semanas e tabela), Selic, CDI, IPCA e Focus (inclusive a Selic esperada por reunião do Copom), o crédito por banco (mediana no tempo e tabela) e as 125 métricas do Panorama. As tabelas ordenam ao clicar no título, buscam, mudam de densidade, baixam em CSV e explicam cada coluna num balão.
-- **Calculadoras**: cota cancelada, retorno de uma oferta e cota ativa, com "e se?" (prazos e spreads vizinhos), o gráfico do valor da cota por mês de contemplação e "como foi calculado" com a conta escrita com os números.
-- **Bastidores** responde "dá para confiar?": o robô travou? (as últimas 14 rodadas e o veredito), de onde vêm os números (cada fonte e se respondeu), o dicionário (18 termos) e como foi feito (o caminho do número até a tela e o que o painel não é).
+- **Calculadoras**: cota cancelada, cota ativa, retorno de uma oferta e precatório, com "e se?" (prazos e spreads vizinhos), gráficos e "como foi calculado" com a conta escrita com os números. Estão a um toque: botão **Calcular** no topo e, no celular, a barra de baixo (veja "Onde ficam e como usar no dia a dia").
+- **Bastidores** responde "dá para confiar?": o robô travou? (as últimas 14 rodadas e o veredito), de onde vêm os números (cada fonte e se respondeu), o dicionário (19 termos) e como foi feito (o caminho do número até a tela e o que o painel não é).
 
-No topo, sempre: o selo do robô, o botão do Excel, imprimir, tema claro ou escuro, o link do código e as setas para ver a foto de outro dia. Não há rodapé.
+No topo, sempre: o selo do robô, o botão **Calcular**, o botão do Excel, imprimir, tema claro ou escuro, o link do código e as setas para ver a foto de outro dia. Não há rodapé. No celular o topo é uma barra fina (o nome, o Excel e o tema); o selo do robô e a data vêm numa faixa logo abaixo, que rola junto com a página, e as telas e o botão **Calcular** ficam numa barra fixa embaixo. Os balões dos títulos das colunas, que o Radix só abre com mouse ou foco, abrem também por toque (por uns 3 segundos).
 
 Cada termo técnico no texto (Selic, spread, valor presente, quartil...) abre uma explicação curta ao passar o mouse, focar com Tab ou tocar. As explicações vêm do dicionário; um teste confere que todo termo usado existe e que todo termo do dicionário aparece em alguma tela.
 
@@ -109,17 +109,30 @@ O **spread** (5 p.p. de exemplo) é de demonstração e é uma premissa só: tro
 
 ## As calculadoras
 
-São modelos simples de **demonstração**. Usam só o que a pessoa digita e as curvas do Tesouro do dia. Nenhum dado de empresa. Os campos já vêm com valores inventados e aceitam número do jeito brasileiro ("50.000,50").
+São modelos simples de **demonstração**. Usam só o que a pessoa digita e as curvas do Tesouro do dia (e, no precatório, a Selic e o IPCA que o Focus espera). Nenhum dado de empresa. Os campos já vêm com valores inventados e aceitam número do jeito brasileiro ("50.000,50").
 
 | Calculadora | Pergunta | Conta |
 |---|---|---|
-| **Cota cancelada** | Quanto vale hoje o valor que a administradora vai devolver no fim do grupo? | Valor ÷ (1 + taxa do Tesouro no prazo + spread)^(meses ÷ 12). Corrigido pela inflação: curva IPCA+, resultado em reais de hoje; senão, curva Prefixada. Mostra também prazos vizinhos e spreads vizinhos. |
-| **Retorno de uma oferta** | Pagando X para receber Y em N meses, quanto rende ao ano? Qual o preço máximo para um retorno-alvo? | (Y ÷ X)^(12 ÷ N) − 1, comparado com o Tesouro do prazo (e com o CDI, se não for corrigido pela inflação). Preço máximo = Y ÷ (1 + alvo)^(N ÷ 12); sem alvo digitado, o alvo é o Tesouro + spread. Mostra o deságio. |
-| **Cota ativa** | Quanto vale a cota de quem recebe o crédito quando for contemplada e continua pagando as parcelas? | Crédito descontado até o mês da contemplação, menos todas as parcelas descontadas, na curva IPCA+ mais o spread. Mostra o valor por mês de contemplação. |
+| **Cota cancelada** | Quanto vale hoje o valor que a administradora vai devolver no fim do grupo? | Valor ÷ (1 + taxa do Tesouro no prazo + spread)^(meses ÷ 12). Corrigido pela inflação: curva IPCA+, resultado em reais de hoje; senão, curva Prefixada. Mostra também prazos vizinhos e spreads vizinhos. Com um preço pedido, diz se cabe e qual é o preço máximo. |
+| **Cota ativa** | Quanto vale a cota de quem recebe o crédito quando for contemplada e continua pagando as parcelas? | Crédito descontado até o mês da contemplação, menos todas as parcelas descontadas, na curva IPCA+ mais o spread. Mostra o valor por mês de contemplação. Com um preço pedido, mostra o ágio sobre o crédito **e** sobre o saldo devedor (a base muda o percentual) e o que sai do bolso no total. |
+| **Retorno de uma oferta** | Pagando X para receber Y em N meses, quanto rende ao ano? Qual o preço máximo para um retorno-alvo? | (Y ÷ X)^(12 ÷ N) − 1, comparado com o Tesouro do prazo (e com o CDI, se não for corrigido pela inflação). Preço máximo = Y ÷ (1 + alvo)^(N ÷ 12); sem alvo digitado, o alvo é o Tesouro + spread. Os custos de transferência entram no que se paga. Mostra o deságio. |
+| **Precatório** | Quanto vale hoje um precatório que só será pago daqui a N meses? Que deságio faz a compra valer a pena? | O valor atualizado hoje vira o valor esperado no pagamento, corrigido mês a mês; tiram-se as retenções informadas; o resultado é descontado na curva Prefixada mais o spread. Dá o valor de hoje, o *deságio justo* e, se houver uma oferta de compra, o retorno ao ano, o *deságio mínimo* e o preço máximo. |
+
+**Como o precatório é corrigido.** Cada mês multiplica o valor por (1 + taxa do ano)^(1 ÷ 12), e a taxa muda conforme o ano em que o mês cai. No ano corrente, a Selic é a média entre a meta de hoje e o que o Focus espera para o fim do ano; nos anos seguintes é o que o Focus espera, e depois do último ano do Focus repete o último. O IPCA de cada ano também vem do Focus. A pessoa escolhe o índice, porque a regra mudou e a transição é discutida: **Selic**; **IPCA mais juros ao ano**, nunca acima da Selic; **uma taxa própria**; ou **sem correção**. Pelo que li em fontes públicas, a Emenda 113 (2021) mandou usar a Selic, e a Emenda 136 (promulgada em 09/09/2025) passou a prever IPCA mais 2% ao ano, limitado pela Selic, nas novas requisições de estados e municípios. Não conferi o texto oficial das emendas e isto não é orientação jurídica: por isso o painel não escolhe o índice por ninguém. O prazo pode ser digitado em meses ou escolhido por mês e ano, até 30 anos.
+
+**O que uma calculadora precisa ter para ser usada todo dia.** Antes de montar a quarta, pesquisei como são as calculadoras de cota e de precatório que existem e vi o que faltava nas três primeiras:
+
+- *Prazo por data.* Quem pensa "o grupo acaba em 03/2029" não quer contar meses: cada calculadora aceita meses ou o mês e o ano.
+- *Preço pedido e custos de transferência.* O que se compra tem preço e taxas; a conta diz se cabe e qual é o máximo.
+- *Ágio nas duas bases.* O mesmo preço é uma porcentagem do crédito e outra, maior, do saldo devedor; mostrar só uma induz a erro.
+- *Spread só desta conta.* Um precatório tem prazo mais incerto que uma cota; dá para usar outro spread sem mexer no do painel.
+- *Copiar o resumo* da conta (para colar numa mensagem) e *voltar aos exemplos*.
+
+**Onde ficam e como usar no dia a dia.** No computador, o botão **Calcular** no topo abre a lista das quatro e leva direto à última que a pessoa usou. No celular, a barra fixa de baixo tem **Calcular**, que faz o mesmo. A tela das calculadoras tem as quatro em abas no alto. Os campos de cada calculadora ficam guardados no navegador de quem usa (`localStorage`, só neste aparelho; nada vai para servidor), então voltar no dia seguinte é continuar de onde parou; um campo guardado de versão antiga ou estragado é descartado e volta ao exemplo. Se o navegador bloqueia o armazenamento, a página funciona do mesmo jeito, sem lembrar. No celular, o resultado principal fica numa barra fixa em cima da barra de baixo enquanto a pessoa muda os campos.
 
 Quando o prazo cai fora da faixa de vencimentos da curva do Tesouro, a calculadora avisa qual é a faixa e que usou a ponta mais próxima.
 
-O que o modelo **não** considera: a chance de ser contemplada, lance, seguro, fundo de reserva, as regras de cada grupo e o risco de a administradora atrasar. Na cota ativa, um spread maior não derruba sempre o valor da cota: ele também encolhe as parcelas, que ficam mais longe que o crédito. Por isso a calculadora mostra os números do spread vizinho e não afirma uma direção.
+O que o modelo **não** considera: a chance de ser contemplada, lance, seguro, fundo de reserva, as regras de cada grupo e o risco de a administradora atrasar; no precatório, a ordem da fila, o imposto de cada caso (as retenções são um percentual que a pessoa informa) e o risco de o ente atrasar o pagamento. Na cota ativa, um spread maior não derruba sempre o valor da cota: ele também encolhe as parcelas, que ficam mais longe que o crédito. Por isso a calculadora mostra os números do spread vizinho e não afirma uma direção.
 
 Antes da primeira versão, eu tinha descartado fazer um "precificador de cota". O que existe agora não é isso: é uma conta transparente, com premissas públicas, que mostra o raciocínio. Preço de verdade depende de extratos, regras e histórico que só a empresa tem, e isso não entra neste repositório.
 
@@ -127,7 +140,7 @@ Antes da primeira versão, eu tinha descartado fazer um "precificador de cota". 
 
 É gerado no navegador, na hora, para o dia que a pessoa está vendo (botão no topo; o gerador só é baixado quando alguém pede). Não guardo um arquivo por dia no repositório (um `.xlsx` não comprime e o repositório cresceria à toa). Escrevi o gerador de `.xlsx` à mão (`site/js/xlsx.js`, um zip com os XMLs que o Excel exige) para não depender de biblioteca.
 
-**Um padrão só em todas as abas** (`site/js/folha.js`): título, subtítulo com a data da foto, uma frase dizendo para que serve a aba, seções e tabelas iguais; azul-marinho e cinza, amarelo só nas células de digitar e azul-claro só nos resultados. Doze abas: Leia-me (com um link para cada aba), Hoje, as três calculadoras, o cálculo mês a mês da cota ativa, Custo do dinheiro, Crédito concorrente, Setor, Mudanças, Fontes e Observações (os números brutos, com filtro).
+**Um padrão só em todas as abas** (`site/js/folha.js`): título, subtítulo com a data da foto, uma frase dizendo para que serve a aba, seções e tabelas iguais; azul-marinho e cinza, amarelo só nas células de digitar e azul-claro só nos resultados. Doze abas: Leia-me (com um link para cada aba), Hoje, as três primeiras calculadoras (o precatório e os campos novos de preço pedido e custos ainda não estão no Excel), o cálculo mês a mês da cota ativa, Custo do dinheiro, Crédito concorrente, Setor, Mudanças, Fontes e Observações (os números brutos, com filtro).
 
 **As calculadoras do Excel são fórmulas de verdade**, não valores colados: troque uma célula amarela e tudo se recalcula. O spread e o valor de referência são nomes (`Spread`, `ValorRef`) na aba Hoje. As células de digitar têm validação (número maior que zero, lista Sim/Não). Cada fórmula leva também o valor já calculado, para os leitores que não recalculam.
 
@@ -168,10 +181,10 @@ python -m pytest tests/test_site.py
 python scripts/confere_excel.py arquivo.xlsx foto.json --pdf pasta   # só no Windows com Excel
 ```
 
-- **114 testes de contas e leitura**, no Node: formatação e leitura de número em português, busca da foto, as contas das calculadoras (conferidas contra fórmulas fechadas, como a anuidade), a sensibilidade, o que mudou em 7 dias, as frases da manchete e dos capítulos, o histórico (inclusive contra a foto de verdade), a saúde do robô, o monitor, o dicionário e o escritor de Excel.
-- **16 testes das telas**, com o vitest e a foto de 31/10/2026: cada tela abre sem erro, a manchete e os títulos dos capítulos saem como esperado, a tabela do Tesouro ordena e filtra, o exemplo da cota cancelada dá o valor da conta independente (R$ 39.324,20), um campo inválido avisa, o robô mostra as rodadas, o dicionário filtra, o tema troca, e **nenhum texto vaza "NaN", "undefined" ou "null"**.
-- **7 testes em Python** que rodam o JavaScript com uma foto de verdade (a que o robô grava, a partir das respostas reais gravadas): a calculadora contra o robô (4.800 combinações, ao centavo), as três calculadoras contra a mesma conta escrita de novo em Python em 192 combinações, medianas e curvas contra a foto, o Excel aberto com o `openpyxl` e a conferência das referências das fórmulas.
-- Quebrei o código de propósito, 85 vezes em quatro rodadas (71 nas versões anteriores e 14 nesta, no histórico, na sensibilidade e nas frases): CDI com 365 dias em vez de 252, série fora de ordem, dia do alvo errado, prazo do título medido com 365 dias, quartil trocado pela mediana, spread ignorado, choque no sentido contrário, "subiu" e "caiu" trocados, frase que sempre promete "mais nos prazos longos", entre outras. Os testes pegaram todas; duas só na segunda tentativa, e cada uma ganhou um teste.
+- **129 testes de contas e leitura**, no Node: formatação e leitura de número em português, busca da foto, as contas das calculadoras (conferidas contra fórmulas fechadas, como a anuidade, e a correção do precatório mês a mês contra o produto das taxas), a sensibilidade, o que mudou em 7 dias, as frases da manchete e dos capítulos, o histórico (inclusive contra a foto de verdade), a saúde do robô, o monitor, o dicionário e o escritor de Excel.
+- **25 testes das telas**, com o vitest e a foto de 31/10/2026: cada tela abre sem erro, as quatro calculadoras abrem e lembram o que foi digitado (e ignoram um valor guardado estragado), a manchete e os títulos dos capítulos saem como esperado, a tabela do Tesouro ordena e filtra, o exemplo da cota cancelada dá o valor da conta independente (R$ 39.324,20) e o do precatório também (R$ 78.802,76), um campo inválido avisa, o robô mostra as rodadas, o dicionário filtra, o tema troca, e **nenhum texto vaza "NaN", "undefined" ou "null"**.
+- **9 testes em Python** que rodam o JavaScript com uma foto de verdade (a que o robô grava, a partir das respostas reais gravadas): a calculadora contra o robô (4.800 combinações, ao centavo), as três primeiras calculadoras contra a mesma conta escrita de novo em Python em 192 combinações, o precatório em 576 e o retorno com custos em outras, medianas e curvas contra a foto, o Excel aberto com o `openpyxl` e a conferência das referências das fórmulas.
+- Quebrei o código de propósito, 103 vezes em cinco rodadas (85 nas versões anteriores e 18 nas calculadoras novas e no celular: virada de ano na correção, teto da Selic, retenção ignorada, taxa do Tesouro de outro prazo, custos fora do preço máximo, ágio na base errada, Selic do ano em curso sem a média, meses entre datas, valor guardado estragado, atalho do celular, spread só da conta, prazo por data e balão por toque): CDI com 365 dias em vez de 252, série fora de ordem, dia do alvo errado, prazo do título medido com 365 dias, quartil trocado pela mediana, spread ignorado, choque no sentido contrário, "subiu" e "caiu" trocados, frase que sempre promete "mais nos prazos longos", entre outras. Os testes pegaram todas; duas só na segunda tentativa, e cada uma ganhou um teste.
 
 O `ci.yml` roda tudo isso (menos o Excel de verdade) a cada envio, com `EXIGE_NODE=1`: no CI, faltar o Node é falha, não pulo.
 
@@ -181,10 +194,12 @@ O workflow [`pages.yml`](../.github/workflows/pages.yml) instala as dependência
 
 ## Limites que conheço
 
-- Vi o painel só em um navegador baseado em Chromium (o do app em que desenvolvo), nos temas claro e escuro, em tela larga (1280 px) e simulando celular (375 px, sem rolagem lateral). Não testei Safari nem Firefox.
+- Vi o painel só em um navegador baseado em Chromium (o do app em que desenvolvo), em tela larga (1280 px) e simulando celular de 320, 375 e 768 px, sem rolagem lateral em 13 telas. Vi os temas claro e escuro, mas das calculadoras novas só o precatório no escuro em tela larga e a cota cancelada e a oferta no escuro no celular; a cota ativa no escuro eu não vi. Não testei em um celular de verdade, nem no Safari ou Firefox.
 - Se o `raw.githubusercontent.com` ficar fora do ar, a página mostra uma mensagem e um botão para tentar de novo; não guarda cópia dos números. Se a API do GitHub passar do limite de consultas, o histórico de rodadas some e o selo vale pela foto.
 - O histórico do robô começa curto: o GitHub só mostra as rodadas que ainda existem, e as primeiras foram de teste. A tira de 14 rodadas vai enchendo com os dias úteis.
 - O histórico dos gráficos é o que cada foto traz (cerca de 5 semanas de Tesouro e 2 meses de Selic). Uma linha do tempo mais longa, juntando muitas fotos, só faz sentido depois de algumas semanas de coleta.
 - Não há dado público de preço de cota nem de precatório (valor e credor); o painel não finge ter.
+- A calculadora de precatório depende do índice que a pessoa escolhe e das projeções do Focus para a Selic e o IPCA, que mudam toda semana. A regra de correção mudou em 2025 e a transição é discutida; li sobre isso em fontes públicas, não conferi o texto oficial e não sou advogado. Retenções (imposto, contribuição, honorários) são um percentual digitado, não uma conta.
+- Os campos lembrados ficam só no navegador (`localStorage`): trocar de aparelho ou limpar os dados do site volta aos exemplos. O Excel ainda não tem o precatório.
 - A comparação "há 7 dias" depende de a foto ter a taxa de referência de cada vencimento. Se faltar, a página diz "sem comparação" em vez de inventar.
 - Quem usa leitor de tela: os gráficos têm descrição e tabela com os mesmos números, mas não testei com um leitor de verdade.

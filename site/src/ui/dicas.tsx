@@ -1,7 +1,7 @@
 import * as Popover from "@radix-ui/react-popover";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { BookOpen } from "lucide-react";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { GLOSSARIO } from "../../js/glossario.js";
 import { irPara } from "../rota";
 
@@ -11,11 +11,29 @@ export const ProvedorDeDicas = ({ children }: { children: ReactNode }) => (
   </Tooltip.Provider>
 );
 
-/** Um balão curto ao passar o mouse ou focar com o teclado. Para texto que não precisa de clique. */
+/**
+ * Um balão curto ao passar o mouse, focar com o teclado ou tocar. O Radix não abre o balão por toque, então no celular o
+ * toque abre por alguns segundos (e o toque fora ou em outro balão fecha).
+ */
 export function Dica({ texto, children, lado = "top" }: { texto: ReactNode; children: ReactNode; lado?: "top" | "bottom" | "left" | "right" }) {
+  const [aberto, setAberto] = useState(false);
+  const fecha = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const tocou = useRef(false);
+  useEffect(() => () => clearTimeout(fecha.current), []);
+  const aoApertar = (e: PointerEvent) => {
+    tocou.current = e.pointerType === "touch";
+  };
+  const aoClicar = () => {
+    if (!tocou.current) return;
+    clearTimeout(fecha.current);
+    setTimeout(() => setAberto(true), 0); // o Radix fecha o balão no pointerdown e no clique; abro logo depois
+    fecha.current = setTimeout(() => setAberto(false), 3500);
+  };
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+    <Tooltip.Root open={aberto} onOpenChange={setAberto}>
+      <Tooltip.Trigger asChild onPointerDown={aoApertar} onClick={aoClicar}>
+        {children}
+      </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content className="balao" side={lado} sideOffset={8} collisionPadding={12}>
           {texto}

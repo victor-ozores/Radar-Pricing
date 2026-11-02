@@ -46,7 +46,7 @@ export function Quadro({
           <h3 className="m-0 font-sans text-[0.95rem] font-semibold tracking-normal text-tinta">{titulo}</h3>
           {subtitulo ? <p className="m-0 mt-0.5 text-[0.8125rem] text-tinta3">{subtitulo}</p> : null}
         </div>
-        {acoes ? <div className="nao-imprime shrink-0">{acoes}</div> : null}
+        {acoes ? <div className="nao-imprime min-w-0 max-w-full">{acoes}</div> : null}
       </figcaption>
       {legenda && legenda.length > 1 ? (
         <ul className="m-0 mb-2 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-[0.8rem] text-tinta2">

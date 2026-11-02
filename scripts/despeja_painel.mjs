@@ -66,6 +66,7 @@ writeFileSync(
       cancelada: calc.cotaCancelada({ ...ex.cancelada, spreadPP: spread }, curvas),
       retorno: calc.retornoDaOferta({ ...ex.retorno, alvoPct: undefined, spreadPP: spread }, curvas, cdi),
       ativa: calc.cotaAtiva({ ...ex.ativa, spreadPP: spread }, curvas.real),
+      precatorio: calc.precatorio({ ...ex.precatorio, spreadPP: spread }, curvas.nominal, modelo.caminhoDeCorrecao(foto)),
     },
     frases: {
       curva: narrativa.fraseDoCapituloDaCurva(lista),

@@ -65,13 +65,13 @@ export function Segmentado<T extends string>({ valor, aoMudar, opcoes, rotulo }:
       value={valor}
       onValueChange={(v) => v && aoMudar(v as T)}
       aria-label={rotulo}
-      className="inline-flex rounded-full border border-linha bg-folha2 p-0.5"
+      className="inline-flex max-w-full flex-wrap rounded-full border border-linha bg-folha2 p-0.5"
     >
       {opcoes.map((o) => (
         <ToggleGroup.Item
           key={o.id}
           value={o.id}
-          className="rounded-full border-0 bg-transparent px-3 py-1 text-[0.8125rem] font-semibold text-tinta2 transition-colors hover:text-tinta data-[state=on]:bg-marca data-[state=on]:text-white data-[state=on]:shadow-sm [[data-tema=escuro]_&]:data-[state=on]:text-[#05201a]"
+          className="rounded-full border-0 bg-transparent px-3 py-2 text-[0.8125rem] font-semibold text-tinta2 transition-colors hover:text-tinta data-[state=on]:bg-marca data-[state=on]:text-white data-[state=on]:shadow-sm sm:py-1 [[data-tema=escuro]_&]:data-[state=on]:text-[#05201a]"
         >
           {o.nome}
         </ToggleGroup.Item>
@@ -185,4 +185,25 @@ export function Contagem({ valor, casas = 2, formato }: { valor: number; casas?:
     return () => c.stop();
   }, [valor]);
   return <>{formato ? formato(mostrado) : num(mostrado, casas)}</>;
+}
+
+// ------------------------------------------------------------------------------------------------ campo de escolha
+/** Uma lista de opções no seletor do próprio aparelho (no celular abre a roleta do sistema, que é a mais fácil de usar). */
+export function CampoEscolha<T extends string>({ rotulo, valor, aoMudar, opcoes, ajuda }: { rotulo: ReactNode; valor: T; aoMudar: (v: T) => void; opcoes: { id: T; nome: string }[]; ajuda?: ReactNode }) {
+  const id = useId();
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-[0.8125rem] font-semibold text-tinta2">
+        {rotulo}
+      </label>
+      <select id={id} value={valor} onChange={(e) => aoMudar(e.target.value as T)} className="w-full rounded-xl border border-linha2 bg-folha px-3 py-2.5 text-[1.05rem] font-semibold text-tinta outline-none focus:border-marca focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--marca)_25%,transparent)]">
+        {opcoes.map((o) => (
+          <option key={o.id} value={o.id}>
+            {o.nome}
+          </option>
+        ))}
+      </select>
+      {ajuda ? <p className="m-0 text-xs text-tinta3">{ajuda}</p> : null}
+    </div>
+  );
 }

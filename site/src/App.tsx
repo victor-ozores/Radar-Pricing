@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Cabecalho } from "./Cabecalho";
+import { BarraInferior, Cabecalho } from "./Cabecalho";
 import { ProvedorDeDados, useDados } from "./dados";
 import { useRota } from "./rota";
 import { ProvedorDeDicas } from "./ui/dicas";
@@ -51,13 +51,14 @@ function Conteudo() {
         Pular para o conteúdo
       </a>
       <Cabecalho rota={rota} />
-      <main id="principal" tabIndex={-1} className="outline-none">
+      <main id="principal" tabIndex={-1} className="pb-16 outline-none md:pb-0">
         {fase === "carregando" ? <Esqueleto /> : fase === "erro" ? <Erro mensagem={mensagem} /> : (
           <Suspense fallback={<Esqueleto />}>
             {rota.tela === "briefing" ? <Briefing /> : rota.tela === "mercado" ? <Mercado sub={rota.sub} /> : rota.tela === "calculadoras" ? <Calculadoras sub={rota.sub} /> : <Bastidores sub={rota.sub} />}
           </Suspense>
         )}
       </main>
+      <BarraInferior rota={rota} />
     </>
   );
 }

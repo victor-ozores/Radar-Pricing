@@ -38,6 +38,7 @@ beforeEach(() => {
     }),
   );
   document.documentElement.setAttribute("data-tema", "claro");
+  localStorage.clear(); // cada teste começa sem lembrar valores de outro
 });
 
 afterEach(() => {
@@ -116,6 +117,16 @@ describe("mercado", () => {
     semLixo();
   });
 
+  it("o balão do título da coluna abre por toque (o Radix sozinho só abre com mouse ou foco)", async () => {
+    await abre("#/mercado/tesouro");
+    const tabela = await screen.findByRole("table", { name: /Taxas dos títulos do Tesouro/ });
+    const botao = within(within(tabela).getByRole("columnheader", { name: /Taxa hoje/ })).getByRole("button");
+    expect(screen.queryByText(/Taxa de compra do último dia da foto/)).toBeNull();
+    fireEvent.pointerDown(botao, { pointerType: "touch" });
+    fireEvent.click(botao);
+    expect((await screen.findAllByText(/Taxa de compra do último dia da foto/)).length).toBeGreaterThan(0);
+  });
+
   it("Selic e inflação: série mensal mostra o mês, não o dia 1", async () => {
     await abre("#/mercado/juros");
     const tabela = await screen.findByRole("table", { name: /Selic, CDI e IPCA/ });
@@ -179,12 +190,92 @@ describe("bastidores", () => {
     semLixo();
   });
 
-  it("dicionário: lista os 18 termos e a busca filtra", async () => {
+  it("dicionário: lista os 19 termos e a busca filtra", async () => {
     await abre("#/bastidores/dicionario");
     await screen.findByText("Spread de risco");
-    expect(document.querySelectorAll("dt")).toHaveLength(18);
+    expect(document.querySelectorAll("dt")).toHaveLength(19);
     fireEvent.change(screen.getByPlaceholderText(/Buscar um termo/), { target: { value: "quartil" } });
     await waitFor(() => expect(document.querySelectorAll("dt").length).toBeLessThan(5));
+  });
+});
+
+describe("precatório e acesso rápido às calculadoras", () => {
+  it("o exemplo do precatório (Selic, 36 meses, spread 5) dá o valor da conta independente, e a oferta rende 31,34% ao ano", async () => {
+    await abre("#/calculadoras/precatorio");
+    // R$ 100.000 × 1,135^(2/12) × 1,1175 × 1,1 × 1,1^(10/12) = R$ 135.925,24, descontado a 14,93% + 5 p.p. por 3 anos
+    expect((await screen.findAllByText("R$ 78.802,76")).length).toBeGreaterThan(0);
+    expect(textoDaPagina()).toMatch(/R\$ 135\.925,24/);
+    expect(textoDaPagina()).toMatch(/31,34% ao ano/);
+    semLixo();
+  });
+
+  it("o prazo pode ser uma data: 10/2029 é o mesmo que 36 meses, e 10/2030 são 48 meses (R$ 71.906,68)", async () => {
+    await abre("#/calculadoras/precatorio");
+    fireEvent.click(screen.getByRole("radio", { name: "Data" }));
+    const campo = screen.getByLabelText(/Quando é pago: mês e ano/);
+    fireEvent.change(campo, { target: { value: "2029-10" } });
+    expect((await screen.findAllByText("R$ 78.802,76")).length).toBeGreaterThan(0);
+    fireEvent.change(campo, { target: { value: "2030-10" } });
+    expect((await screen.findAllByText("R$ 71.906,68")).length).toBeGreaterThan(0); // 48 meses, conta independente
+    expect(textoDaPagina()).toMatch(/R\$ 149\.517,76/);
+  });
+
+  it("um spread só desta conta muda o resultado sem mexer no painel", async () => {
+    await abre("#/calculadoras/precatorio");
+    fireEvent.click(screen.getByRole("switch", { name: /Usar outro spread só nesta conta/ }));
+    fireEvent.change(await screen.findByRole("textbox", { name: "Spread desta conta" }), { target: { value: "10" } });
+    expect((await screen.findAllByText("R$ 69.714,59")).length).toBeGreaterThan(0);
+  });
+
+  it("os valores digitados ficam guardados e a calculadora usada por último vira o atalho", async () => {
+    await abre("#/calculadoras/oferta");
+    const campo = screen.getByRole("textbox", { name: "Preço da oferta" }) as HTMLInputElement;
+    fireEvent.change(campo, { target: { value: "41.000" } });
+    cleanup();
+    await abre("#/calculadoras/oferta");
+    expect((screen.getByRole("textbox", { name: "Preço da oferta" }) as HTMLInputElement).value).toBe("41.000,00");
+    // a barra do celular leva para a última calculadora
+    const calcular = screen.getAllByRole("link", { name: /Calcular/ }).find((a) => a.closest("nav")?.className.includes("fixed")) as HTMLAnchorElement;
+    expect(calcular.getAttribute("href")).toBe("#/calculadoras/oferta");
+    fireEvent.click(screen.getByRole("button", { name: "Voltar aos exemplos" }));
+    expect((screen.getByRole("textbox", { name: "Preço da oferta" }) as HTMLInputElement).value).toBe("38.000,00");
+  });
+
+  it("um valor guardado estragado não derruba a tela: volta ao exemplo", async () => {
+    localStorage.setItem("radar-calc-cancelada", JSON.stringify({ valor: "abc", meses: null, corrigido: 7, preco: Infinity }));
+    await abre("#/calculadoras/cancelada");
+    expect((await screen.findAllByText("R$ 39.324,20")).length).toBeGreaterThan(0);
+  });
+
+  it("o menu Calcular, em qualquer tela, lista as quatro calculadoras", async () => {
+    await abre("#/mercado/tesouro");
+    fireEvent.click(screen.getByRole("button", { name: "Abrir as calculadoras" }));
+    const menu = await screen.findByText("Retorno de uma oferta", { selector: "span" });
+    const lista = menu.closest("ul") as HTMLElement;
+    expect(within(lista).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#/calculadoras/cancelada", "#/calculadoras/ativa", "#/calculadoras/oferta", "#/calculadoras/precatorio"]);
+  });
+
+  it("copiar resumo põe o texto da conta na área de transferência", async () => {
+    const escreve = vi.fn(async () => {});
+    Object.defineProperty(navigator, "clipboard", { value: { writeText: escreve }, configurable: true });
+    await abre("#/calculadoras/precatorio");
+    fireEvent.click(await screen.findByRole("button", { name: /Copiar resumo/ }));
+    await waitFor(() => expect(escreve).toHaveBeenCalled());
+    const texto = (escreve.mock.calls as unknown as string[][])[0][0];
+    expect(texto).toMatch(/Radar Pricing · Precatório · foto de 31\/10\/2026/);
+    expect(texto).toMatch(/R\$ 78\.802,76/);
+    expect(texto).toMatch(/não é preço nem recomendação/);
+  });
+
+  it("cota cancelada e cota ativa aceitam um preço pedido e dizem se cabe", async () => {
+    await abre("#/calculadoras/cancelada");
+    fireEvent.click(screen.getByRole("switch", { name: /Tenho um preço pedido/ }));
+    expect(await screen.findByText(/O preço cabe: sobram R\$ 1\.324,20/)).toBeTruthy(); // 39.324,20 − 38.000
+    cleanup();
+    await abre("#/calculadoras/ativa");
+    fireEvent.click(screen.getByRole("switch", { name: /Tenho um preço pedido/ }));
+    expect(await screen.findByText(/O ágio pedido, nas duas bases/)).toBeTruthy();
+    expect(textoDaPagina()).toMatch(/20,0% do crédito e 17,5% do saldo devedor/);
   });
 });
 

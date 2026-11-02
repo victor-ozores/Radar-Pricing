@@ -115,24 +115,27 @@ export function cotaCancelada({ valor, meses, corrigido, spreadPP }, curvas) {
  * Tesouro do mesmo prazo (e o CDI, se não for corrigido pela inflação) e calcula o preço máximo para um retorno-alvo
  * (`alvoPct`; sem ele, usa a taxa do Tesouro no prazo + o spread). Corrigido: o retorno é acima da inflação.
  */
-export function retornoDaOferta({ preco, valor, meses, corrigido, alvoPct, spreadPP }, curvas, cdiAnualPct) {
+export function retornoDaOferta({ preco, valor, meses, corrigido, alvoPct, spreadPP, custos = 0 }, curvas, cdiAnualPct) {
   const curva = escolheCurva(curvas, corrigido);
-  if (!curva || !positivo(preco) || !positivo(valor) || !(meses >= 1) || !(spreadPP >= 0)) return null;
+  if (!curva || !positivo(preco) || !positivo(valor) || !(meses >= 1) || !(spreadPP >= 0) || !(custos >= 0)) return null;
   const [ancora, extrapolado] = interpola(curva.pontos, meses / 12);
-  const retorno = ((valor / preco) ** (12 / meses) - 1) * 100;
+  const pago = preco + custos; // o que sai do bolso: o preço e os custos de transferência
+  const retorno = ((valor / pago) ** (12 / meses) - 1) * 100;
   const alvo = Number.isFinite(alvoPct) ? alvoPct : ancora + spreadPP;
   const precoMaximo = valor / (1 + alvo / 100) ** (meses / 12);
   const referencias = [{ nome: corrigido ? "Tesouro IPCA+ no prazo (acima do IPCA)" : "Tesouro Prefixado no prazo", taxa: ancora }];
   if (!corrigido && Number.isFinite(cdiAnualPct)) referencias.push({ nome: "CDI de hoje (anualizado)", taxa: cdiAnualPct });
   return {
     retorno_aa: retorno,
-    retorno_total: (valor / preco - 1) * 100,
+    retorno_total: (valor / pago - 1) * 100,
+    pago,
+    custos,
     taxa_ancora: ancora,
     extrapolado,
     alvo,
     alvo_padrao: !Number.isFinite(alvoPct),
-    preco_maximo: precoMaximo,
-    folga: precoMaximo - preco,
+    preco_maximo: precoMaximo - custos, // o máximo a oferecer, já separando os custos de transferência
+    folga: precoMaximo - pago,
     referencias: referencias.map((r) => ({ ...r, diferenca_pp: retorno - r.taxa })),
   };
 }
@@ -142,6 +145,7 @@ export const EXEMPLOS = {
   cancelada: { valor: 50000, meses: 24, corrigido: true },
   retorno: { preco: 38000, valor: 50000, meses: 24, corrigido: true },
   ativa: { credito: 100000, parcela: 1900, parcelas: 60, contemplacao: 12 },
+  precatorio: { valor: 100000, meses: 36, indice: "selic", jurosPP: 2, propriaPct: 8, retencaoPct: 0, desagioPct: 40 },
 };
 
 const CONTEMPLACOES_PADRAO = [0, 6, 12, 24, 36, 48, 60, 84, 120, 180];
@@ -215,4 +219,105 @@ export function sensibilidade(curva, prazos, spreadPP, valor = 1000, choques = C
       }),
     };
   });
+}
+
+// --------------------------------------------------------------------------------------------- avaliar um preço pedido
+/**
+ * Um preço pedido contra o valor justo da conta: o que sai do bolso (preço mais custos), a folga e o preço máximo.
+ * Serve à cota cancelada e à cota ativa. `valorJusto` é o valor de hoje que a calculadora achou.
+ */
+export function avaliaPreco({ valorJusto, preco, custos = 0 }) {
+  if (!Number.isFinite(valorJusto) || !positivo(preco) || !(custos >= 0)) return null;
+  const pago = preco + custos;
+  return { pago, custos, folga: valorJusto - pago, cabe: valorJusto - pago >= 0, preco_maximo: valorJusto - custos };
+}
+
+/**
+ * O ágio de uma cota ativa vendida por `preco`, nas duas bases que o mercado usa (o percentual muda muito conforme a
+ * base): sobre o crédito e sobre o saldo devedor (as parcelas que faltam, sem desconto). E o custo todo de quem compra:
+ * saldo devedor + preço + custos de transferência.
+ */
+export function agioDaCota({ preco, custos = 0, credito, saldoDevedor }) {
+  if (!positivo(preco) || !(custos >= 0) || !positivo(credito) || !positivo(saldoDevedor)) return null;
+  return { sobre_credito_pct: (preco / credito) * 100, sobre_saldo_pct: (preco / saldoDevedor) * 100, custo_total: saldoDevedor + preco + custos };
+}
+
+// --------------------------------------------------------------------------------------------- precatório
+export const INDICES_DE_CORRECAO = ["selic", "ipca", "propria", "nenhum"];
+export const MAX_MESES_PRECATORIO = 360;
+
+/**
+ * Quanto um valor cresce até o pagamento. Selic e IPCA andam mês a mês pelo `caminho` (modelo.caminhoDeCorrecao):
+ * cada mês rende (1 + taxa do ano)^(1/12). No IPCA, a taxa do ano é o IPCA mais os juros, limitada pela Selic.
+ * Devolve null se faltar dado do índice escolhido ou se o prazo não for um número inteiro de meses.
+ * @param {{ meses: number, indice: "selic"|"ipca"|"propria"|"nenhum", jurosPP?: number, propriaPct?: number }} p
+ */
+export function fatorDeCorrecao({ meses, indice, jurosPP = 0, propriaPct = 0 }, caminho) {
+  if (!Number.isInteger(meses) || meses < 1) return null;
+  if (indice === "nenhum") return 1;
+  if (indice === "propria") return Number.isFinite(propriaPct) ? (1 + propriaPct / 100) ** (meses / 12) : null;
+  if (indice !== "selic" && indice !== "ipca") return null;
+  if (!caminho) return null;
+  let fator = 1;
+  for (let m = 1; m <= meses; m++) {
+    const ano = caminho.anoBase + Math.floor((caminho.mesBase + m) / 12);
+    const selic = caminho.selicDoAno(ano);
+    let taxa = selic;
+    if (indice === "ipca") {
+      const ipca = caminho.ipcaDoAno(ano);
+      taxa = ipca === null ? null : selic === null ? ipca + jurosPP : Math.min(ipca + jurosPP, selic);
+    }
+    if (taxa === null || taxa === undefined) return null;
+    fator *= (1 + taxa / 100) ** (1 / 12);
+  }
+  return fator;
+}
+
+/**
+ * Precatório: o valor atualizado hoje (`valor`) cresce com a correção até o pagamento (`meses`), perde as retenções
+ * (`retencaoPct`: IR, PSS, honorários... o que a pessoa informar) e é descontado pela curva Prefixada mais o spread.
+ * Com `desagioPct` (o deságio de uma oferta de compra, sobre o valor atualizado) calcula também o retorno de quem
+ * compra. Modelo simples de DEMONSTRAÇÃO: não sabe a ordem de pagamento, o ente devedor nem a regra de cada caso.
+ */
+export function precatorio({ valor, meses, indice, jurosPP = 0, propriaPct = 0, retencaoPct = 0, desagioPct = null, custos = 0, spreadPP }, curvaNominal, caminho) {
+  const curva = curvaNominal && curvaNominal.pontos && curvaNominal.pontos.length ? curvaNominal : null;
+  if (!curva || !positivo(valor) || !Number.isInteger(meses) || meses < 1 || meses > MAX_MESES_PRECATORIO || !(spreadPP >= 0)) return null;
+  if (!(jurosPP >= 0) || !(retencaoPct >= 0 && retencaoPct < 100) || !(custos >= 0)) return null;
+  if (desagioPct !== null && !(desagioPct >= 0 && desagioPct < 100)) return null;
+  const fator = fatorDeCorrecao({ meses, indice, jurosPP, propriaPct }, caminho);
+  if (fator === null) return null;
+  const esperado = valor * fator;
+  const liquido = esperado * (1 - retencaoPct / 100);
+  const [ancora, extrapolado] = interpola(curva.pontos, meses / 12);
+  const desconto = ancora + spreadPP;
+  const vp = valorPresente(liquido, desconto, meses);
+  let oferta = null;
+  if (desagioPct !== null) {
+    const preco = valor * (1 - desagioPct / 100);
+    const pago = preco + custos;
+    oferta = {
+      preco,
+      pago,
+      custos,
+      retorno_aa: ((liquido / pago) ** (12 / meses) - 1) * 100,
+      retorno_total: (liquido / pago - 1) * 100,
+      folga: vp - pago,
+      preco_maximo: vp - custos,
+      desagio_minimo_pct: (1 - (vp - custos) / valor) * 100,
+    };
+  }
+  return {
+    fator,
+    correcao_total_pct: (fator - 1) * 100,
+    correcao_aa_pct: (fator ** (12 / meses) - 1) * 100,
+    valor_esperado: esperado,
+    liquido_esperado: liquido,
+    taxa_ancora: ancora,
+    taxa_desconto: desconto,
+    valor_presente: vp,
+    pct_do_valor: (vp / valor) * 100,
+    desagio_justo_pct: 100 - (vp / valor) * 100,
+    extrapolado,
+    oferta,
+  };
 }

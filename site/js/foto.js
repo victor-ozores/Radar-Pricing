@@ -29,6 +29,20 @@ export function somaDias(iso, dias) {
   return d.toISOString().slice(0, 10);
 }
 
+/** Soma meses a uma data (AAAA-MM ou AAAA-MM-DD) e devolve o dia 1 do mês de chegada (AAAA-MM-01). */
+export function somaMeses(iso, meses) {
+  const [a, m] = iso.split("-").map(Number);
+  const total = a * 12 + (m - 1) + meses;
+  return `${String(Math.floor(total / 12)).padStart(4, "0")}-${String((total % 12) + 1).padStart(2, "0")}-01`;
+}
+
+/** Quantos meses de calendário separam dois meses (o mês de `ate` menos o de `de`); aceita AAAA-MM e AAAA-MM-DD. */
+export function mesesEntre(de, ate) {
+  const [a1, m1] = de.split("-").map(Number);
+  const [a2, m2] = ate.split("-").map(Number);
+  return (a2 - a1) * 12 + (m2 - m1);
+}
+
 export function diasEntre(deIso, ateIso) {
   return Math.round((new Date(`${ateIso}T12:00:00Z`) - new Date(`${deIso}T12:00:00Z`)) / 86_400_000);
 }

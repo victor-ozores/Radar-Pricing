@@ -1,10 +1,12 @@
-import { ChevronLeft, ChevronRight, FileSpreadsheet, Moon, Printer, Sun } from "lucide-react";
+import * as Popover from "@radix-ui/react-popover";
+import { Bot, Calculator, ChevronDown, ChevronLeft, ChevronRight, FileSpreadsheet, Moon, Newspaper, Printer, Sun, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { dataBR, diaDaSemana } from "../js/formato.js";
 import { haQuanto } from "../js/saude.js";
 import { baixaExcel } from "./baixa";
+import { CALCULADORAS, ultimaCalculadora } from "./calc/memoria";
 import { useDados } from "./dados";
-import { irPara, TELAS, enderecoDa, type Rota } from "./rota";
+import { enderecoDa, irPara, TELAS, type Rota } from "./rota";
 import { useTema } from "./tema";
 import { Dica } from "./ui/dicas";
 
@@ -29,32 +31,86 @@ function IconeGitHub() {
   );
 }
 
-const botaoIcone = "grid size-9 place-items-center rounded-full border border-linha bg-folha p-0 text-tinta2 transition-colors hover:border-marca hover:text-marca";
+const botaoIcone = "grid size-10 place-items-center rounded-full border border-linha bg-folha p-0 text-tinta2 transition-colors hover:border-marca hover:text-marca";
 
-export function Cabecalho({ rota }: { rota: Rota }) {
-  const { estado, veredito, data, maisRecente, vizinha, vaiParaAMaisRecente, trabalhando } = useDados();
-  const [tema, trocaTema] = useTema();
-  const [gerando, setGerando] = useState(false);
-  const [nota, setNota] = useState("");
-  const vai = (sentido: -1 | 1) =>
-    vizinha(sentido).then((achou: boolean) => {
-      if (achou) return setNota("");
-      setNota(sentido < 0 ? "Não há foto anterior guardada ainda." : "Esta já é a foto mais recente.");
-      globalThis.setTimeout(() => setNota(""), 4000);
-    });
+/** A bolinha de situação do robô, com o texto curto. Leva para a tela que explica. */
+function ChipDoRobo({ compacto = false }: { compacto?: boolean }) {
+  const { estado, veredito } = useDados();
   const tom = veredito?.estado === "em_dia" ? "ok" : veredito?.estado === "falhou" ? "erro" : "aviso";
   const cor = { ok: "bg-ok", aviso: "bg-aviso", erro: "bg-erro" }[tom];
-  const texto = !veredito || !estado ? "Verificando o robô…" : veredito.estado === "em_dia" ? `Atualizado ${haQuanto(estado.foto.gerado_em)}` : veredito.curto;
-  const antiga = data && maisRecente && data < maisRecente;
-
+  const texto = !veredito || !estado ? "Verificando o robô…" : veredito.estado === "em_dia" ? (compacto ? "Robô em dia" : `Atualizado ${haQuanto(estado.foto.gerado_em)}`) : veredito.curto;
   return (
-    <header className="nao-imprime sticky top-0 z-40 border-b border-linha bg-papel/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[76rem] items-center gap-3 px-4 py-2.5 md:gap-5 md:px-6">
-        <a href={enderecoDa("briefing")} className="flex items-center gap-2.5 rounded-lg no-underline" aria-label="Radar Pricing, ir ao briefing">
+    <button
+      type="button"
+      onClick={() => irPara("bastidores", "robo")}
+      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-linha bg-folha font-semibold text-tinta2 hover:border-marca ${compacto ? "px-3 py-2 text-xs" : "px-3 py-1.5 text-[0.8125rem]"}`}
+      aria-label={`Situação do robô: ${texto}. Ver detalhes`}
+    >
+      <span className={`relative inline-block size-2.5 rounded-full ${cor}`}>{tom === "ok" ? <span className={`absolute inset-0 animate-ping rounded-full ${cor} opacity-40 motion-reduce:hidden`} /> : null}</span>
+      {texto}
+    </button>
+  );
+}
+
+/** "Calcular": as quatro calculadoras a um clique, de qualquer tela. A última usada vem marcada. */
+function MenuCalcular({ rota }: { rota: Rota }) {
+  const [aberto, setAberto] = useState(false);
+  const ultima = ultimaCalculadora();
+  return (
+    <Popover.Root open={aberto} onOpenChange={setAberto}>
+      <Popover.Trigger asChild>
+        <button type="button" className="hidden items-center gap-1.5 rounded-full border-0 bg-marca px-4 py-2 text-sm font-semibold text-[var(--marca-sobre)] shadow-sm transition-transform hover:-translate-y-px md:inline-flex" aria-label="Abrir as calculadoras">
+          <Calculator size={16} aria-hidden /> Calcular <ChevronDown size={14} aria-hidden />
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content align="end" sideOffset={10} collisionPadding={12} className="z-50 w-[22rem] max-w-[calc(100vw-1.5rem)] rounded-2xl border border-linha2 bg-folha p-2 shadow-[var(--sombra-balao)]">
+          <p className="rotulo m-0 px-3 pb-1 pt-2">Calculadoras</p>
+          <ul className="m-0 flex list-none flex-col gap-0.5 p-0">
+            {CALCULADORAS.map((c) => (
+              <li key={c.id}>
+                <a
+                  href={enderecoDa("calculadoras", c.id)}
+                  onClick={() => setAberto(false)}
+                  aria-current={rota.tela === "calculadoras" && rota.sub === c.id ? "page" : undefined}
+                  className="block rounded-xl px-3 py-2.5 no-underline hover:bg-folha2 aria-[current=page]:bg-marca2"
+                >
+                  <span className="flex items-center justify-between gap-2 text-sm font-semibold text-tinta">
+                    {c.nome}
+                    {c.id === ultima ? <span className="rounded-full bg-marca2 px-2 py-px text-[0.68rem] font-bold text-marca">última</span> : null}
+                  </span>
+                  <span className="block text-xs text-tinta3">{c.resumo}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
+export function Cabecalho({ rota }: { rota: Rota }) {
+  return (
+    <>
+      <BarraDoTopo rota={rota} />
+      <FaixaDaFoto />
+    </>
+  );
+}
+
+function BarraDoTopo({ rota }: { rota: Rota }) {
+  const { estado } = useDados();
+  const [tema, trocaTema] = useTema();
+  const [gerando, setGerando] = useState(false);
+  return (
+    <header className="nao-imprime sticky top-0 z-40 border-b border-linha bg-papel/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[76rem] items-center gap-3 px-4 py-2 md:gap-5 md:px-6 md:py-2.5">
+        <a href={enderecoDa("briefing")} className="flex min-w-0 items-center gap-2.5 rounded-lg no-underline" aria-label="Radar Pricing, ir ao briefing">
           <Logo />
-          <span className="leading-none">
-            <span className="display block text-[1.22rem] font-semibold tracking-tight text-tinta">Radar Pricing</span>
-            <span className="mt-0.5 hidden text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-tinta3 sm:block">Premissas públicas de mercado</span>
+          <span className="min-w-0 leading-none">
+            <span className="display block truncate text-[1.18rem] font-semibold tracking-tight text-tinta">Radar Pricing</span>
+            <span className="mt-0.5 hidden whitespace-nowrap text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-tinta3 2xl:block">Premissas públicas de mercado</span>
           </span>
         </a>
 
@@ -72,19 +128,12 @@ export function Cabecalho({ rota }: { rota: Rota }) {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => irPara("bastidores", "robo")}
-            className="hidden items-center gap-2 rounded-full border border-linha bg-folha px-3 py-1.5 text-[0.8125rem] font-semibold text-tinta2 hover:border-marca sm:inline-flex"
-            aria-label={`Situação do robô: ${texto}. Ver detalhes`}
-          >
-            <span className={`relative inline-block size-2.5 rounded-full ${cor}`}>
-              {tom === "ok" ? <span className={`absolute inset-0 animate-ping rounded-full ${cor} opacity-40 motion-reduce:hidden`} /> : null}
-            </span>
-            {texto}
-          </button>
+          <MenuCalcular rota={rota} />
+          <span className="hidden xl:inline-flex">
+            <ChipDoRobo />
+          </span>
           <Dica texto="Imprimir ou salvar o briefing em PDF">
-            <button type="button" className={`${botaoIcone} hidden sm:grid`} aria-label="Imprimir o briefing" onClick={() => globalThis.print()}>
+            <button type="button" className={`${botaoIcone} hidden lg:grid`} aria-label="Imprimir o briefing" onClick={() => globalThis.print()}>
               <Printer size={17} />
             </button>
           </Dica>
@@ -109,59 +158,88 @@ export function Cabecalho({ rota }: { rota: Rota }) {
             </button>
           </Dica>
           <Dica texto="Código e documentação no GitHub">
-            <a className={botaoIcone} href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="Código e documentação no GitHub">
+            <a className={`${botaoIcone} hidden sm:grid`} href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="Código e documentação no GitHub">
               <IconeGitHub />
             </a>
           </Dica>
         </div>
       </div>
-
-      <nav aria-label="Telas do painel (celular)" className="mx-auto flex max-w-[76rem] gap-1 overflow-x-auto px-3 pb-2 md:hidden">
-        {TELAS.map((t) => (
-          <a
-            key={t.id}
-            href={enderecoDa(t.id)}
-            aria-current={rota.tela === t.id ? "page" : undefined}
-            className="whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold text-tinta2 no-underline aria-[current=page]:bg-tinta aria-[current=page]:text-papel"
-          >
-            {t.nome}
-          </a>
-        ))}
-      </nav>
-
-      {estado && data ? (
-        <div className="border-t border-linha/70 bg-folha/60">
-          <div className="mx-auto flex max-w-[76rem] flex-wrap items-center gap-x-4 gap-y-1 px-4 py-1.5 text-[0.8rem] text-tinta2 md:px-6">
-            <span className="flex items-center gap-1">
-              <Dica texto="Foto anterior">
-                <button type="button" disabled={trabalhando} aria-label="Ver a foto anterior" onClick={() => vai(-1)} className="grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tinta2 hover:bg-folha2 hover:text-marca disabled:opacity-40">
-                  <ChevronLeft size={16} />
-                </button>
-              </Dica>
-              <span className="num font-semibold text-tinta">
-                Foto de {dataBR(data)}
-              </span>
-              <span className="hidden capitalize text-tinta3 sm:inline">· {diaDaSemana(data)}</span>
-              <Dica texto="Foto seguinte">
-                <button type="button" disabled={trabalhando || !antiga} aria-label="Ver a foto seguinte" onClick={() => vai(1)} className="grid size-6 place-items-center rounded-md border-0 bg-transparent p-0 text-tinta2 hover:bg-folha2 hover:text-marca disabled:opacity-30">
-                  <ChevronRight size={16} />
-                </button>
-              </Dica>
-            </span>
-            <span role="status" aria-live="polite" className="text-aviso empty:hidden">{nota}</span>
-            {antiga ? (
-              <span className="text-aviso">
-                Foto antiga.{" "}
-                <button type="button" onClick={vaiParaAMaisRecente} className="border-0 bg-transparent p-0 font-semibold text-marca underline">
-                  Ver a mais recente ({dataBR(maisRecente)})
-                </button>
-              </span>
-            ) : (
-              <span className="hidden text-tinta3 sm:inline">Cada dia fica guardado para sempre: dá para voltar e ver os números daquele dia.</span>
-            )}
-          </div>
-        </div>
-      ) : null}
     </header>
+  );
+}
+
+/** A data da foto, as setas para outro dia e (no celular) a situação do robô. Rola junto com a página. */
+function FaixaDaFoto() {
+  const { estado, data, maisRecente, vizinha, vaiParaAMaisRecente, trabalhando } = useDados();
+  const [nota, setNota] = useState("");
+  if (!estado || !data) return null;
+  const antiga = maisRecente !== null && data < maisRecente;
+  const vai = (sentido: -1 | 1) =>
+    vizinha(sentido).then((achou: boolean) => {
+      if (achou) return setNota("");
+      setNota(sentido < 0 ? "Não há foto anterior guardada ainda." : "Esta já é a foto mais recente.");
+      globalThis.setTimeout(() => setNota(""), 4000);
+    });
+  const seta = "grid size-9 place-items-center rounded-md border-0 bg-transparent p-0 text-tinta2 hover:bg-folha2 hover:text-marca disabled:opacity-30 sm:size-7";
+  return (
+    <div className="nao-imprime border-b border-linha/70 bg-folha/60">
+      <div className="mx-auto flex max-w-[76rem] flex-wrap items-center gap-x-4 gap-y-1 px-2 py-1 text-[0.8rem] text-tinta2 sm:px-4 md:px-6">
+        <span className="flex items-center gap-0.5">
+          <button type="button" disabled={trabalhando} aria-label="Ver a foto anterior" onClick={() => vai(-1)} className={seta}>
+            <ChevronLeft size={18} />
+          </button>
+          <span className="num font-semibold text-tinta">Foto de {dataBR(data)}</span>
+          <span className="ml-1 hidden capitalize text-tinta3 sm:inline">· {diaDaSemana(data)}</span>
+          <button type="button" disabled={trabalhando || !antiga} aria-label="Ver a foto seguinte" onClick={() => vai(1)} className={seta}>
+            <ChevronRight size={18} />
+          </button>
+        </span>
+        <span role="status" aria-live="polite" className="text-aviso empty:hidden">
+          {nota}
+        </span>
+        {antiga ? (
+          <span className="text-aviso">
+            Foto antiga.{" "}
+            <button type="button" onClick={vaiParaAMaisRecente} className="border-0 bg-transparent p-0 font-semibold text-marca underline">
+              Ver a mais recente ({dataBR(maisRecente)})
+            </button>
+          </span>
+        ) : (
+          <span className="hidden text-tinta3 md:inline">Cada dia fica guardado para sempre: dá para voltar e ver os números daquele dia.</span>
+        )}
+        <span className="ml-auto xl:hidden">
+          <ChipDoRobo compacto />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const ABAS_DO_CELULAR = [
+  { tela: "briefing", nome: "Briefing", Icone: Newspaper },
+  { tela: "mercado", nome: "Mercado", Icone: TrendingUp },
+  { tela: "calculadoras", nome: "Calcular", Icone: Calculator },
+  { tela: "bastidores", nome: "Bastidores", Icone: Bot },
+] as const;
+
+/** A navegação do celular fica embaixo, ao alcance do polegar; "Calcular" abre a última calculadora usada. */
+export function BarraInferior({ rota }: { rota: Rota }) {
+  return (
+    <nav aria-label="Telas do painel" className="nao-imprime fixed inset-x-0 bottom-0 z-40 border-t border-linha bg-papel/95 backdrop-blur-md md:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+      <ul className="m-0 grid list-none grid-cols-4 p-0">
+        {ABAS_DO_CELULAR.map(({ tela, nome, Icone }) => (
+          <li key={tela}>
+            <a
+              href={tela === "calculadoras" ? enderecoDa("calculadoras", ultimaCalculadora()) : enderecoDa(tela)}
+              aria-current={rota.tela === tela ? "page" : undefined}
+              className="flex h-14 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold text-tinta3 no-underline aria-[current=page]:text-marca"
+            >
+              <Icone size={21} aria-hidden strokeWidth={rota.tela === tela ? 2.4 : 1.9} />
+              {nome}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

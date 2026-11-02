@@ -18,6 +18,7 @@ export const GLOSSARIO = {
   inadimplencia: "A parte dos consorciados com parcelas atrasadas.",
   desagio: "Quanto o preço fica abaixo do valor a receber.",
   rodadas: "Cada vez que o robô roda: lê as fontes, guarda a foto do dia e publica. Verde deu certo, vermelho falhou.",
+  precatorio: "Dívida do governo reconhecida pela Justiça. Quem tem o direito entra numa fila e só recebe quando o devedor paga; até lá, o valor é corrigido.",
   foto: "O retrato dos números de um dia, guardado para sempre: assim qualquer preço do passado pode ser refeito com as taxas daquele dia.",
 };
 
@@ -40,5 +41,6 @@ export const NOMES_DO_GLOSSARIO = {
   inadimplencia: "Inadimplência",
   desagio: "Deságio",
   rodadas: "Rodadas do robô",
+  precatorio: "Precatório",
   foto: "Foto do dia",
 };

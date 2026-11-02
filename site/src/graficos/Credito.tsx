@@ -121,7 +121,7 @@ export function FaixasDeCredito({ imobiliario, veiculos }: { imobiliario: Modali
   const linhas = [imobiliario && { m: imobiliario, nome: "Financiamento imobiliário" }, veiculos && { m: veiculos, nome: "Financiamento de veículos" }].filter(Boolean) as { m: Modalidade; nome: string }[];
   if (linhas.length === 0) return null;
   const maximo = Math.ceil(Math.max(...linhas.map((l) => l.m.resumo.maior)) / 10) * 10;
-  const w = Math.max(320, largura);
+  const w = Math.max(240, largura);
   const compacto = w < 560;
   const alturaLinha = compacto ? ALTURA_LINHA_COMPACTA : ALTURA_LINHA;
   const margemE = compacto ? 14 : MARGEM.e;

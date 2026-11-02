@@ -293,6 +293,39 @@ class Auditoria:
         self.confere(
             "calculadora", "cota ativa: valor da cota", vp_credito - vp_parcelas, ex["ativa"]["valor_da_cota"]
         )
+        self.precatorio(spread)
+
+    def precatorio(self, spread: float) -> None:
+        """O exemplo do precatório (100 mil, 36 meses, Selic, 40% de deságio), com a Selic dos registros."""
+        ano_base, mes_base = int(self.foto["data"][:4]), int(self.foto["data"][5:7]) - 1
+        meta = max((d, v) for d, v in self.serie("bcb_sgs", "selic_meta") if d <= self.foto["data"])[1]
+        por_ano: dict[int, list[tuple[str, float]]] = {}
+        for r in self.registros:
+            if r["serie"] == "focus_selic_anual":
+                por_ano.setdefault(int(r["dimensao"].split("=")[1]), []).append((r["data_ref"], r["valor"]))
+        selic = {ano: max(v)[1] for ano, v in por_ano.items()}
+
+        def taxa(ano: int) -> float:
+            if ano == ano_base and ano in selic:
+                return (meta + selic[ano]) / 2
+            if ano in selic:
+                return selic[ano]
+            return selic[max(selic)] if ano > max(selic) else meta
+
+        fator = 1.0
+        for m in range(1, 37):
+            fator *= (1 + taxa(ano_base + (mes_base + m) // 12) / 100) ** (1 / 12)
+        esperado = 100000 * fator
+        desconto = self.interpola(self.curva("Tesouro Prefixado"), 3) + spread
+        vp = esperado / (1 + desconto / 100) ** 3
+        ex = self.js["exemplos"]["precatorio"]
+        self.confere("precatório", "fator de correção (Selic, 36 meses)", fator, ex["fator"])
+        self.confere("precatório", "valor esperado no pagamento", esperado, ex["valor_esperado"])
+        self.confere("precatório", "valor presente", vp, ex["valor_presente"])
+        retorno = ((esperado / 60000) ** (1 / 3) - 1) * 100
+        self.confere(
+            "precatório", "retorno de quem compra com 40% de deságio", retorno, ex["oferta"]["retorno_aa"]
+        )
 
     # ------------------------------------------------------------------------------------ frases
     def frases(self) -> None:

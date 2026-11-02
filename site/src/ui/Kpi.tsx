@@ -27,7 +27,7 @@ export function Kpi({ m, foto }: { m: Manchete; foto: Foto }) {
         <div className="min-w-0 text-xs text-tinta3">
           {m.delta7 ? <Delta valor={m.delta7.delta} tipo="pp" tamanho="p" periodo={PERIODO_DO_KPI} /> : <span>{m.nota ?? "sem comparação de 7 dias"}</span>}
           <Dica texto={`${m.fonte}${m.nota ? ` · ${m.nota}` : ""}. Dado de ${m.dataEhMes ? mesAno(m.data) : dataBR(m.data)}.`}>
-            <button type="button" className="mt-1 block max-w-full cursor-help truncate border-0 bg-transparent p-0 text-left text-[0.72rem] text-tinta3 underline decoration-dotted underline-offset-4">
+            <button type="button" className="-mx-1 mt-0.5 block max-w-full cursor-help truncate px-1 py-1 border-0 bg-transparent text-left text-[0.72rem] text-tinta3 underline decoration-dotted underline-offset-4">
               {m.fonte.replace(/ \(.*\)/, "")} · {quando}
             </button>
           </Dica>

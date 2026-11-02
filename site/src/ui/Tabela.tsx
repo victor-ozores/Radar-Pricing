@@ -102,12 +102,12 @@ export function Tabela<T>({ dados, colunas, legenda, nomeDoArquivo = "radar-pric
           <span className="num">{filtro ? `${num(linhas.length, 0)} de ${num(total, 0)}` : num(total, 0)}</span> {total === 1 ? "linha" : "linhas"}
         </span>
         <Dica texto={compacta ? "Voltar ao espaçamento confortável" : "Mostrar mais linhas na tela"}>
-          <button type="button" onClick={() => setCompacta((c) => !c)} aria-pressed={compacta} className="rounded-lg border border-linha bg-transparent px-2 py-1 text-xs font-semibold text-tinta2 hover:border-marca hover:text-marca aria-pressed:border-marca aria-pressed:text-marca">
+          <button type="button" onClick={() => setCompacta((c) => !c)} aria-pressed={compacta} className="rounded-lg border border-linha bg-transparent px-2.5 py-2 text-xs font-semibold text-tinta2 hover:border-marca hover:text-marca aria-pressed:border-marca aria-pressed:text-marca sm:py-1">
             Compacta
           </button>
         </Dica>
         <Dica texto="Baixar o que está na tela em CSV (abre direto no Excel)">
-          <button type="button" onClick={baixaCsv} disabled={linhas.length === 0} className="inline-flex items-center gap-1 rounded-lg border border-linha bg-transparent px-2 py-1 text-xs font-semibold text-tinta2 hover:border-marca hover:text-marca disabled:opacity-40">
+          <button type="button" onClick={baixaCsv} disabled={linhas.length === 0} className="inline-flex items-center gap-1 rounded-lg border border-linha bg-transparent px-2.5 py-2 text-xs font-semibold text-tinta2 hover:border-marca hover:text-marca disabled:opacity-40 sm:py-1">
             <Download size={13} aria-hidden /> CSV
           </button>
         </Dica>
@@ -127,7 +127,7 @@ export function Tabela<T>({ dados, colunas, legenda, nomeDoArquivo = "radar-pric
                     <button
                       type="button"
                       onClick={h.column.getToggleSortingHandler()}
-                      className={`inline-flex items-center gap-1 border-0 bg-transparent p-0 text-[0.7rem] font-bold uppercase tracking-[0.07em] ${sentido ? "text-tinta" : "text-tinta3"} hover:text-tinta ${meta?.numerica ? "flex-row-reverse" : ""}`}
+                      className={`inline-flex items-center gap-1 border-0 bg-transparent px-0 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.07em] ${sentido ? "text-tinta" : "text-tinta3"} hover:text-tinta ${meta?.numerica ? "flex-row-reverse" : ""}`}
                     >
                       {titulo}
                       <Seta size={12} className={sentido ? "text-marca" : "opacity-50"} aria-hidden />

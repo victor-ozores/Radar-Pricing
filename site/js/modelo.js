@@ -174,6 +174,38 @@ function ordemDaReuniao(codigo) {
   return m ? Number(m[2]) * 100 + Number(m[1]) : 0;
 }
 
+/**
+ * Os caminhos que um valor corrigido pela Selic ou pelo IPCA pode seguir daqui para a frente, tirados da foto:
+ * a Selic de cada ano (no ano em curso, a média entre a meta de hoje e a esperada para o fim do ano; nos seguintes,
+ * a do Focus, repetindo a última quando o Focus acaba) e o IPCA esperado de cada ano (idem). É uma projeção simples,
+ * não uma previsão: serve para dar ordem de grandeza ao que um valor corrigido valerá no pagamento.
+ */
+export function caminhoDeCorrecao(foto) {
+  const f = focus(foto);
+  const anoBase = Number(foto.data.slice(0, 4));
+  const mesBase = Number(foto.data.slice(5, 7)) - 1;
+  const meta = entradaDeVariacao(foto, "bcb_sgs", "selic_meta")?.valor ?? null;
+  const mapa = (lista) => new Map(lista.map((x) => [x.ano, x.valor]));
+  const selic = mapa(f.selic);
+  const ipca = mapa(f.ipca);
+  const repete = (m, ano) => {
+    if (m.size === 0) return null;
+    if (m.has(ano)) return m.get(ano);
+    const anos = [...m.keys()].sort((a, b) => a - b);
+    return ano > anos.at(-1) ? m.get(anos.at(-1)) : m.get(anos[0]);
+  };
+  return {
+    anoBase,
+    mesBase,
+    anosDoFocus: { selic: [...selic.keys()].sort((a, b) => a - b), ipca: [...ipca.keys()].sort((a, b) => a - b) },
+    selicDoAno(ano) {
+      if (ano === anoBase && meta !== null && selic.has(anoBase)) return (meta + selic.get(anoBase)) / 2;
+      return repete(selic, ano) ?? meta;
+    },
+    ipcaDoAno: (ano) => repete(ipca, ano),
+  };
+}
+
 /** Selic, CDI e IPCA do SGS, uma linha por série, com a data do último dado. */
 export function seriesDoBanco(foto) {
   const ordem = [

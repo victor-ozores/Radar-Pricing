@@ -5,6 +5,7 @@ import { dataBR, diaDaSemana, num } from "../../js/formato.js";
 import { fraseDasBarras, fraseDasExcluidas, fraseDoFocus, heroDoDia, leituraDoDia } from "../../js/leitura.js";
 import * as modelo from "../../js/modelo.js";
 import { fraseDoCapituloDaCurva, fraseDoCapituloDoCredito, fraseDoCapituloDoCusto, fraseDoCapituloDoSetor, manchetePrincipal } from "../../js/narrativa.js";
+import { ultimaCalculadora } from "../calc/memoria";
 import { useDados, useEstado } from "../dados";
 import { CurvaDeJuros, SelicEmDias, SelicEsperada } from "../graficos/Juros";
 import { FaixasDeCredito } from "../graficos/Credito";
@@ -72,7 +73,7 @@ function Topo() {
             <button type="button" onClick={() => irAo("cap-curva")} className="inline-flex items-center gap-2 rounded-full border-0 bg-marca px-5 py-2.5 text-sm font-semibold text-[var(--marca-sobre)] shadow-sm transition-transform hover:-translate-y-px">
               Ver como chegamos aí <ArrowRight size={16} />
             </button>
-            <button type="button" onClick={() => irPara("calculadoras")} className="inline-flex items-center gap-2 rounded-full border border-linha2 bg-folha px-5 py-2.5 text-sm font-semibold text-tinta transition-colors hover:border-marca hover:text-marca">
+            <button type="button" onClick={() => irPara("calculadoras", ultimaCalculadora())} className="inline-flex items-center gap-2 rounded-full border border-linha2 bg-folha px-5 py-2.5 text-sm font-semibold text-tinta transition-colors hover:border-marca hover:text-marca">
               Calcular uma cota
             </button>
             <button type="button" onClick={() => globalThis.print()} className="inline-flex items-center gap-2 rounded-full border-0 bg-transparent px-3 py-2.5 text-sm font-semibold text-tinta2 hover:text-marca">
@@ -134,7 +135,7 @@ function Numeros() {
           ["cap-credito", "4 · Crédito concorrente"],
           ["cap-setor", "5 · O setor"],
         ].map(([id, nome]) => (
-          <button key={id} type="button" onClick={() => irAo(id)} className="rounded-full border border-linha bg-folha px-3 py-1 text-[0.8125rem] font-semibold text-tinta2 hover:border-marca hover:text-marca">
+          <button key={id} type="button" onClick={() => irAo(id)} className="rounded-full border border-linha bg-folha px-3 py-2 text-[0.8125rem] font-semibold text-tinta2 hover:border-marca hover:text-marca sm:py-1">
             {nome}
           </button>
         ))}
@@ -278,7 +279,7 @@ export function Briefing() {
             <button type="button" onClick={() => irPara("mercado")} className="rounded-full border-0 bg-marca px-5 py-2.5 text-sm font-semibold text-[var(--marca-sobre)]">
               Explorar o mercado
             </button>
-            <button type="button" onClick={() => irPara("calculadoras")} className="rounded-full border border-linha2 bg-folha px-5 py-2.5 text-sm font-semibold text-tinta hover:border-marca hover:text-marca">
+            <button type="button" onClick={() => irPara("calculadoras", ultimaCalculadora())} className="rounded-full border border-linha2 bg-folha px-5 py-2.5 text-sm font-semibold text-tinta hover:border-marca hover:text-marca">
               Calculadoras
             </button>
             <button type="button" onClick={() => irPara("bastidores")} className="rounded-full border border-linha2 bg-folha px-5 py-2.5 text-sm font-semibold text-tinta hover:border-marca hover:text-marca">

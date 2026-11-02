@@ -245,6 +245,166 @@ def test_calculadoras_do_painel_batem_com_uma_conta_feita_em_python(foto_json):
             assert js[campo] == pytest.approx(valor, rel=1e-9, abs=1e-9), (caso, campo)
 
 
+# ------------------------------------------------------------------------------------------ precatório
+def _caminho_independente(foto: dict):
+    """A Selic e o IPCA esperados de cada ano, tirados direto dos registros brutos (não do código do painel)."""
+    registros = foto["registros"]
+    ano_base, mes_base = int(foto["data"][:4]), int(foto["data"][5:7]) - 1
+    meta = max(
+        (r["data_ref"], r["valor"])
+        for r in registros
+        if r["serie"] == "selic_meta" and r["data_ref"] <= foto["data"]
+    )[1]
+
+    def focus(serie: str) -> dict[int, float]:
+        por_ano: dict[int, list[tuple[str, float]]] = {}
+        for r in registros:
+            if r["serie"] == serie:
+                por_ano.setdefault(int(r["dimensao"].split("=")[1]), []).append((r["data_ref"], r["valor"]))
+        return {ano: max(v)[1] for ano, v in por_ano.items()}
+
+    selic_por_ano, ipca_por_ano = focus("focus_selic_anual"), focus("focus_ipca_anual")
+
+    def repete(mapa: dict[int, float], ano: int) -> float | None:
+        if not mapa:
+            return None
+        if ano in mapa:
+            return mapa[ano]
+        return mapa[max(mapa)] if ano > max(mapa) else mapa[min(mapa)]
+
+    def selic(ano: int) -> float:
+        if ano == ano_base and ano_base in selic_por_ano:
+            return (meta + selic_por_ano[ano_base]) / 2
+        valor = repete(selic_por_ano, ano)
+        return meta if valor is None else valor
+
+    return ano_base, mes_base, selic, lambda ano: repete(ipca_por_ano, ano)
+
+
+def _precatorio(e: dict, curva: dict, caminho) -> dict:
+    ano_base, mes_base, selic, ipca = caminho
+    if e["indice"] == "nenhum":
+        fator = 1.0
+    elif e["indice"] == "propria":
+        fator = (1 + e["propriaPct"] / 100) ** (e["meses"] / 12)
+    else:
+        fator = 1.0
+        for m in range(1, e["meses"] + 1):
+            ano = ano_base + (mes_base + m) // 12
+            taxa = selic(ano) if e["indice"] == "selic" else min(ipca(ano) + e["jurosPP"], selic(ano))
+            fator *= (1 + taxa / 100) ** (1 / 12)
+    esperado = e["valor"] * fator
+    liquido = esperado * (1 - e["retencaoPct"] / 100)
+    desconto = _taxa(curva, e["meses"]) + e["spreadPP"]
+    vp = valor_presente(liquido, desconto, e["meses"])
+    saida = {
+        "fator": fator,
+        "valor_esperado": esperado,
+        "liquido_esperado": liquido,
+        "valor_presente": vp,
+        "taxa_desconto": desconto,
+    }
+    if e["desagioPct"] is not None:
+        pago = e["valor"] * (1 - e["desagioPct"] / 100) + e["custos"]
+        saida |= {
+            "pago": pago,
+            "retorno_aa": ((liquido / pago) ** (12 / e["meses"]) - 1) * 100,
+            "folga": vp - pago,
+            "preco_maximo": vp - e["custos"],
+        }
+    return saida
+
+
+def _cenarios_do_precatorio() -> list[dict]:
+    casos = []
+    for valor in (1000, 123456.78):
+        for meses in (1, 2, 3, 14, 36, 48, 120, 200, 360):
+            for indice in ("selic", "ipca", "propria", "nenhum"):
+                for retencao in (0, 17.5):
+                    for desagio, custos in ((None, 0), (40, 1500)):
+                        for spread in (0, 5):
+                            entrada = {
+                                "valor": valor,
+                                "meses": meses,
+                                "indice": indice,
+                                "jurosPP": 2,
+                                "propriaPct": 8,
+                                "retencaoPct": retencao,
+                                "desagioPct": desagio,
+                                "custos": custos,
+                                "spreadPP": spread,
+                            }
+                            casos.append({"calc": "precatorio", "entrada": entrada})
+    return casos
+
+
+def test_precatorio_do_painel_bate_com_uma_conta_feita_em_python(foto_json):
+    """O precatório (JavaScript) contra o mesmo laço mês a mês escrito de novo em Python, com a Selic e o IPCA
+    esperados tirados direto dos registros da foto, em 576 combinações de entrada."""
+    foto = json.loads(foto_json.read_text(encoding="utf-8"))
+    curva = foto["derivados"]["ancoras"]["curva_nominal"]
+    caminho = _caminho_independente(foto)
+    casos = _cenarios_do_precatorio()
+    r = subprocess.run(
+        [NODE, str(AJUDA), "cenarios", str(foto_json), "-"],
+        input=json.dumps(casos),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    assert r.returncode == 0, r.stderr
+    do_js = json.loads(r.stdout)
+    assert len(do_js) == len(casos) == 576
+    for caso, js in zip(casos, do_js, strict=True):
+        esperado = _precatorio(caso["entrada"], curva, caminho)
+        for campo, valor in esperado.items():
+            obtido = js[campo] if campo in js else js["oferta"][campo]
+            assert obtido == pytest.approx(valor, rel=1e-9, abs=1e-9), (caso, campo)
+
+
+def test_retorno_da_oferta_com_custos_bate_com_uma_conta_feita_em_python(foto_json):
+    foto = json.loads(foto_json.read_text(encoding="utf-8"))
+    a = foto["derivados"]["ancoras"]
+    curvas = {"nominal": a["curva_nominal"], "real": a["curva_real"]}
+    casos = [
+        {
+            "calc": "retorno",
+            "entrada": {
+                "preco": 38000,
+                "valor": 50000,
+                "meses": m,
+                "corrigido": c,
+                "alvoPct": None,
+                "spreadPP": 5,
+                "custos": custos,
+            },
+        }
+        for m in (6, 24, 60)
+        for c in (True, False)
+        for custos in (0, 2500)
+    ]
+    r = subprocess.run(
+        [NODE, str(AJUDA), "cenarios", str(foto_json), "-"],
+        input=json.dumps(casos),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    assert r.returncode == 0, r.stderr
+    for caso, js in zip(casos, json.loads(r.stdout), strict=True):
+        e = caso["entrada"]
+        pago = e["preco"] + e["custos"]
+        ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
+        maximo = valor_presente(e["valor"], ancora + e["spreadPP"], e["meses"])
+        assert js["retorno_aa"] == pytest.approx(
+            ((e["valor"] / pago) ** (12 / e["meses"]) - 1) * 100, rel=1e-9
+        )
+        assert js["folga"] == pytest.approx(maximo - pago, rel=1e-9, abs=1e-9)
+        assert js["preco_maximo"] == pytest.approx(maximo - e["custos"], rel=1e-9, abs=1e-9)
+
+
 # ------------------------------------------------------------------------------------------ excel
 ABAS_DO_EXCEL = [
     "Leia-me",
