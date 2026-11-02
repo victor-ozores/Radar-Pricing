@@ -35,6 +35,13 @@
   --s2: #d95926;
   --s3: #7a56c2;
   --s4: #1b8a6b;
+  /* linhas de um mesmo gráfico com muitas séries (vencimentos do Tesouro): slots 1 a 6 da paleta validada, claro */
+  --t1: #2a78d6;
+  --t2: #eb6834;
+  --t3: #1baf7a;
+  --t4: #eda100;
+  --t5: #e87ba4;
+  --t6: #008300;
   --sombra: 0 1px 0 rgb(21 33 30 / 0.04), 0 14px 32px -18px rgb(21 33 30 / 0.28);
   --sombra-balao: 0 10px 30px -8px rgb(21 33 30 / 0.35);
 }
@@ -68,6 +75,13 @@
   --s2: #e2662f;
   --s3: #9a7de0;
   --s4: #2fa883;
+  /* a mesma paleta de 6, passos do tema escuro */
+  --t1: #3987e5;
+  --t2: #d95926;
+  --t3: #199e70;
+  --t4: #c98500;
+  --t5: #d55181;
+  --t6: #008300;
   --sombra: 0 1px 0 rgb(0 0 0 / 0.3), 0 14px 32px -18px rgb(0 0 0 / 0.7);
   --sombra-balao: 0 10px 30px -8px rgb(0 0 0 / 0.8);
 }

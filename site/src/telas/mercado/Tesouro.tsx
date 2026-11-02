@@ -5,7 +5,7 @@ import { dataBR, num, pct } from "../../../js/formato.js";
 import { dataAteO, titulosDoTesouro } from "../../../js/historico.js";
 import { somaDias } from "../../../js/foto.js";
 import { entradaDeVariacao, variacaoDe } from "../../../js/modelo.js";
-import { Balao, EIXO, GRADE, Quadro } from "../../graficos/base";
+import { Balao, EIXO, GRADE, Quadro, marcasDeTaxa } from "../../graficos/base";
 import type { Foto } from "../../tipos";
 import { Delta } from "../../ui/Delta";
 import { Spark } from "../../ui/Spark";
@@ -14,14 +14,20 @@ import { Tabela } from "../../ui/Tabela";
 
 type Titulo = { chave: string; titulo: string; vencimento: string; ano: number; pontos: { data: string; valor: number }[] };
 
-/** Do mais claro (vencimento mais curto) ao mais escuro (mais longo): o prazo vira a cor, sem inventar uma cor por linha. */
-const corDoPrazo = (i: number, n: number) => `color-mix(in srgb, var(--s1) ${n < 2 ? 100 : Math.round(38 + (62 * i) / (n - 1))}%, var(--folha))`;
+/**
+ * Uma cor para cada vencimento, na ordem do prazo (os 6 primeiros passos da paleta categórica validada). Um degradê de um azul só
+ * não separa 6 linhas que andam juntas: os degraus ficavam a 0,05 de claridade (o mínimo é 0,06) e o mais claro a 1,7:1 do fundo.
+ */
+const corDoPrazo = (i: number) => (i < 6 ? `var(--t${i + 1})` : "var(--tinta-3)");
 
 function EvolucaoDoTesouro({ titulos }: { titulos: Titulo[] }) {
   const nomes = [...new Set(titulos.map((t) => t.titulo))].filter((t) => t !== "Tesouro Selic");
   const [titulo, setTitulo] = useState(nomes[0] ?? "");
   const [janela, setJanela] = useState<"7" | "30" | "tudo">("tudo");
   const doTitulo = useMemo(() => titulos.filter((t) => t.titulo === titulo), [titulos, titulo]);
+  const [escondidas, setEscondidas] = useState<string[]>([]);
+  const [destaque, setDestaque] = useState<string | null>(null);
+  const alterna = (chave: string) => setEscondidas((atual) => (atual.includes(chave) ? atual.filter((c) => c !== chave) : doTitulo.length - atual.filter((c) => doTitulo.some((t) => t.chave === c)).length > 1 ? [...atual, chave] : atual));
   const linhas = useMemo(() => {
     const datas = [...new Set(doTitulo.flatMap((t) => t.pontos.map((p) => p.data)))].sort();
     const fim = datas.at(-1);
@@ -38,8 +44,7 @@ function EvolucaoDoTesouro({ titulos }: { titulos: Titulo[] }) {
   return (
     <Quadro
       titulo={`Como a taxa de cada vencimento do ${titulo} andou`}
-      subtitulo="% ao ano, taxa de compra de cada dia. Cada linha é um vencimento; quanto mais forte a cor, mais longo o prazo."
-      legenda={doTitulo.map((t, i) => ({ cor: corDoPrazo(i, doTitulo.length), nome: `Vence em ${t.ano}` }))}
+      subtitulo="% ao ano, taxa de compra de cada dia. Cada cor é um vencimento; toque na legenda para esconder ou mostrar uma linha."
       acoes={
         <div className="flex flex-wrap gap-2">
           <Segmentado valor={titulo} aoMudar={setTitulo} rotulo="Título" opcoes={nomes.map((n) => ({ id: n, nome: n.replace("Tesouro ", "") }))} />
@@ -51,12 +56,46 @@ function EvolucaoDoTesouro({ titulos }: { titulos: Titulo[] }) {
         linhas: [...linhas].reverse().map((l) => [dataBR(l.data), ...doTitulo.map((t) => { const v = (l as Record<string, any>)[t.chave]; return typeof v === "number" ? num(v) : "—"; })]),
       }}
     >
+      <ul className="nao-imprime m-0 mb-2 flex list-none flex-wrap gap-1.5 p-0">
+        {doTitulo.map((t, i) => {
+          const oculta = escondidas.includes(t.chave);
+          const ultimo = t.pontos.at(-1)?.valor;
+          return (
+            <li key={t.chave}>
+              <button
+                type="button"
+                aria-pressed={!oculta}
+                aria-label={`Vencimento ${t.ano}${typeof ultimo === "number" ? `, hoje ${pct(ultimo)}` : ""}: ${oculta ? "mostrar" : "esconder"} a linha`}
+                onClick={() => alterna(t.chave)}
+                onPointerEnter={() => setDestaque(t.chave)}
+                onPointerLeave={() => setDestaque(null)}
+                onFocus={() => setDestaque(t.chave)}
+                onBlur={() => setDestaque(null)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.8rem] transition-opacity ${oculta ? "border-linha bg-transparent text-tinta3 opacity-60" : "border-linha2 bg-folha text-tinta"} hover:border-marca`}
+              >
+                <svg width="20" height="8" aria-hidden>
+                  <line x1="1" x2="19" y1="4" y2="4" stroke={corDoPrazo(i)} strokeWidth="3" strokeLinecap="round" opacity={oculta ? 0.4 : 1} />
+                </svg>
+                <span className="font-semibold">{t.ano}</span>
+                {typeof ultimo === "number" ? <span className="num text-tinta3">{pct(ultimo)}</span> : null}
+              </button>
+            </li>
+          );
+        })}
+        {escondidas.some((c) => doTitulo.some((t) => t.chave === c)) ? (
+          <li>
+            <button type="button" onClick={() => setEscondidas([])} className="rounded-full border-0 bg-transparent px-2 py-1 text-[0.8rem] font-semibold text-marca underline underline-offset-2">
+              Mostrar todas
+            </button>
+          </li>
+        ) : null}
+      </ul>
       <div className="h-[22rem] w-full" role="img" aria-label={`Evolução da taxa dos vencimentos do ${titulo} entre ${dataBR(linhas[0].data)} e ${dataBR(linhas.at(-1)!.data)}. Os valores estão na tabela abaixo.`}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={linhas} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="data" {...EIXO} minTickGap={40} tickFormatter={(d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 0)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip
               cursor={{ stroke: "var(--linha-2)" }}
               content={({ active, payload }) => {
@@ -65,7 +104,7 @@ function EvolucaoDoTesouro({ titulos }: { titulos: Titulo[] }) {
                 return (
                   <Balao
                     titulo={dataBR(d.data)}
-                    linhas={[...doTitulo].reverse().map((t) => ({ cor: corDoPrazo(doTitulo.indexOf(t), doTitulo.length), nome: `Vencimento ${t.ano}`, valor: typeof d[t.chave] === "number" ? pct(d[t.chave]) : "—" }))}
+                    linhas={[...doTitulo].filter((t) => !escondidas.includes(t.chave)).reverse().map((t) => ({ cor: corDoPrazo(doTitulo.indexOf(t)), nome: `Vencimento ${t.ano}`, valor: typeof d[t.chave] === "number" ? pct(d[t.chave]) : "—" }))}
                     nota={`Primeiro dia do gráfico: ${dataBR(linhas[0].data)}`}
                   />
                 );
@@ -75,8 +114,10 @@ function EvolucaoDoTesouro({ titulos }: { titulos: Titulo[] }) {
               <Line
                 key={t.chave}
                 dataKey={t.chave}
-                stroke={corDoPrazo(i, doTitulo.length)}
-                strokeWidth={2.4}
+                hide={escondidas.includes(t.chave)}
+                stroke={corDoPrazo(i)}
+                strokeWidth={destaque === t.chave ? 3.6 : 2.4}
+                strokeOpacity={destaque && destaque !== t.chave ? 0.18 : 1}
                 dot={false}
                 activeDot={{ r: 5, stroke: "var(--folha)", strokeWidth: 2 }}
                 isAnimationActive={animar}

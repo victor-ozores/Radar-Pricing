@@ -4,7 +4,7 @@ import { dataBR, mesAno, num, pct, pp, sinal } from "../../js/formato.js";
 import { custoDoDinheiro } from "../../js/historico.js";
 import { Segmentado } from "../ui/blocos";
 import type { Foto } from "../tipos";
-import { Balao, COR, EIXO, GRADE, Quadro } from "./base";
+import { Balao, COR, EIXO, GRADE, Quadro, marcasDeTaxa } from "./base";
 
 const semMovimento = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -13,6 +13,10 @@ type Ponto = { vencimento: string; ano?: number; taxa: number; ref7: number | nu
 type Curva = { id: string; nome: string; descricao: string; titulo: string; base: string; pontos: Ponto[] };
 
 const NOMES_DO_PRAZO: Record<string, string> = { hoje: "Hoje", ha7: "Há 7 dias", ha30: "Há 30 dias" };
+
+/** "Hoje" é o azul cheio; "há 7 dias" é laranja e "há 30 dias" é cinza, tracejados: três linhas que não se confundem. */
+const COR_HA7 = COR.s2;
+const COR_HA30 = "var(--tinta-3)";
 
 /** Faixa de valores com folga, arredondada para meio ponto, para o eixo não colar nas linhas. */
 function dominio(valores: number[], passo = 0.5): [number, number] {
@@ -49,8 +53,8 @@ export function CurvaDeJuros({ curvas }: { curvas: Curva[] }) {
   const animar = !semMovimento();
   const legenda = [
     { cor: COR.s1, nome: "Hoje" },
-    ...(tem7 ? [{ cor: COR.s1, nome: "Há 7 dias", tracejado: true }] : []),
-    ...(tem30 ? [{ cor: COR.s1, nome: "Há 30 dias", tracejado: true }] : []),
+    ...(tem7 ? [{ cor: COR_HA7, nome: "Há 7 dias", tracejado: true }] : []),
+    ...(tem30 ? [{ cor: COR_HA30, nome: "Há 30 dias", tracejado: true }] : []),
   ];
   return (
     <Quadro
@@ -68,7 +72,7 @@ export function CurvaDeJuros({ curvas }: { curvas: Curva[] }) {
           <LineChart data={linhas} margin={{ top: 14, right: 18, bottom: 4, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="rotulo" {...EIXO} padding={{ left: 18, right: 18 }} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 1)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip
               cursor={{ stroke: "var(--linha-2)", strokeWidth: 1 }}
               content={({ active, payload }) => {
@@ -79,16 +83,16 @@ export function CurvaDeJuros({ curvas }: { curvas: Curva[] }) {
                     titulo={`Vencimento em ${mesAno(d.vencimento)}`}
                     linhas={[
                       { cor: COR.s1, nome: NOMES_DO_PRAZO.hoje, valor: pct(d.hoje), destaque: true },
-                      ...(d.ha7 === null ? [] : [{ cor: COR.s1, nome: NOMES_DO_PRAZO.ha7, valor: pct(d.ha7), tracejado: true }]),
-                      ...(d.ha30 === null ? [] : [{ cor: COR.s1, nome: NOMES_DO_PRAZO.ha30, valor: pct(d.ha30), tracejado: true }]),
+                      ...(d.ha7 === null ? [] : [{ cor: COR_HA7, nome: NOMES_DO_PRAZO.ha7, valor: pct(d.ha7), tracejado: true }]),
+                      ...(d.ha30 === null ? [] : [{ cor: COR_HA30, nome: NOMES_DO_PRAZO.ha30, valor: pct(d.ha30), tracejado: true }]),
                     ]}
                     nota={d.d7 === null ? undefined : `Em 7 dias: ${pp(d.d7)}${d.d30 === null ? "" : ` · em 30 dias: ${pp(d.d30)}`}`}
                   />
                 );
               }}
             />
-            {tem30 ? <Line dataKey="ha30" name="Há 30 dias" stroke={COR.s1} strokeOpacity={0.3} strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
-            {tem7 ? <Line dataKey="ha7" name="Há 7 dias" stroke={COR.s1} strokeOpacity={0.6} strokeWidth={2} strokeDasharray="6 5" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
+            {tem30 ? <Line dataKey="ha30" name="Há 30 dias" stroke={COR_HA30} strokeWidth={2.2} strokeDasharray="2 5" strokeLinecap="round" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
+            {tem7 ? <Line dataKey="ha7" name="Há 7 dias" stroke={COR_HA7} strokeWidth={2.2} strokeDasharray="6 5" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
             <Line
               dataKey="hoje"
               name="Hoje"
@@ -141,7 +145,7 @@ export function SelicEmDias({ foto }: { foto: Foto }) {
           <LineChart data={linhas} margin={{ top: 10, right: 14, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="data" {...EIXO} minTickGap={36} tickFormatter={(d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 2)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip
               cursor={{ stroke: "var(--linha-2)" }}
               content={({ active, payload }) => {
@@ -186,7 +190,7 @@ export function SelicEsperada({ selic, metaHoje, data }: { selic: Esperado[]; me
       subtitulo={`Mediana das projeções do Boletim Focus${data ? ` de ${dataBR(data)}` : ""}, no fim de cada ano. % ao ano.`}
       legenda={[
         { cor: COR.s1, nome: "Focus de hoje" },
-        ...(tem30 ? [{ cor: COR.s1, nome: "Focus 30 dias atrás", tracejado: true }] : []),
+        ...(tem30 ? [{ cor: COR_HA30, nome: "Focus 30 dias atrás", tracejado: true }] : []),
       ]}
       tabela={{ colunas: ["Quando", "Focus de hoje (% a.a.)", "Há 30 dias (% a.a.)"], linhas: linhas.map((l) => [l.rotulo, num(l.valor), l.ref30 === null ? "—" : num(l.ref30)]) }}
     >
@@ -195,7 +199,7 @@ export function SelicEsperada({ selic, metaHoje, data }: { selic: Esperado[]; me
           <LineChart data={linhas} margin={{ top: 14, right: 18, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="rotulo" {...EIXO} padding={{ left: 22, right: 22 }} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 1)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             {metaHoje !== null ? <ReferenceLine y={metaHoje} stroke="var(--linha-2)" strokeDasharray="3 4" /> : null}
             <Tooltip
               cursor={{ stroke: "var(--linha-2)" }}
@@ -207,14 +211,14 @@ export function SelicEsperada({ selic, metaHoje, data }: { selic: Esperado[]; me
                     titulo={d.rotulo}
                     linhas={[
                       { cor: COR.s1, nome: d.ano ? "Focus de hoje" : "Meta Selic", valor: pct(d.valor), destaque: true },
-                      ...(d.ref30 === null ? [] : [{ cor: COR.s1, nome: "Focus há 30 dias", valor: pct(d.ref30), tracejado: true }]),
+                      ...(d.ref30 === null ? [] : [{ cor: COR_HA30, nome: "Focus há 30 dias", valor: pct(d.ref30), tracejado: true }]),
                     ]}
                     nota={d.ref30 === null ? undefined : `Mudou ${pp(d.valor - d.ref30)} em 30 dias`}
                   />
                 );
               }}
             />
-            {tem30 ? <Line dataKey="ref30" stroke={COR.s1} strokeOpacity={0.5} strokeWidth={2} strokeDasharray="6 5" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
+            {tem30 ? <Line dataKey="ref30" stroke={COR_HA30} strokeWidth={2.2} strokeDasharray="6 5" dot={false} activeDot={false} isAnimationActive={animar} connectNulls /> : null}
             <Line dataKey="valor" stroke={COR.s1} strokeWidth={3} dot={{ r: 5, fill: COR.s1, stroke: "var(--folha)", strokeWidth: 2 }} activeDot={{ r: 7, stroke: "var(--folha)", strokeWidth: 2.5 }} isAnimationActive={animar} />
           </LineChart>
         </ResponsiveContainer>

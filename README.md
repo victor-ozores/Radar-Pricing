@@ -213,12 +213,12 @@ O que as calculadoras **não** consideram: a chance de ser contemplada, lance, s
 
 | O quê | Como | Resultado |
 |---|---|---|
-| **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 581 números conferidos, 0 divergências ([relatório](docs/auditoria/calculos_2026-11-01.md)) |
+| **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 755 números conferidos, 0 divergências, e mais 72 mil em entradas aleatórias ([relatório de 01/11](docs/auditoria/calculos_2026-11-01.md) e [segunda revisão, de 02/11](docs/auditoria/calculos_2026-11-02.md)) |
 | **O dado bruto** | Comparei com as fontes oficiais baixadas de novo | 360 de 360 taxas do Tesouro iguais ao arquivo oficial; 65 valores do SGS e 16 do Focus iguais aos das APIs |
 | **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 224 combinações das três primeiras calculadoras (com a taxa própria) e 576 do precatório contra a conta refeita em Python |
-| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 151 + 45 + 135 testes, todos offline (respostas reais gravadas) |
+| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 153 + 51 + 135 testes, todos offline (respostas reais gravadas) |
 | **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 1.401 fórmulas, 0 diferenças contra o painel, em 16 cenários |
-| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 155 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
+| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 175 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
 | **A nuvem** | A rodada de verdade no GitHub Actions, o site publicado e o `npm audit` | verde; 0 vulnerabilidades conhecidas nas dependências |
 
 ## 🧱 Tecnologias
@@ -242,7 +242,7 @@ src/radar_pricing/      o robô: http.py (cliente), fontes/ (7 coletores), colet
 site/                   o painel
   js/                   contas, leitura da foto, frases e Excel (JavaScript simples)
   src/                  telas (Briefing, Mercado, Calculadoras, Bastidores), gráficos e componentes
-  tests/                151 testes de contas e leitura, com a foto real em tests/fixtures
+  tests/                153 testes de contas e leitura, com a foto real em tests/fixtures
 scripts/                verifica_fontes.py (testa cada fonte de verdade), audita_painel.py,
                         confere_excel.py (abre o Excel de verdade, no Windows), grava_amostras.py
 tests/                  135 testes em Python, com respostas reais gravadas

@@ -4,7 +4,7 @@ import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip,
 import { comUnidade, dataBR, deltaComUnidade, mesAno, num, pct } from "../../../js/formato.js";
 import { creditoNoTempo } from "../../../js/historico.js";
 import * as modelo from "../../../js/modelo.js";
-import { Balao, COR, EIXO, GRADE, Quadro } from "../../graficos/base";
+import { Balao, COR, EIXO, GRADE, Quadro, marcasDeTaxa } from "../../graficos/base";
 import type { Foto } from "../../tipos";
 import { Delta } from "../../ui/Delta";
 import { Spark } from "../../ui/Spark";
@@ -50,7 +50,7 @@ function MedianaNoTempo({ foto, serie, titulo, subtitulo }: { foto: Foto; serie:
           <ComposedChart data={linhas.map((l) => ({ ...l, miolo: [l.p25, l.p75] }))} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="data" {...EIXO} tickFormatter={(d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`} padding={{ left: 16, right: 16 }} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 0)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip
               cursor={{ stroke: "var(--linha-2)" }}
               content={({ active, payload }) => {

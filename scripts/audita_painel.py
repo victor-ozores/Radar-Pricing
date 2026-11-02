@@ -294,6 +294,178 @@ class Auditoria:
             "calculadora", "cota ativa: valor da cota", vp_credito - vp_parcelas, ex["ativa"]["valor_da_cota"]
         )
         self.precatorio(spread)
+        self.negocios(spread)
+        self.lotes(spread)
+
+    # ------------------------------------------------------------------------------------ negócios (veredito)
+    MARGEM_PCT = 5  # escrita de novo aqui, de propósito: a regra do painel tem de dar o mesmo com outra mão
+
+    def _selic_do_ano(self) -> tuple[int, int, dict[int, float], float]:
+        ano_base, mes_base = int(self.foto["data"][:4]), int(self.foto["data"][5:7]) - 1
+        meta = max((d, v) for d, v in self.serie("bcb_sgs", "selic_meta") if d <= self.foto["data"])[1]
+        por_ano: dict[int, list[tuple[str, float]]] = {}
+        for r in self.registros:
+            if r["serie"] == "focus_selic_anual":
+                por_ano.setdefault(int(r["dimensao"].split("=")[1]), []).append((r["data_ref"], r["valor"]))
+        return ano_base, mes_base, {ano: max(v)[1] for ano, v in por_ano.items()}, meta
+
+    def _fator_selic(self, meses: int) -> float:
+        ano_base, mes_base, selic, meta = self._selic_do_ano()
+
+        def taxa(ano: int) -> float:
+            if ano == ano_base and ano in selic:
+                return (meta + selic[ano]) / 2
+            if ano in selic:
+                return selic[ano]
+            return selic[max(selic)] if ano > max(selic) else meta
+
+        fator = 1.0
+        for m in range(1, meses + 1):
+            fator *= (1 + taxa(ano_base + (mes_base + m) // 12) / 100) ** (1 / 12)
+        return fator
+
+    def _leitura(
+        self, pago_hoje: float, saidas: float, recebe: float, valor_justo: float, meses: int | None
+    ) -> dict:
+        total = pago_hoje + saidas
+        folga = valor_justo - pago_hoje
+        folga_pct = folga / pago_hoje * 100
+        situacao = "ruim" if folga < 0 else "limite" if folga_pct < self.MARGEM_PCT else "bom"
+        retorno = (
+            ((recebe / pago_hoje) ** (12 / meses) - 1) * 100 if saidas == 0 and meses and recebe > 0 else None
+        )
+        return {
+            "total_pago": total,
+            "lucro": recebe - total,
+            "lucro_pct": (recebe - total) / total * 100,
+            "folga": folga,
+            "folga_pct": folga_pct,
+            "retorno_aa": retorno,
+            "situacao": situacao,
+        }
+
+    def negocios(self, spread: float) -> None:
+        real, nominal = self.curva("Tesouro IPCA+"), self.curva("Tesouro Prefixado")
+        for n in self.js["negocios"]:
+            e, r, js = n["entrada"], n["resultado"], n["leitura"]
+            area = f"negócio ({n['id']})"
+            if n["tipo"] == "cancelada":
+                propria = e.get("correcaoPct") is not None
+                curva = real if e["corrigido"] and not propria else nominal
+                recebe = (
+                    e["valor"] * (1 + e["correcaoPct"] / 100) ** (e["meses"] / 12) if propria else e["valor"]
+                )
+                vp = recebe / (1 + (self.interpola(curva, e["meses"] / 12) + spread) / 100) ** (
+                    e["meses"] / 12
+                )
+                self.confere(area, "valor no pagamento", recebe, r["valor_no_pagamento"])
+                self.confere(area, "valor presente", vp, r["valor_presente"])
+                esp = self._leitura(e["preco"] + e["custos"], 0, recebe, vp, e["meses"])
+            elif n["tipo"] == "oferta":
+                curva = real if e["corrigido"] else nominal
+                custos = e.get("custos", 0)
+                alvo = (
+                    e["alvoPct"]
+                    if e.get("alvoPct") is not None
+                    else self.interpola(curva, e["meses"] / 12) + spread
+                )
+                bruto = e["valor"] / (1 + alvo / 100) ** (e["meses"] / 12)
+                self.confere(area, "preço máximo (já sem os custos)", bruto - custos, r["preco_maximo"])
+                self.confere(
+                    area,
+                    "retorno ao ano",
+                    ((e["valor"] / (e["preco"] + custos)) ** (12 / e["meses"]) - 1) * 100,
+                    r["retorno_aa"],
+                )
+                esp = self._leitura(e["preco"] + custos, 0, e["valor"], bruto, e["meses"])
+            elif n["tipo"] == "ativa":
+
+                def fator(m: int) -> float:
+                    return (1 + (self.interpola(real, m / 12) + spread) / 100) ** (m / 12)
+
+                vp_par = sum(e["parcela"] / fator(t) for t in range(1, e["parcelas"] + 1))
+                vp_cre = e["credito"] if e["contemplacao"] == 0 else e["credito"] / fator(e["contemplacao"])
+                self.confere(area, "valor da cota", vp_cre - vp_par, r["valor_da_cota"])
+                esp = self._leitura(
+                    e["preco"] + e["custos"],
+                    e["parcela"] * e["parcelas"],
+                    e["credito"],
+                    vp_cre - vp_par,
+                    None,
+                )
+            else:  # precatório
+                meses = e["meses"]
+                fator = (
+                    (1 + e["propriaPct"] / 100) ** (meses / 12)
+                    if e["indice"] == "propria"
+                    else self._fator_selic(meses)
+                )
+                liquido = e["valor"] * fator * (1 - e["retencaoPct"] / 100)
+                vp = liquido / (1 + (self.interpola(nominal, meses / 12) + spread) / 100) ** (meses / 12)
+                self.confere(area, "valor líquido no pagamento", liquido, r["liquido_esperado"])
+                self.confere(area, "valor presente", vp, r["valor_presente"])
+                pago = e["valor"] * (1 - e["desagioPct"] / 100) + e["custos"]
+                self.confere(
+                    area,
+                    "deságio mínimo",
+                    (1 - (vp - e["custos"]) / e["valor"]) * 100,
+                    r["oferta"]["desagio_minimo_pct"],
+                )
+                esp = self._leitura(pago, 0, liquido, vp, meses)
+            for campo in ("total_pago", "lucro", "lucro_pct", "folga", "folga_pct", "retorno_aa"):
+                self.confere(area, campo, esp[campo], js[campo])
+            self.confere(area, "situação (verde, amarelo ou vermelho)", esp["situacao"], js["situacao"])
+
+    # ------------------------------------------------------------------------------------ várias cotas
+    def lotes(self, spread: float) -> None:
+        real, nominal = self.curva("Tesouro IPCA+"), self.curva("Tesouro Prefixado")
+
+        def num(txt: str) -> float | None:
+            txt = txt.strip().replace("R$", "").replace("%", "")
+            if not txt:
+                return None
+            return float(txt.replace(".", "").replace(",", "."))
+
+        for tipo, bloco in self.js["lotes"].items():
+            linhas = [x for x in bloco["texto"].split("\n") if x.strip()]
+            calculadas = [x for x in bloco["resultado"]["linhas"] if "erro" not in x]
+            self.confere(f"lista ({tipo})", "linhas calculadas", len(linhas), len(calculadas))
+            for texto, js in zip(linhas, calculadas, strict=True):
+                c = [x.strip() for x in texto.split(";")]
+                area = f"lista ({tipo}) linha {js['n']}"
+                if tipo == "cancelada":
+                    valor, meses = num(c[0]), int(num(c[1]))
+                    corr = c[2].lower()
+                    propria = corr not in ("", "ipca", "sem")
+                    taxa = num(corr) if propria else None
+                    curva = real if corr in ("", "ipca") else nominal
+                    recebe = valor * (1 + taxa / 100) ** (meses / 12) if propria else valor
+                    vp = recebe / (1 + (self.interpola(curva, meses / 12) + spread) / 100) ** (meses / 12)
+                    preco, custos = (
+                        num(c[3]) if len(c) > 3 else None,
+                        (num(c[4]) if len(c) > 4 else None) or 0,
+                    )
+                    esp = self._leitura(preco + custos, 0, recebe, vp, meses) if preco else None
+                else:
+                    credito, parcela, n_par, k = num(c[0]), num(c[1]), int(num(c[2])), int(num(c[3]))
+
+                    def fator(m: int) -> float:
+                        return (1 + (self.interpola(real, m / 12) + spread) / 100) ** (m / 12)
+
+                    vp = (credito if k == 0 else credito / fator(k)) - sum(
+                        parcela / fator(t) for t in range(1, n_par + 1)
+                    )
+                    preco, custos = (
+                        num(c[4]) if len(c) > 4 else None,
+                        (num(c[5]) if len(c) > 5 else None) or 0,
+                    )
+                    esp = self._leitura(preco + custos, parcela * n_par, credito, vp, None) if preco else None
+                self.confere(area, "vale hoje", vp, js["vale_hoje"])
+                if esp:
+                    self.confere(area, "lucro no fim", esp["lucro"], js["lucro"])
+                    self.confere(area, "situação", esp["situacao"], js["situacao"])
+                else:
+                    self.confere(area, "sem preço, sem veredito", None, js.get("situacao"))
 
     def precatorio(self, spread: float) -> None:
         """O exemplo do precatório (100 mil, 36 meses, Selic, 40% de deságio), com a Selic dos registros."""

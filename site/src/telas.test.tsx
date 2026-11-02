@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import foto from "../tests/fixtures/foto-2026-10-31.json";
 import { App } from "./App";
+import { marcasDeTaxa, rotuloPct } from "./graficos/base";
 
 const RODADAS = {
   workflow_runs: [1, 2, 3].map((n) => ({
@@ -513,6 +514,78 @@ describe("pente fino final (o que um diretor repara ao usar o site publicado)", 
     expect(textoDaPagina()).toMatch(/deságio é de 24,0%\./);
     fireEvent.change(screen.getByRole("textbox", { name: "Custos de transferência" }), { target: { value: "1.200" } });
     await waitFor(() => expect(textoDaPagina()).toMatch(/deságio é de 24,0% sobre o preço \(21,6% contando os custos\)/));
+  });
+});
+
+describe("gráficos: cada linha com a sua cor", () => {
+  const traco = (botao: Element) => botao.querySelector("svg line")?.getAttribute("stroke");
+
+  it("as marcas do eixo de taxa são redondas, no máximo seis, dentro do gráfico e sem rótulo repetido", () => {
+    expect(marcasDeTaxa(6, 9).ticks).toEqual([6, 7, 8, 9]); // antes: 6; 6,75; 7,5; 8,25; 9 (e o rótulo arredondava 6,75 para "6,8%")
+    expect(marcasDeTaxa(6, 9).formato(7)).toBe("7%");
+    expect(marcasDeTaxa(13.5, 14.25).ticks).toEqual([13.5, 13.75, 14, 14.25]);
+    expect(marcasDeTaxa(13.5, 14.25).formato(13.75)).toBe("13,75%");
+    expect(marcasDeTaxa(0, 60).ticks).toEqual([0, 20, 40, 60]);
+    let sorteio = 12345; // sorteio simples e fixo, para o teste dar sempre o mesmo
+    const proximo = () => ((sorteio = (sorteio * 1103515245 + 12345) % 2147483648) / 2147483648);
+    for (let i = 0; i < 400; i++) {
+      const lo = Math.round(proximo() * 3000) / 100;
+      const hi = lo + 0.2 + proximo() * 40;
+      const { ticks, formato } = marcasDeTaxa(lo, hi);
+      expect(ticks.length).toBeGreaterThanOrEqual(1);
+      expect(ticks.length).toBeLessThanOrEqual(6);
+      expect(ticks.every((v) => v >= lo - 1e-9 && v <= hi + 1e-9)).toBe(true);
+      expect(new Set(ticks.map(formato)).size).toBe(ticks.length); // nenhum rótulo repetido
+    }
+  });
+
+  it("o eixo em % não repete rótulos: 8,5% não vira '8%' ao lado de outro '8%'", () => {
+    expect([6, 7, 8, 9].map(rotuloPct)).toEqual(["6%", "7%", "8%", "9%"]);
+    expect([7.5, 8.5, 13.25].map(rotuloPct)).toEqual(["7,5%", "8,5%", "13,3%"]);
+    expect(rotuloPct(7.0000001)).toBe("7%"); // sobra de ponto flutuante não vira "7,0%"
+    expect(rotuloPct(0)).toBe("0%");
+    expect(new Set([7, 7.5, 8, 8.5].map(rotuloPct)).size).toBe(4);
+  });
+
+  it("Tesouro: cada vencimento tem uma cor diferente na legenda (seis, em ordem), e a legenda mostra a taxa de hoje", async () => {
+    await abre("#/mercado/tesouro");
+    const chips = await screen.findAllByRole("button", { name: /^Vencimento \d{4}/ });
+    expect(chips).toHaveLength(6); // IPCA+: 2029, 2032, 2035, 2040, 2045, 2050
+    expect(chips.map(traco)).toEqual(["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)", "var(--t5)", "var(--t6)"]);
+    expect(chips[0].textContent).toMatch(/2029\s*7,7\d%/);
+    expect(chips.map((c) => c.getAttribute("aria-label"))[0]).toMatch(/hoje 7,7\d%: esconder a linha/);
+  });
+
+  it("Tesouro: clicar na legenda esconde e mostra a linha, nunca a última, e 'Mostrar todas' volta tudo", async () => {
+    await abre("#/mercado/tesouro");
+    const chips = await screen.findAllByRole("button", { name: /^Vencimento \d{4}/ });
+    fireEvent.click(chips[0]);
+    expect(chips[0].getAttribute("aria-pressed")).toBe("false");
+    for (const c of chips.slice(1)) fireEvent.click(c);
+    const aindaLigadas = chips.filter((c) => c.getAttribute("aria-pressed") === "true");
+    expect(aindaLigadas).toHaveLength(1); // a última linha não se esconde
+    fireEvent.click(screen.getByRole("button", { name: "Mostrar todas" }));
+    expect(chips.every((c) => c.getAttribute("aria-pressed") === "true")).toBe(true);
+    expect(screen.queryByRole("button", { name: "Mostrar todas" })).toBeNull();
+  });
+
+  it("Tesouro Prefixado: as 5 linhas usam as 5 primeiras cores", async () => {
+    await abre("#/mercado/tesouro");
+    fireEvent.click(await screen.findByRole("radio", { name: "Prefixado" }));
+    const chips = await waitFor(() => {
+      const c = screen.getAllByRole("button", { name: /^Vencimento \d{4}/ });
+      expect(c).toHaveLength(5);
+      return c;
+    });
+    expect(chips.map(traco)).toEqual(["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)", "var(--t5)"]);
+  });
+
+  it("curva do briefing: hoje, há 7 dias e há 30 dias têm três cores diferentes (azul, laranja e cinza)", async () => {
+    await abre("#/briefing");
+    const figura = (await screen.findByText(/Taxa do Tesouro Prefixado por vencimento/)).closest("figure") as HTMLElement;
+    const legenda = figura.querySelector("ul") as HTMLElement; // a primeira lista da figura é a legenda (a outra "Há 7 dias" é o título de uma coluna da tabela)
+    const item = (nome: string) => within(legenda).getByText(nome).closest("li")?.querySelector("svg line")?.getAttribute("stroke");
+    expect([item("Hoje"), item("Há 7 dias"), item("Há 30 dias")]).toEqual(["var(--s1)", "var(--s2)", "var(--tinta-3)"]);
   });
 });
 

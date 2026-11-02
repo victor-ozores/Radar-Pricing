@@ -6,7 +6,7 @@ import { somaMeses } from "../../../js/foto.js";
 import { caminhoDeCorrecao } from "../../../js/modelo.js";
 import { mesesDaConta, notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
-import { Balao, COR, EIXO, GRADE } from "../../graficos/base";
+import { Balao, COR, EIXO, GRADE, rotuloPct } from "../../graficos/base";
 import { Campo, CampoEscolha } from "../../ui/blocos";
 import { Termo } from "../../ui/dicas";
 import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, ESe, Interruptor, Moldura, Nota, Resultado, SpreadDaConta, Veredito, comSinalPct, comSinalReais, linhaDoVeredito, tituloDaSituacao } from "./pecas";
@@ -141,7 +141,7 @@ export function Precatorio() {
                 <LineChart data={serie} margin={{ top: 12, right: 14, bottom: 0, left: 0 }}>
                   <CartesianGrid {...GRADE} />
                   <XAxis dataKey="meses" type="number" domain={[12, 120]} ticks={[12, 36, 60, 84, 108]} {...EIXO} tickFormatter={(v: number) => `${v / 12}a`} />
-                  <YAxis {...EIXO} axisLine={false} width={44} tickFormatter={(v: number) => `${num(v, 0)}%`} />
+                  <YAxis {...EIXO} axisLine={false} width={44} tickFormatter={rotuloPct} />
                   <Tooltip
                     cursor={{ stroke: "var(--linha-2)" }}
                     content={({ active, payload }) => {

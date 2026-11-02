@@ -1,10 +1,35 @@
 import { Table2 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { num } from "../../js/formato.js";
 
 /** Aparência comum dos eixos: grade quase invisível, números pequenos e cinzas. */
 export const GRADE = { stroke: "var(--linha)", strokeDasharray: "2 4", vertical: false } as const;
 export const EIXO = { stroke: "var(--linha-2)", tickLine: false, tick: { fill: "var(--tinta-3)", fontSize: 12 } } as const;
 export const COR = { s1: "var(--s1)", s2: "var(--s2)", s3: "var(--s3)", s4: "var(--s4)" } as const;
+
+/**
+ * O rótulo de um número no eixo, em %: sem casa decimal se o número é redondo, com uma se não é. Antes o eixo escrevia sempre
+ * zero casas, e uma marca em 8,5% saía como "8%" ao lado de outra "8%".
+ */
+export const rotuloPct = (v: number) => {
+  const redondo = Math.abs(v - Math.round(v)) < 1e-6;
+  return `${num(redondo ? Math.round(v) : v, redondo ? 0 : 1)}%`;
+};
+
+/**
+ * As marcas de um eixo de taxa (%): de passo "redondo" (0,05, 0,1, 0,25, 0,5, 1, 2, 5, 10 ou 20), no máximo `maximo` delas, e o
+ * rótulo com as casas que o passo pede. Antes o gráfico espaçava 5 marcas iguais entre o menor e o maior valor e eu arredondava o
+ * rótulo: 6,75% saía como "6,8%".
+ */
+export function marcasDeTaxa(lo: number, hi: number, maximo = 6) {
+  const passos = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20];
+  const quantas = (p: number) => Math.floor(hi / p + 1e-9) - Math.ceil(lo / p - 1e-9) + 1;
+  const passo = passos.find((p) => quantas(p) <= maximo) ?? 50;
+  const ticks: number[] = [];
+  for (let v = Math.ceil(lo / passo - 1e-9) * passo; v <= hi + 1e-9; v += passo) ticks.push(Math.round(v * 1e6) / 1e6 + 0); // + 0 troca um "-0" (de ceil(-1e-9) * passo) por 0
+  const casas = passo >= 1 ? 0 : passo >= 0.5 ? 1 : passo >= 0.25 ? 2 : passo >= 0.1 ? 1 : 2;
+  return { ticks, formato: (v: number) => `${num(v, casas)}%` };
+}
 
 /** Largura atual de um elemento (para os gráficos que eu mesmo desenho em SVG). */
 export function useLargura<T extends HTMLElement>(): [React.RefObject<T | null>, number] {

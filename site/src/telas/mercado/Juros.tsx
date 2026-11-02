@@ -4,7 +4,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { comUnidade, dataBR, deltaComUnidade, mesAno, num, pct } from "../../../js/formato.js";
 import { focusNoTempo, serieDe } from "../../../js/historico.js";
 import * as modelo from "../../../js/modelo.js";
-import { Balao, COR, EIXO, GRADE, Quadro } from "../../graficos/base";
+import { Balao, COR, EIXO, GRADE, Quadro, marcasDeTaxa } from "../../graficos/base";
 import type { Foto } from "../../tipos";
 import { Delta } from "../../ui/Delta";
 import { Spark } from "../../ui/Spark";
@@ -33,7 +33,7 @@ function EvolucaoDoFocus({ foto, serie, titulo, subtitulo }: { foto: Foto; serie
           <LineChart data={linhas} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="data" {...EIXO} minTickGap={36} tickFormatter={(d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 1)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip
               cursor={{ stroke: "var(--linha-2)" }}
               content={({ active, payload }) => {
@@ -69,7 +69,7 @@ function SelicPorReuniao({ reunioes, data }: { reunioes: { reuniao: string; valo
           <LineChart data={reunioes} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="reuniao" {...EIXO} interval="preserveStartEnd" minTickGap={20} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} tickFormatter={(v: number) => `${num(v, 1)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[lo, hi]} ticks={marcasDeTaxa(lo, hi).ticks} tickFormatter={marcasDeTaxa(lo, hi).formato} />
             <Tooltip cursor={{ stroke: "var(--linha-2)" }} content={({ active, payload }) => (active && payload?.[0] ? <Balao titulo={`Reunião ${(payload[0].payload as any).reuniao}`} linhas={[{ cor: COR.s1, nome: "Selic esperada", valor: pct((payload[0].payload as any).valor), destaque: true }]} /> : null)} />
             <Line dataKey="valor" type="stepAfter" stroke={COR.s1} strokeWidth={3} dot={{ r: 4, fill: COR.s1, stroke: "var(--folha)", strokeWidth: 2 }} activeDot={{ r: 6, stroke: "var(--folha)", strokeWidth: 2 }} isAnimationActive={animar} />
           </LineChart>
