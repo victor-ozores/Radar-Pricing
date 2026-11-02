@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { EXEMPLOS, MAX_MESES_PRECATORIO, precatorio } from "../../../js/calc.js";
+import { EXEMPLOS, leituraDoNegocio, MAX_MESES_PRECATORIO, precatorio } from "../../../js/calc.js";
 import { dataBR, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { somaMeses } from "../../../js/foto.js";
 import { caminhoDeCorrecao } from "../../../js/modelo.js";
@@ -9,7 +9,7 @@ import { useEstado } from "../../dados";
 import { Balao, COR, EIXO, GRADE } from "../../graficos/base";
 import { Campo, CampoEscolha } from "../../ui/blocos";
 import { Termo } from "../../ui/dicas";
-import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, ESe, Interruptor, Moldura, Nota, Resultado, SpreadDaConta } from "./pecas";
+import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, ESe, Interruptor, Moldura, Nota, Resultado, SpreadDaConta, Veredito, comSinalPct, comSinalReais, linhaDoVeredito, tituloDaSituacao } from "./pecas";
 
 const EXEMPLO = { valor: EXEMPLOS.precatorio.valor, meses: EXEMPLOS.precatorio.meses, prazoEmData: false, prazoData: "", indice: EXEMPLOS.precatorio.indice as string, jurosPP: EXEMPLOS.precatorio.jurosPP, propriaPct: EXEMPLOS.precatorio.propriaPct, retencaoPct: EXEMPLOS.precatorio.retencaoPct, temOferta: true, desagioPct: EXEMPLOS.precatorio.desagioPct, custos: 0, usarSpread: false, spread: 5 };
 
@@ -40,6 +40,7 @@ export function Precatorio() {
   const base = { valor: e.valor, indice, jurosPP: e.jurosPP, propriaPct: e.propriaPct, retencaoPct: e.retencaoPct, custos: e.custos, spreadPP: spread };
   const conta = (m: number, i: Indice = indice, desagio: number | null = null) => precatorio({ ...base, meses: m, indice: i, desagioPct: desagio as any }, curvas.nominal, caminho);
   const r = useMemo(() => (meses ? conta(meses, indice, e.temOferta ? e.desagioPct : null) : null), [meses, indice, e, spread, curvas.nominal, caminho]); // eslint-disable-line react-hooks/exhaustive-deps
+  const leitura = r?.oferta && meses ? leituraDoNegocio({ pagoHoje: r.oferta.pago, recebe: r.liquido_esperado, valorJusto: r.valor_presente, meses }) : null;
   const animar = !(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const serie = useMemo(() => PRAZOS_DO_GRAFICO.map((m) => ({ meses: m, desagio: conta(m)?.desagio_justo_pct ?? null })).filter((p) => p.desagio !== null), [e, spread, indice, curvas.nominal, caminho]); // eslint-disable-line react-hooks/exhaustive-deps
   const semDado = indice === "selic" && caminho.selicDoAno(caminho.anoBase) === null ? "a Selic" : indice === "ipca" && caminho.ipcaDoAno(caminho.anoBase) === null ? "o IPCA esperado" : null;
@@ -59,6 +60,7 @@ export function Precatorio() {
       `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       r ? `Valor esperado no pagamento: ${reais(r.valor_esperado)} (correção de ${num(r.correcao_total_pct, 1)}%, ${num(r.correcao_aa_pct, 2)}% ao ano); vale hoje ${reais(r.valor_presente)} (${num(r.pct_do_valor, 1)}% do valor atualizado: deságio justo de ${num(r.desagio_justo_pct, 1)}%)` : "Sem resultado para estes dados",
       ...(r?.oferta ? [`Oferta de compra com ${num(e.desagioPct, 1)}% de deságio (${reais(r.oferta.preco, 0)}${e.custos > 0 ? ` + ${reais(e.custos, 0)} de custos` : ""}): retorno de ${num(r.oferta.retorno_aa, 2)}% ao ano; deságio mínimo para ganhar Tesouro + spread: ${num(r.oferta.desagio_minimo_pct, 1)}%`] : []),
+      ...(leitura ? [linhaDoVeredito(leitura)] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ].join("\n");
   return (
@@ -87,6 +89,30 @@ export function Precatorio() {
       {semDado ? <Nota>Esta foto não traz {semDado} esperado(a); escolha outra correção ou informe uma taxa.</Nota> : null}
       {r && meses ? (
         <>
+          {leitura && r.oferta ? (
+            <Veredito
+              situacao={leitura.situacao}
+              frase={
+                <>
+                  Comprando o precatório por <strong>{reais(r.oferta.pago, 0)}</strong> ({num(e.desagioPct, 1)}% de deságio sobre {reais(e.valor, 0)}
+                  {e.custos > 0 ? ", com os custos" : ""}) e recebendo {reais(r.liquido_esperado, 0)}
+                  {e.retencaoPct > 0 ? " depois das retenções" : ""} em {prazoEmTexto(meses)}:{" "}
+                  {leitura.situacao === "bom" ? "o preço está abaixo do que o precatório vale hoje." : leitura.situacao === "limite" ? "o preço é quase o que o precatório vale hoje, então sobra pouco." : "o preço passa do que o precatório vale hoje."}
+                </>
+              }
+              itens={[
+                { rotulo: "Lucro no fim", valor: comSinalReais(leitura.lucro), sub: `${comSinalPct(leitura.lucro_pct)} · recebe ${reais(r.liquido_esperado, 0)}, paga ${reais(leitura.total_pago, 0)}`, tom: leitura.lucro >= 0 ? "bom" : "ruim" },
+                { rotulo: "Rende ao ano", valor: `${num(r.oferta.retorno_aa, 2)}%`, sub: `você exige ${num(r.taxa_desconto, 2)}% (Tesouro + spread)`, tom: leitura.folga >= 0 ? "bom" : "ruim" },
+                { rotulo: leitura.folga >= 0 ? "Sobra sobre o exigido" : "Falta para o exigido", valor: comSinalReais(leitura.folga), sub: "em valor de hoje", tom: leitura.folga >= 0 ? "bom" : "ruim" },
+              ]}
+              rodape={
+                <>
+                  Deságio mínimo para ainda compensar: <strong className="num">{num(r.oferta.desagio_minimo_pct, 1)}%</strong> (preço máximo <strong className="num">{reais(r.oferta.preco_maximo)}</strong>
+                  {e.custos > 0 ? ", já separando os custos" : ""}).
+                </>
+              }
+            />
+          ) : null}
           <Resultado
             rotulo="Vale hoje"
             valor={r.valor_presente}
@@ -97,7 +123,7 @@ export function Precatorio() {
               </>
             }
           />
-          <BarraDoResultado rotulo="Vale hoje" valor={reais(r.valor_presente)} />
+          <BarraDoResultado rotulo={leitura ? `${tituloDaSituacao(leitura.situacao)} · lucro` : "Vale hoje"} valor={leitura ? comSinalReais(leitura.lucro) : reais(r.valor_presente)} situacao={leitura?.situacao ?? null} />
           <div className="rounded-2xl border border-linha bg-folha p-4">
             <h3 className="m-0 mb-1 font-sans text-sm font-semibold text-tinta">O que chega no pagamento</h3>
             <p className="m-0 text-[0.9rem] leading-snug text-tinta2">
@@ -106,14 +132,6 @@ export function Precatorio() {
             </p>
             {alemDoFocus ? <p className="m-0 mt-1.5 text-xs text-tinta3">O Focus só olha até {Math.max(...caminho.anosDoFocus[indice === "selic" ? "selic" : "ipca"])}; depois disso repito o último valor esperado.</p> : null}
           </div>
-          {r.oferta ? (
-            <div className={`rounded-2xl border p-4 ${r.oferta.folga >= 0 ? "border-ok/30 bg-ok2" : "border-aviso/40 bg-aviso2"}`}>
-              <p className="rotulo m-0">Com a oferta de {num(e.desagioPct, 1)}% de deságio ({reais(r.oferta.preco, 0)})</p>
-              <p className="m-0 mt-1 text-[0.97rem] leading-snug text-tinta">
-                Quem compra ganha <strong className="num">{num(r.oferta.retorno_aa, 2)}% ao ano</strong> contra {pct(r.taxa_desconto)} de Tesouro mais spread. {r.oferta.folga >= 0 ? `Cabe: sobram ${reais(r.oferta.folga)} contra o valor de hoje.` : `Não cabe: passa ${reais(Math.abs(r.oferta.folga))} do valor de hoje.`} Para empatar, o deságio mínimo é de <strong className="num">{num(r.oferta.desagio_minimo_pct, 1)}%</strong> (preço máximo {reais(r.oferta.preco_maximo)}).
-              </p>
-            </div>
-          ) : null}
           <Aviso extrapolado={r.extrapolado} curva={curvas.nominal} />
           <div className="folha min-w-0 p-4 md:p-5">
             <h3 className="m-0 font-sans text-[0.95rem] font-semibold text-tinta">Quanto a espera pesa no deságio justo</h3>

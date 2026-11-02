@@ -147,6 +147,25 @@ test("os exemplos que vêm na tela calculam sem erro nos dois tipos", () => {
   }
 });
 
+test("cada linha com preço traz o lucro e o veredito, pela mesma regra das calculadoras", () => {
+  const r = calculaLote("50.000;24;ipca;38.000;0\n120.000;60;ipca;60.000;1.500\n50.000;24;ipca;45.000;0\n30.000;18;sem;;", "cancelada", ctx);
+  const [a, b, c, d] = r.linhas;
+  assert.equal(a.situacao, "limite");
+  perto(a.lucro, 12000);
+  assert.equal(b.situacao, "bom");
+  perto(b.lucro, 120000 - 61500); // o preço e os custos saem do bolso
+  assert.equal(c.situacao, "ruim");
+  perto(c.lucro, 5000); // lucra em dinheiro, mas rende menos que o exigido
+  assert.equal(d.situacao, undefined); // sem preço, sem veredito
+  assert.deepEqual([r.resumo.compensam, r.resumo.no_limite, r.resumo.nao_compensam], [1, 1, 1]);
+  perto(r.resumo.soma_lucro, 12000 + 58500 + 5000);
+  const ativa = calculaLote("80.000;1.250;48;0;15.000;800\n100.000;1.900;60;12;20.000", "ativa", ctx);
+  assert.equal(ativa.linhas[0].situacao, "bom");
+  perto(ativa.linhas[0].lucro, 80000 - (60000 + 15800)); // as parcelas também saem do bolso
+  assert.equal(ativa.linhas[1].situacao, "ruim");
+  perto(ativa.linhas[1].lucro, 100000 - (114000 + 20000));
+});
+
 // --------------------------------------------------------------------------------------------- aviso do robô sem nome interno
 test("o aviso do robô sobre a ABAC mostra o nome do dado, não o código interno", () => {
   assert.equal(textoDoAviso("Sistema de Consórcios em julho/2026: dados econômicos: não achei abac_ticket_medio"), "Sistema de Consórcios em julho/2026: dados econômicos: não encontrei ticket médio");

@@ -161,7 +161,7 @@ describe("calculadoras", () => {
     await screen.findByText(/Esta oferta rende/);
     cleanup();
     await abre("#/calculadoras/ativa");
-    await screen.findByText(/A cota vale hoje/);
+    expect((await screen.findAllByText(/A cota vale hoje/)).length).toBeGreaterThan(0);
     semLixo();
   });
 
@@ -205,7 +205,7 @@ describe("precatório e acesso rápido às calculadoras", () => {
     // R$ 100.000 × 1,135^(2/12) × 1,1175 × 1,1 × 1,1^(10/12) = R$ 135.925,24, descontado a 14,93% + 5 p.p. por 3 anos
     expect((await screen.findAllByText("R$ 78.802,76")).length).toBeGreaterThan(0);
     expect(textoDaPagina()).toMatch(/R\$ 135\.925,24/);
-    expect(textoDaPagina()).toMatch(/31,34% ao ano/);
+    expect(textoDaPagina()).toMatch(/31,34%/); // o que rende quem compra com 40% de deságio
     semLixo();
   });
 
@@ -267,15 +267,102 @@ describe("precatório e acesso rápido às calculadoras", () => {
     expect(texto).toMatch(/não é preço nem recomendação/);
   });
 
-  it("cota cancelada e cota ativa aceitam um preço pedido e dizem se cabe", async () => {
+  it("cota cancelada: abre com o veredito 'No limite' e muda para 'Compensa' e 'Não compensa' conforme o preço", async () => {
     await abre("#/calculadoras/cancelada");
+    const quadro = await screen.findByLabelText("O negócio: No limite");
+    expect(within(quadro).getByText("+R$ 12.000")).toBeTruthy(); // lucro no fim: 50.000 − 38.000
+    expect(within(quadro).getByText("+R$ 1.324")).toBeTruthy(); // sobra sobre o exigido: 39.324,20 − 38.000
+    expect(quadro.textContent).toMatch(/Preço máximo para ainda compensar: R\$ 39\.324,20/);
+    expect(textoDaPagina()).toMatch(/No limite · lucro\+R\$ 12\.000/); // a barra do celular leva o mesmo veredito
+    const preco = screen.getByRole("textbox", { name: "Preço pedido" });
+    fireEvent.change(preco, { target: { value: "45.000" } });
+    const ruim = await screen.findByLabelText("O negócio: Não compensa");
+    expect(within(ruim).getByText("+R$ 5.000")).toBeTruthy(); // há lucro em dinheiro...
+    expect(within(ruim).getByText("−R$ 5.676")).toBeTruthy(); // ...mas rende menos que o retorno exigido
+    expect(ruim.textContent).toMatch(/no máximo R\$ 39\.324,20 \(R\$ 5\.676 a menos\)/);
+    fireEvent.change(preco, { target: { value: "30.000" } });
+    const bom = await screen.findByLabelText("O negócio: Compensa");
+    expect(within(bom).getByText("+R$ 20.000")).toBeTruthy();
+    expect(within(bom).getByText("+R$ 9.324")).toBeTruthy();
     fireEvent.click(screen.getByRole("switch", { name: /Tenho um preço pedido/ }));
-    expect(await screen.findByText(/O preço cabe: sobram R\$ 1\.324,20/)).toBeTruthy(); // 39.324,20 − 38.000
-    cleanup();
+    await waitFor(() => expect(screen.queryByLabelText(/O negócio:/)).toBeNull()); // sem preço, sem veredito
+    semLixo();
+  });
+
+  it("cota ativa: abre com 'Não compensa' (R$ 20.000 por uma cota que vale R$ 3.443) e mostra o ágio nas duas bases", async () => {
     await abre("#/calculadoras/ativa");
-    fireEvent.click(screen.getByRole("switch", { name: /Tenho um preço pedido/ }));
+    const ruim = await screen.findByLabelText("O negócio: Não compensa");
+    expect(within(ruim).getByText("−R$ 34.000")).toBeTruthy(); // 100.000 − (114.000 de parcelas + 20.000 de preço)
+    expect(ruim.textContent).toMatch(/no máximo R\$ 3\.443,01/);
     expect(await screen.findByText(/O ágio pedido, nas duas bases/)).toBeTruthy();
     expect(textoDaPagina()).toMatch(/20,0% do crédito e 17,5% do saldo devedor/);
+    fireEvent.change(screen.getByRole("textbox", { name: "Preço pedido" }), { target: { value: "2.500" } });
+    const bom = await screen.findByLabelText("O negócio: Compensa");
+    expect(within(bom).getByText("+R$ 943")).toBeTruthy(); // 3.443,01 − 2.500
+    semLixo();
+  });
+
+  it("retorno de uma oferta: abre com 'No limite' e o lucro em reais; precatório com oferta abre com 'Compensa'", async () => {
+    await abre("#/calculadoras/oferta");
+    const oferta = await screen.findByLabelText("O negócio: No limite");
+    expect(within(oferta).getByText("+R$ 12.000")).toBeTruthy();
+    expect(within(oferta).getByText("14,71%")).toBeTruthy();
+    expect(oferta.textContent).toMatch(/você exige 12,76% \(Tesouro \+ spread\)/);
+    cleanup();
+    await abre("#/calculadoras/precatorio");
+    const prec = await screen.findByLabelText("O negócio: Compensa");
+    expect(within(prec).getByText("+R$ 75.925")).toBeTruthy(); // 135.925,24 − 60.000
+    expect(within(prec).getByText("31,34%")).toBeTruthy();
+    expect(prec.textContent).toMatch(/Deságio mínimo para ainda compensar: 21,2%/);
+    semLixo();
+  });
+
+  it("os custos de transferência entram no veredito: R$ 38.000 mais R$ 1.500 de custos já não compensa", async () => {
+    await abre("#/calculadoras/cancelada");
+    fireEvent.change(screen.getByRole("textbox", { name: "Custos de transferência" }), { target: { value: "1.500" } });
+    const ruim = await screen.findByLabelText("O negócio: Não compensa");
+    expect(within(ruim).getByText("+R$ 10.500")).toBeTruthy(); // 50.000 − 39.500
+    expect(within(ruim).getByText("−R$ 176")).toBeTruthy(); // 39.324,20 − 39.500
+    expect(ruim.textContent).toMatch(/no máximo R\$ 37\.824,20/); // o valor menos os custos
+  });
+
+  it("oferta e precatório: os custos de transferência também entram no veredito", async () => {
+    await abre("#/calculadoras/oferta");
+    fireEvent.change(screen.getByRole("textbox", { name: "Custos de transferência" }), { target: { value: "1.200" } });
+    const oferta = await screen.findByLabelText("O negócio: No limite");
+    expect(within(oferta).getByText("+R$ 124")).toBeTruthy(); // 39.324,20 de máximo bruto − 39.200 que saem do bolso
+    expect(oferta.textContent).toMatch(/R\$ 38\.124,20 \(já separando os custos\)/);
+    cleanup();
+    await abre("#/calculadoras/precatorio");
+    fireEvent.change(screen.getByRole("textbox", { name: "Custos de transferência" }), { target: { value: "1.500" } });
+    const prec = await screen.findByLabelText("O negócio: Compensa");
+    expect(within(prec).getByText("+R$ 74.425")).toBeTruthy(); // 135.925,24 − 61.500
+  });
+
+  it("as cores: verde, amarelo e vermelho no quadro e na barra do celular, e o cartão do valor não é verde", async () => {
+    await abre("#/calculadoras/cancelada");
+    const preco = screen.getByRole("textbox", { name: "Preço pedido" });
+    const par = { "30.000": ["border-ok", "bg-ok2"], "38.000": ["border-aviso", "bg-aviso2"], "45.000": ["border-erro", "bg-erro2"] } as const;
+    for (const [valor, [borda, fundo]] of Object.entries(par)) {
+      fireEvent.change(preco, { target: { value: valor } });
+      await waitFor(() => expect(document.querySelector(`section[aria-label^='O negócio:'].${borda}`)).not.toBeNull());
+      const quadro = document.querySelector("section[aria-label^='O negócio:']") as HTMLElement;
+      expect(quadro.className).toContain(fundo);
+      const barra = document.querySelector("div.fixed[role=status]") as HTMLElement;
+      expect(barra.className).toContain(borda);
+    }
+    expect(document.querySelector("main div.rounded-2xl.bg-marca2")).toBeNull(); // o cartão do valor é neutro: o verde fica só no veredito
+  });
+
+  it("os três vereditos nunca dependem só da cor: cada um tem uma palavra diferente", async () => {
+    await abre("#/calculadoras/cancelada");
+    const palavras = new Set<string>();
+    for (const preco of ["30.000", "38.000", "45.000"]) {
+      fireEvent.change(screen.getByRole("textbox", { name: "Preço pedido" }), { target: { value: preco } });
+      await waitFor(() => expect(document.querySelector("section[aria-label^='O negócio:']")).not.toBeNull());
+      palavras.add(document.querySelector("section[aria-label^='O negócio:']")?.getAttribute("aria-label") ?? "");
+    }
+    expect([...palavras].sort()).toEqual(["O negócio: Compensa", "O negócio: No limite", "O negócio: Não compensa"]);
   });
 });
 
@@ -314,7 +401,12 @@ describe("taxa própria na cota cancelada e várias cotas de uma vez", () => {
     expect(within(tabela).getAllByRole("row")).toHaveLength(5); // cabeçalho + 4 cotas
     expect(within(tabela).getAllByText("R$ 39.324,20").length).toBeGreaterThan(0); // igual ao exemplo da cota cancelada
     expect((await screen.findAllByText("R$ 180.882,65")).length).toBeGreaterThan(0); // a soma
-    expect(textoDaPagina()).toMatch(/Cabem no preço pedido\s*2 de 2/);
+    expect(textoDaPagina()).toMatch(/Compensam\s*1\s*de 3/); // 61.500 por R$ 65.651 compensa; 38.000 por R$ 39.324 fica no limite; 62.000 por R$ 52.927 não compensa
+    expect(textoDaPagina()).toMatch(/1 no limite/);
+    expect(textoDaPagina()).toMatch(/1 não compensam/);
+    expect(within(tabela).getByText("Compensa")).toBeTruthy();
+    expect(within(tabela).getByText("No limite")).toBeTruthy();
+    expect(within(tabela).getByText("Não compensa")).toBeTruthy();
     semLixo();
   });
 

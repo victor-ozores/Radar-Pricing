@@ -6,7 +6,8 @@ import { notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Segmentado } from "../../ui/blocos";
 import { Tabela } from "../../ui/Tabela";
-import { AcoesDaConta, BarraDoResultado, Moldura, Nota } from "./pecas";
+import { CircleCheck, CircleX, TriangleAlert } from "lucide-react";
+import { AcoesDaConta, BarraDoResultado, Moldura, Nota, comSinalReais, tituloDaSituacao, type Situacao } from "./pecas";
 
 type Tipo = "cancelada" | "ativa";
 
@@ -30,6 +31,8 @@ type Linha = {
   pctDoValor: number | null;
   preco: number | null;
   cabe: boolean | null;
+  situacao: Situacao | null;
+  lucro: number | null;
   folga: number | null;
   precoMaximo: number | null;
   agioCredito: number | null;
@@ -64,6 +67,8 @@ export function Lote() {
           pctDoValor: l.pct_do_valor ?? null,
           preco: en.preco ?? null,
           cabe: l.cabe ?? null,
+          situacao: (l.situacao ?? null) as Situacao | null,
+          lucro: l.lucro ?? null,
           folga: l.folga ?? null,
           precoMaximo: l.preco_maximo ?? null,
           agioCredito: l.agio_credito_pct ?? null,
@@ -92,16 +97,27 @@ export function Lote() {
             { accessorKey: "c", header: "Correção", meta: { ajuda: "Como o valor é corrigido até a data: IPCA, sem correção ou a taxa que você informou." }, cell: (c) => c.getValue() ?? traco },
           ];
     const resultado: ColumnDef<Linha, any>[] = [
-      { accessorKey: "valeHoje", header: tipo === "ativa" ? "Vale a cota" : "Vale hoje", meta: { numerica: true, ajuda: "O valor de hoje, com o spread do painel.", csv: (l: Linha) => virgula(l.valeHoje) }, sortUndefined: "last", cell: (c) => (c.getValue() === null ? traco : <span className="num font-bold text-tinta">{reais(c.getValue())}</span>) },
-      { accessorKey: "pctDoValor", header: tipo === "ativa" ? "% do crédito" : "% do valor", meta: { numerica: true, csv: (l: Linha) => virgula(l.pctDoValor) }, sortUndefined: "last", cell: (c) => (c.getValue() === null ? traco : <span className="num">{pct(c.getValue(), 1)}</span>) },
       { accessorKey: "preco", header: "Preço pedido", meta: { numerica: true, csv: (l: Linha) => virgula(l.preco) }, sortUndefined: "last", cell: (c) => dinheiro(c.getValue()) },
       {
-        accessorKey: "cabe",
-        header: "Cabe?",
-        meta: { ajuda: "O preço pedido (com os custos) cabe dentro do valor de hoje?", csv: (l: Linha) => (l.cabe === null ? "" : l.cabe ? "cabe" : "não cabe") },
-        cell: (c) => (c.getValue() === null ? traco : c.getValue() ? <span className="font-semibold text-ok">Cabe</span> : <span className="font-semibold text-aviso">Não cabe</span>),
+        accessorKey: "situacao",
+        header: "Veredito",
+        meta: { ajuda: "Compensa: o preço está abaixo do máximo para o retorno exigido, com folga de 5% ou mais. No limite: sobra menos que isso. Não compensa: o preço passa do máximo.", csv: (l: Linha) => (l.situacao ? tituloDaSituacao(l.situacao) : "") },
+        cell: (c) => {
+          const s = c.getValue() as Situacao | null;
+          if (!s) return traco;
+          const Icone = s === "bom" ? CircleCheck : s === "limite" ? TriangleAlert : CircleX;
+          const cor = s === "bom" ? "text-ok" : s === "limite" ? "text-aviso" : "text-erro";
+          return (
+            <span className={`inline-flex items-center gap-1 whitespace-nowrap font-semibold ${cor}`}>
+              <Icone size={15} aria-hidden /> {tituloDaSituacao(s)}
+            </span>
+          );
+        },
       },
-      { accessorKey: "folga", header: "Folga", meta: { numerica: true, ajuda: "O valor de hoje menos o que sai do bolso (preço mais custos). Negativa: o preço passa do valor.", csv: (l: Linha) => virgula(l.folga) }, sortUndefined: "last", cell: (c) => dinheiro(c.getValue()) },
+      { accessorKey: "lucro", header: "Lucro no fim", meta: { numerica: true, ajuda: "O que entra menos tudo o que sai do bolso (preço, custos e, na cota ativa, as parcelas), sem descontar nada.", csv: (l: Linha) => virgula(l.lucro) }, sortUndefined: "last", cell: (c) => (c.getValue() === null ? traco : <span className={`num font-semibold ${c.getValue() >= 0 ? "text-ok" : "text-erro"}`}>{comSinalReais(c.getValue())}</span>) },
+      { accessorKey: "valeHoje", header: tipo === "ativa" ? "Vale a cota" : "Vale hoje", meta: { numerica: true, ajuda: "O valor de hoje, com o spread do painel.", csv: (l: Linha) => virgula(l.valeHoje) }, sortUndefined: "last", cell: (c) => (c.getValue() === null ? traco : <span className="num font-bold text-tinta">{reais(c.getValue())}</span>) },
+      { accessorKey: "pctDoValor", header: tipo === "ativa" ? "% do crédito" : "% do valor", meta: { numerica: true, csv: (l: Linha) => virgula(l.pctDoValor) }, sortUndefined: "last", cell: (c) => (c.getValue() === null ? traco : <span className="num">{pct(c.getValue(), 1)}</span>) },
+      { accessorKey: "folga", header: "Sobra sobre o exigido", meta: { numerica: true, ajuda: "O valor de hoje menos o que sai do bolso hoje (preço mais custos). Negativa: o preço passa do máximo.", csv: (l: Linha) => virgula(l.folga) }, sortUndefined: "last", cell: (c) => dinheiro(c.getValue()) },
       { accessorKey: "precoMaximo", header: "Preço máximo", meta: { numerica: true, ajuda: "O máximo que dá para pagar sem perder para o valor de hoje, já separando os custos.", csv: (l: Linha) => virgula(l.precoMaximo) }, sortUndefined: "last", cell: (c) => dinheiro(c.getValue()) },
     ];
     const agio: ColumnDef<Linha, any>[] =
@@ -128,7 +144,7 @@ export function Lote() {
     [
       `Radar Pricing · Várias cotas (${tipo === "ativa" ? "ativas" : "canceladas"}) · foto de ${dataBR(foto.data)}`,
       `${r.calculadas} de ${r.total} cotas calculadas${r.com_erro ? ` (${r.com_erro} com erro)` : ""}; soma do valor de hoje: ${reais(r.soma_vale_hoje)}`,
-      ...(r.com_preco ? [`Com preço pedido: ${r.cabem} de ${r.com_preco} cabem; pagaria ${reais(r.soma_pago)} por cotas que valem ${reais(r.soma_vale_das_com_preco)}`] : []),
+      ...(r.com_preco ? [`Com preço pedido: ${r.compensam} compensam, ${r.no_limite} no limite e ${r.nao_compensam} não compensam (de ${r.com_preco}); pagaria ${reais(r.soma_pago)} por cotas que valem ${reais(r.soma_vale_das_com_preco)}; lucro no fim, somado: ${comSinalReais(r.soma_lucro)}`] : []),
       `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ].join("\n");
@@ -204,14 +220,15 @@ export function Lote() {
               <p className="m-0 mt-1 text-xs text-tinta3">Cotas com valor negativo entram na soma.</p>
             </div>
             <div className="folha p-4">
-              <p className="rotulo m-0">Cabem no preço pedido</p>
+              <p className="rotulo m-0">Compensam</p>
               {r.com_preco ? (
                 <>
                   <p className="display num m-0 mt-1 text-[1.6rem] font-semibold leading-tight text-tinta">
-                    {r.cabem} <span className="font-sans text-sm font-medium text-tinta3">de {r.com_preco}</span>
+                    {r.compensam} <span className="font-sans text-sm font-medium text-tinta3">de {r.com_preco}</span>
                   </p>
                   <p className="m-0 mt-1 text-xs text-tinta3">
-                    Paga {reais(r.soma_pago, 0)} por cotas que valem {reais(r.soma_vale_das_com_preco, 0)}.
+                    <span className="font-semibold text-aviso">{r.no_limite} no limite</span> · <span className="font-semibold text-erro">{r.nao_compensam} não compensam</span>. Lucro no fim, somado:{" "}
+                    <span className={`num font-semibold ${r.soma_lucro >= 0 ? "text-ok" : "text-erro"}`}>{comSinalReais(r.soma_lucro)}</span>.
                   </p>
                 </>
               ) : (

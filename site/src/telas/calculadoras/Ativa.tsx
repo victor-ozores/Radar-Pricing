@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { agioDaCota, cotaAtiva, EXEMPLOS, MAX_PARCELAS } from "../../../js/calc.js";
+import { agioDaCota, cotaAtiva, EXEMPLOS, leituraDoNegocio, MAX_PARCELAS } from "../../../js/calc.js";
 import { dataBR, num, numComMenos, prazoEmTexto, reais } from "../../../js/formato.js";
 import { notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Balao, COR, EIXO, GRADE } from "../../graficos/base";
 import { Campo } from "../../ui/blocos";
-import { AcoesDaConta, Aviso, BarraDoResultado, ComoFoiCalculado, ESe, Moldura, Nota, PrecoPedido, Resultado, SpreadDaConta, VeredictoDoPreco } from "./pecas";
+import { AcoesDaConta, Aviso, BarraDoResultado, ComoFoiCalculado, ESe, Moldura, Nota, PrecoPedido, Resultado, SpreadDaConta, Veredito, comSinalPct, comSinalReais, linhaDoVeredito, tituloDaSituacao } from "./pecas";
 
-const EXEMPLO = { ...EXEMPLOS.ativa, usarSpread: false, spread: 5, temPreco: false, preco: 20000, custos: 0 };
+const EXEMPLO = { ...EXEMPLOS.ativa, usarSpread: false, spread: 5, temPreco: true, preco: 20000, custos: 0 };
 
 export function Ativa() {
   const { curvas, spread: geral, foto, parametros } = useEstado();
@@ -18,6 +18,7 @@ export function Ativa() {
   const r = useMemo(() => cotaAtiva({ credito: e.credito, parcela: e.parcela, parcelas: e.parcelas, contemplacao: k, spreadPP: spread }, curvas.real), [e.credito, e.parcela, e.parcelas, k, spread, curvas.real]);
   const saldo = e.parcela * e.parcelas;
   const agio = r && e.temPreco ? agioDaCota({ preco: e.preco, custos: e.custos, credito: e.credito, saldoDevedor: saldo }) : null;
+  const leitura = r && e.temPreco ? leituraDoNegocio({ pagoHoje: e.preco + e.custos, saidasFuturas: saldo, recebe: e.credito, valorJusto: r.valor_da_cota }) : null;
   const animar = !(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const resumo = () =>
     [
@@ -26,6 +27,7 @@ export function Ativa() {
       `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       r ? `A cota vale hoje ${reais(r.valor_da_cota)} (${num(r.pct_do_credito, 1)}% do crédito): crédito em valor de hoje ${reais(r.vp_credito)} menos parcelas em valor de hoje ${reais(r.vp_parcelas)}` : "Sem resultado para estes dados",
       ...(r && agio ? [`Preço pedido ${reais(e.preco, 0)} (+ ${reais(e.custos, 0)} de custos): ágio de ${num(agio.sobre_credito_pct, 1)}% sobre o crédito e ${num(agio.sobre_saldo_pct, 1)}% sobre o saldo devedor; preço máximo para empatar ${reais(r.valor_da_cota - e.custos)}`] : []),
+      ...(r && leitura ? [linhaDoVeredito(leitura)] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ].join("\n");
   return (
@@ -43,19 +45,49 @@ export function Ativa() {
     >
       {r ? (
         <>
+          {leitura && r ? (
+            <Veredito
+              situacao={leitura.situacao}
+              frase={
+                <>
+                  Comprando a cota por <strong>{reais(e.preco + e.custos, 0)}</strong>
+                  {e.custos > 0 ? " (com os custos)" : ""}, você ainda paga {e.parcelas} parcelas ({reais(saldo, 0)}) e recebe o crédito de {reais(e.credito, 0)} {k === 0 ? "agora" : `em ${prazoEmTexto(k)}`}:{" "}
+                  {leitura.situacao === "bom" ? "o preço está abaixo do que a cota vale hoje." : leitura.situacao === "limite" ? "o preço é quase o que a cota vale hoje, então sobra pouco." : "o preço passa do que a cota vale hoje."}
+                </>
+              }
+              itens={[
+                { rotulo: "Lucro no fim", valor: comSinalReais(leitura.lucro), sub: `${comSinalPct(leitura.lucro_pct)} · recebe ${reais(e.credito, 0)}, paga ${reais(leitura.total_pago, 0)} (preço, custos e parcelas)`, tom: leitura.lucro >= 0 ? "bom" : "ruim" },
+                { rotulo: "A cota vale hoje", valor: reais(r.valor_da_cota, 0), sub: `você paga ${reais(e.preco + e.custos, 0)} por ela`, tom: r.valor_da_cota >= 0 ? "neutro" : "ruim" },
+                { rotulo: leitura.folga >= 0 ? "Sobra sobre o valor" : "Falta para o valor", valor: comSinalReais(leitura.folga), sub: "em valor de hoje", tom: leitura.folga >= 0 ? "bom" : "ruim" },
+              ]}
+              rodape={
+                r.valor_da_cota - e.custos <= 0 ? (
+                  <>Nesse cenário nem de graça compensa: as parcelas pesam mais que o crédito.</>
+                ) : leitura.situacao === "ruim" ? (
+                  <>
+                    Para compensar, o preço teria de cair para no máximo <strong className="num">{reais(r.valor_da_cota - e.custos)}</strong> ({reais(Math.abs(leitura.folga), 0)} a menos).
+                  </>
+                ) : (
+                  <>
+                    Preço máximo para ainda compensar: <strong className="num">{reais(r.valor_da_cota - e.custos)}</strong>
+                    {e.custos > 0 ? " (já separando os custos)" : ""}.
+                  </>
+                )
+              }
+            />
+          ) : null}
           <Resultado
             rotulo="A cota vale hoje"
             valor={r.valor_da_cota}
             formato={(n) => reais(n)}
-            tom={r.valor_da_cota < 0 ? "sobe" : "marca"}
+            tom={r.valor_da_cota < 0 ? "sobe" : "neutro"}
             nota={
               <>
                 É o crédito de {reais(e.credito, 0)} em valor de hoje ({reais(r.vp_credito)}) menos as {e.parcelas} parcelas em valor de hoje ({reais(r.vp_parcelas)}). Equivale a <strong>{num(r.pct_do_credito, 1)}%</strong> do crédito.
               </>
             }
           />
-          <BarraDoResultado rotulo="A cota vale" valor={reais(r.valor_da_cota)} />
-          {e.temPreco ? <VeredictoDoPreco valorJusto={r.valor_da_cota} preco={e.preco} custos={e.custos} rotuloDoJusto="o valor da cota" /> : null}
+          <BarraDoResultado rotulo={leitura ? `${tituloDaSituacao(leitura.situacao)} · lucro` : "A cota vale"} valor={leitura ? comSinalReais(leitura.lucro) : reais(r.valor_da_cota)} situacao={leitura?.situacao ?? null} />
           {agio ? (
             <div className="rounded-2xl border border-linha bg-folha p-4">
               <h3 className="m-0 mb-1 font-sans text-sm font-semibold text-tinta">O ágio pedido, nas duas bases</h3>

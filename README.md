@@ -51,7 +51,7 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 * **O que aconteceu hoje, em uma frase?** A manchete diz quanto mudou, em 7 dias, o valor de hoje de um dinheiro que só chega em 3 anos.
 * **De onde vem isso?** Cinco capítulos contam a história na ordem em que o preço se forma: o custo do dinheiro, a curva de juros do Tesouro, quanto isso pesa no valor, o crédito que concorre e o setor.
 * **E se a taxa andar?** Uma tabela mostra o valor de hoje em cada prazo se a taxa subir ou cair até 3 pontos.
-* **Quanto vale, ou quanto rende, esta cota?** Cinco calculadoras: cota cancelada, cota ativa, retorno de uma oferta, precatório e uma lista de várias cotas de uma vez, cada uma com a conta escrita com os números.
+* **Quanto vale, ou quanto rende, esta cota?** Cinco calculadoras: cota cancelada, cota ativa, retorno de uma oferta, precatório e uma lista de várias cotas de uma vez, cada uma com a conta escrita com os números e com um quadro que diz, em verde, amarelo ou vermelho, se o negócio **compensa**, quanto você lucra em reais e quanto sobra ou falta sobre o retorno que você exige.
 * **Dá para confiar nos números?** O painel diz se o robô está em dia (as últimas 14 rodadas), de onde vem cada número, com a data, e o que cada termo técnico quer dizer.
 
 ## 🧭 Como Usar
@@ -201,6 +201,7 @@ Todas as fontes são públicas e oficiais. Cada uma foi testada com chamada de v
 * **Mudança em 7 dias.** A mesma conta com a curva de uma semana antes (o robô guarda a taxa de 7 dias atrás de cada vencimento): a diferença é o efeito da semana.
 * **Retorno de uma oferta** = (valor a receber ÷ preço) elevado a (12 ÷ meses) − 1. **Preço máximo** = valor a receber ÷ (1 + retorno desejado) elevado a (meses ÷ 12).
 * **Cota ativa** = o crédito descontado até o mês da contemplação, menos todas as parcelas descontadas.
+* **O veredito** (**Compensa**, **No limite**, **Não compensa**) = o *lucro no fim* (o que entra menos o que sai do bolso, sem descontar) ao lado do *quanto sobra ou falta sobre o retorno exigido* (o valor de hoje do que entra menos o que sai hoje). Vermelho quando falta, amarelo quando sobra menos de 5%, verde daí para cima. Pode haver lucro em reais e mesmo assim "Não compensa", porque rende menos que o Tesouro mais o spread.
 * **Cota cancelada com taxa própria** = o valor de hoje cresce à taxa que você informar (o índice do bem, como INCC ou tabela FIPE) até a data e depois desconta pela curva Prefixada mais o spread, porque a correção já embute a inflação.
 * **Várias cotas** = a mesma conta de cada calculadora, linha por linha, sobre a lista que você colar; nada de conta nova.
 * **Precatório** = o valor corrigido mês a mês até o pagamento (multiplicando o fator de cada mês, que vem da Selic ou do IPCA que o Focus espera para aquele ano), menos as retenções que você informar, descontado pela curva Prefixada do Tesouro mais o *spread*. O índice de correção é uma escolha sua (Selic, IPCA mais juros limitado pela Selic, taxa própria ou sem correção), porque a regra mudou em 2025 e a transição é discutida: a calculadora mostra a conta e não diz qual vale para o seu caso. O resultado é o valor de hoje e o *deságio justo* (quanto abaixo do valor atualizado o preço teria de ficar para quem compra ganhar o Tesouro mais o spread). Com uma oferta de compra, mostra também o retorno ao ano de quem compra, o *deságio mínimo* e o preço máximo, já separando os custos.
@@ -215,9 +216,9 @@ O que as calculadoras **não** consideram: a chance de ser contemplada, lance, s
 | **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 581 números conferidos, 0 divergências ([relatório](docs/auditoria/calculos_2026-11-01.md)) |
 | **O dado bruto** | Comparei com as fontes oficiais baixadas de novo | 360 de 360 taxas do Tesouro iguais ao arquivo oficial; 65 valores do SGS e 16 do Focus iguais aos das APIs |
 | **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 224 combinações das três primeiras calculadoras (com a taxa própria) e 576 do precatório contra a conta refeita em Python |
-| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 143 + 39 + 135 testes, todos offline (respostas reais gravadas) |
+| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 151 + 45 + 135 testes, todos offline (respostas reais gravadas) |
 | **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 1.401 fórmulas, 0 diferenças contra o painel, em 16 cenários |
-| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 140 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
+| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 155 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
 | **A nuvem** | A rodada de verdade no GitHub Actions, o site publicado e o `npm audit` | verde; 0 vulnerabilidades conhecidas nas dependências |
 
 ## 🧱 Tecnologias
@@ -241,7 +242,7 @@ src/radar_pricing/      o robô: http.py (cliente), fontes/ (7 coletores), colet
 site/                   o painel
   js/                   contas, leitura da foto, frases e Excel (JavaScript simples)
   src/                  telas (Briefing, Mercado, Calculadoras, Bastidores), gráficos e componentes
-  tests/                143 testes de contas e leitura, com a foto real em tests/fixtures
+  tests/                151 testes de contas e leitura, com a foto real em tests/fixtures
 scripts/                verifica_fontes.py (testa cada fonte de verdade), audita_painel.py,
                         confere_excel.py (abre o Excel de verdade, no Windows), grava_amostras.py
 tests/                  135 testes em Python, com respostas reais gravadas

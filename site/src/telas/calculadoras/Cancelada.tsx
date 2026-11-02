@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { cotaCancelada, EXEMPLOS } from "../../../js/calc.js";
+import { cotaCancelada, EXEMPLOS, leituraDoNegocio } from "../../../js/calc.js";
 import { dataBR, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { mesesDaConta, notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Campo, CampoEscolha } from "../../ui/blocos";
 import { Termo } from "../../ui/dicas";
-import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, ESe, Moldura, Nota, PrecoPedido, Resultado, SpreadDaConta, VeredictoDoPreco } from "./pecas";
+import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, ESe, Moldura, Nota, PrecoPedido, Resultado, SpreadDaConta, Veredito, comSinalPct, comSinalReais, linhaDoVeredito, tituloDaSituacao } from "./pecas";
 
 const INDICES = [
   { id: "ipca", nome: "Pela inflação (IPCA)" },
@@ -20,7 +20,7 @@ const AJUDA_DO_INDICE: Record<Indice, string> = {
   nenhum: "O valor é fixo em reais, sem correção.",
 };
 
-const EXEMPLO = { valor: EXEMPLOS.cancelada.valor, meses: EXEMPLOS.cancelada.meses, indice: "ipca" as string, propriaPct: 5, prazoEmData: false, prazoData: "", usarSpread: false, spread: 5, temPreco: false, preco: 38000, custos: 0 };
+const EXEMPLO = { valor: EXEMPLOS.cancelada.valor, meses: EXEMPLOS.cancelada.meses, indice: "ipca" as string, propriaPct: 5, prazoEmData: false, prazoData: "", usarSpread: false, spread: 5, temPreco: true, preco: 38000, custos: 0 };
 
 export function Cancelada() {
   const { curvas, spread: geral, foto, parametros } = useEstado();
@@ -33,6 +33,7 @@ export function Cancelada() {
     [e.valor, meses, indice, e.propriaPct, spread, curvas],
   );
   const curva = indice === "ipca" ? curvas.real : curvas.nominal;
+  const leitura = r && meses && e.temPreco ? leituraDoNegocio({ pagoHoje: e.preco + e.custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, meses }) : null;
   const textoDoIndice = indice === "ipca" ? "corrigido pela inflação" : indice === "propria" ? `corrigido a ${num(e.propriaPct, 2)}% ao ano` : "sem correção";
   const resumo = () =>
     [
@@ -40,7 +41,7 @@ export function Cancelada() {
       `Valor que o grupo devolve: ${reais(e.valor, 0)} em ${prazoEmTexto(meses ?? 0)} (${textoDoIndice})`,
       `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       r ? `Vale hoje: ${reais(r.valor_presente)} (${num(r.pct_do_valor, 1)}% do valor), taxa de desconto de ${pct(r.taxa_desconto)} ao ano` : "Sem resultado para estes dados",
-      ...(r && e.temPreco ? [`Preço pedido: ${reais(e.preco, 0)} + ${reais(e.custos, 0)} de custos = ${reais(e.preco + e.custos, 0)}; preço máximo para empatar: ${reais(r.valor_presente - e.custos)}`] : []),
+      ...(r && leitura ? [`Preço pedido: ${reais(e.preco, 0)} + ${reais(e.custos, 0)} de custos = ${reais(e.preco + e.custos, 0)}; preço máximo para compensar: ${reais(r.valor_presente - e.custos)}`, linhaDoVeredito(leitura)] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ].join("\n");
   return (
@@ -58,6 +59,35 @@ export function Cancelada() {
     >
       {r && meses ? (
         <>
+          {leitura && meses ? (
+            <Veredito
+              situacao={leitura.situacao}
+              frase={
+                <>
+                  Pagando <strong>{reais(e.preco + e.custos, 0)}</strong>
+                  {e.custos > 0 ? " (com os custos)" : ""} por um valor que a administradora devolve em {prazoEmTexto(meses)}:{" "}
+                  {leitura.situacao === "bom" ? "o preço está abaixo do que esse valor vale hoje." : leitura.situacao === "limite" ? "o preço é quase o que esse valor vale hoje, então sobra pouco." : "o preço passa do que esse valor vale hoje."}
+                </>
+              }
+              itens={[
+                { rotulo: "Lucro no fim", valor: comSinalReais(leitura.lucro), sub: `${comSinalPct(leitura.lucro_pct)} · recebe ${reais(r.valor_no_pagamento, 0)}, paga ${reais(leitura.total_pago, 0)}`, tom: leitura.lucro >= 0 ? "bom" : "ruim" },
+                { rotulo: "Rende ao ano", valor: `${num(leitura.retorno_aa ?? 0, 2)}%`, sub: `você exige ${num(r.taxa_desconto, 2)}% (Tesouro + spread)`, tom: leitura.folga >= 0 ? "bom" : "ruim" },
+                { rotulo: leitura.folga >= 0 ? "Sobra sobre o exigido" : "Falta para o exigido", valor: comSinalReais(leitura.folga), sub: "em valor de hoje", tom: leitura.folga >= 0 ? "bom" : "ruim" },
+              ]}
+              rodape={
+                leitura.situacao === "ruim" ? (
+                  <>
+                    Para compensar, o preço teria de cair para no máximo <strong className="num">{reais(r.valor_presente - e.custos)}</strong> ({reais(Math.abs(leitura.folga), 0)} a menos).
+                  </>
+                ) : (
+                  <>
+                    Preço máximo para ainda compensar: <strong className="num">{reais(r.valor_presente - e.custos)}</strong>
+                    {e.custos > 0 ? " (já separando os custos)" : ""}.
+                  </>
+                )
+              }
+            />
+          ) : null}
           <Resultado
             rotulo="Vale hoje"
             valor={r.valor_presente}
@@ -68,8 +98,7 @@ export function Cancelada() {
               </>
             }
           />
-          <BarraDoResultado rotulo="Vale hoje" valor={reais(r.valor_presente)} />
-          {e.temPreco ? <VeredictoDoPreco valorJusto={r.valor_presente} preco={e.preco} custos={e.custos} /> : null}
+          <BarraDoResultado rotulo={leitura ? `${tituloDaSituacao(leitura.situacao)} · lucro` : "Vale hoje"} valor={leitura ? comSinalReais(leitura.lucro) : reais(r.valor_presente)} situacao={leitura?.situacao ?? null} />
           <Aviso extrapolado={r.extrapolado} curva={curva} />
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <ESe titulo="E se o prazo fosse outro?" linhas={r.prazos.map((p: any) => ({ rotulo: prazoEmTexto(p.meses), valor: p.valor_presente, texto: reais(p.valor_presente, 0), atual: p.meses === meses, extra: `${num(p.pct_do_valor, 0)}%` }))} />

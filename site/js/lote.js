@@ -1,7 +1,7 @@
 // Várias cotas de uma vez: lê uma lista colada (copiada do Excel, com tabulação, ou separada por ";") e calcula cada
 // linha com as MESMAS funções das calculadoras (calc.js). Nada aqui faz conta própria: só lê, valida e junta.
 
-import { agioDaCota, avaliaPreco, cotaAtiva, cotaCancelada, MAX_PARCELAS } from "./calc.js";
+import { agioDaCota, avaliaPreco, cotaAtiva, cotaCancelada, leituraDoNegocio, MAX_PARCELAS } from "./calc.js";
 import { lerNumero } from "./formato.js";
 
 export const MAX_LINHAS = 500;
@@ -20,8 +20,8 @@ export const COLUNAS_DO_LOTE = {
 
 /** Valores inventados, para a pessoa ver o formato (cada um pode ser trocado). */
 export const EXEMPLO_DE_LOTE = {
-  cancelada: "50.000;24;ipca;38.000;0\n120.000;60;ipca;60.000;1.500\n80.000;36;4,5;;\n30.000;18;sem;;",
-  ativa: "100.000;1.900;60;12;;\n80.000;1.250;48;0;15.000;800\n150.000;1.800;80;6;;",
+  cancelada: "50.000;24;ipca;38.000;0\n120.000;60;ipca;60.000;1.500\n80.000;36;4,5;62.000;\n30.000;18;sem;;",
+  ativa: "100.000;1.900;60;12;;\n80.000;1.250;48;0;15.000;800\n150.000;1.800;80;6;60.000;",
 };
 
 const separa = (linha) => (linha.includes("\t") ? linha.split("\t") : linha.split(";")).map((c) => c.trim());
@@ -54,8 +54,10 @@ function leCancelada(c, { curvas, spreadPP }) {
   const r = cotaCancelada({ valor, meses, corrigido: corr.corrigido, correcaoPct: corr.correcaoPct, spreadPP }, curvas);
   if (!r) return { erro: "sem a curva do Tesouro nesta foto" };
   const a = preco === null ? null : avaliaPreco({ valorJusto: r.valor_presente, preco, custos });
+  const lei = preco === null ? null : leituraDoNegocio({ pagoHoje: preco + custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, meses });
   return {
     entrada: { valor, meses, correcao: corr.rotulo, preco, custos },
+    ...(lei ? { lucro: lei.lucro, lucro_pct: lei.lucro_pct, situacao: lei.situacao } : {}),
     vale_hoje: r.valor_presente,
     pct_do_valor: r.pct_do_valor,
     taxa_desconto: r.taxa_desconto,
@@ -81,8 +83,10 @@ function leAtiva(c, { curvas, spreadPP }) {
   if (!r) return { erro: "sem a curva do Tesouro IPCA+ nesta foto" };
   const a = preco === null ? null : avaliaPreco({ valorJusto: r.valor_da_cota, preco, custos });
   const agio = preco === null ? null : agioDaCota({ preco, custos, credito, saldoDevedor: r.total_das_parcelas });
+  const lei = preco === null ? null : leituraDoNegocio({ pagoHoje: preco + custos, saidasFuturas: r.total_das_parcelas, recebe: credito, valorJusto: r.valor_da_cota });
   return {
     entrada: { credito, parcela, parcelas, contemplacao, preco, custos },
+    ...(lei ? { lucro: lei.lucro, lucro_pct: lei.lucro_pct, situacao: lei.situacao } : {}),
     vale_hoje: r.valor_da_cota,
     pct_do_valor: r.pct_do_credito,
     extrapolado: r.extrapolado,
@@ -94,7 +98,7 @@ function leAtiva(c, { curvas, spreadPP }) {
 /**
  * Calcula a lista. `texto`: uma cota por linha. A primeira linha pode ser um título (não começa por número) e linhas
  * em branco são ignoradas. Cada linha sai com `n` (o número da linha no texto) e, ou o resultado, ou `erro`.
- * @returns {{ linhas: any[], resumo: { total: number, calculadas: number, com_erro: number, soma_vale_hoje: number, com_preco: number, cabem: number, soma_pago: number, soma_vale_das_com_preco: number }, truncado: boolean }}
+ * @returns {{ linhas: any[], resumo: { total: number, calculadas: number, com_erro: number, soma_vale_hoje: number, com_preco: number, cabem: number, compensam: number, no_limite: number, nao_compensam: number, soma_lucro: number, soma_pago: number, soma_vale_das_com_preco: number }, truncado: boolean }}
  */
 export function calculaLote(texto, tipo, { curvas, spreadPP }) {
   const leitor = tipo === "ativa" ? leAtiva : leCancelada;
@@ -131,6 +135,10 @@ export function calculaLote(texto, tipo, { curvas, spreadPP }) {
       soma_vale_hoje: boas.reduce((s, l) => s + l.vale_hoje, 0),
       com_preco: comPreco.length,
       cabem: comPreco.filter((l) => l.cabe).length,
+      compensam: comPreco.filter((l) => l.situacao === "bom").length,
+      no_limite: comPreco.filter((l) => l.situacao === "limite").length,
+      nao_compensam: comPreco.filter((l) => l.situacao === "ruim").length,
+      soma_lucro: comPreco.reduce((s, l) => s + l.lucro, 0),
       soma_pago: comPreco.reduce((s, l) => s + l.pago, 0),
       soma_vale_das_com_preco: comPreco.reduce((s, l) => s + l.vale_hoje, 0),
     },

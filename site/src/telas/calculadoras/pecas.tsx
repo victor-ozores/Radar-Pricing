@@ -1,7 +1,6 @@
 import * as Switch from "@radix-ui/react-switch";
-import { Check, Copy, RotateCcw } from "lucide-react";
+import { Check, CircleCheck, CircleX, Copy, RotateCcw, TriangleAlert } from "lucide-react";
 import { useId, useState, type ReactNode } from "react";
-import { avaliaPreco } from "../../../js/calc.js";
 import { mesAno, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { somaMeses } from "../../../js/foto.js";
 import { copiaTexto } from "../../calc/memoria";
@@ -99,7 +98,7 @@ type PatchDePreco = { temPreco: boolean; preco: number; custos: number };
 export function PrecoPedido({ e, muda, rotulo = "Tenho um preço pedido", ajudaDoPreco }: { e: PatchDePreco; muda: (p: Partial<PatchDePreco>) => void; rotulo?: string; ajudaDoPreco?: ReactNode }) {
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-folha2 p-3">
-      <Interruptor ligado={e.temPreco} aoMudar={(v) => muda({ temPreco: v })} rotulo={rotulo} ajuda="A conta diz se o preço cabe e qual é o máximo." />
+      <Interruptor ligado={e.temPreco} aoMudar={(v) => muda({ temPreco: v })} rotulo={rotulo} ajuda="A conta diz se compensa, quanto você lucra e qual é o preço máximo." />
       {e.temPreco ? (
         <>
           <Campo rotulo="Preço pedido" valor={e.preco} aoMudar={(v) => muda({ preco: v })} prefixo="R$" min={1} max={1e9} ajuda={ajudaDoPreco} />
@@ -111,24 +110,25 @@ export function PrecoPedido({ e, muda, rotulo = "Tenho um preço pedido", ajudaD
 }
 
 // ------------------------------------------------------------------------------------------------ resultados
-export function Resultado({ rotulo, valor, formato, nota, tom = "marca" }: { rotulo: ReactNode; valor: number; formato: (n: number) => string; nota?: ReactNode; tom?: "marca" | "sobe" }) {
+export function Resultado({ rotulo, valor, formato, nota, tom = "neutro" }: { rotulo: ReactNode; valor: number; formato: (n: number) => string; nota?: ReactNode; tom?: "neutro" | "sobe" }) {
   return (
-    <div className="rounded-2xl border border-marca/25 bg-marca2 p-4 sm:p-5">
-      <p className="rotulo m-0 text-marca">{rotulo}</p>
+    <div className="rounded-2xl border border-linha bg-folha p-4 sm:p-5">
+      <p className="rotulo m-0">{rotulo}</p>
       <p className={`display num m-0 mt-1 break-words text-[2.3rem] font-semibold leading-none tracking-tight sm:text-[2.6rem] md:text-[3.2rem] ${tom === "sobe" ? "text-sobe" : "text-tinta"}`}>
         <Contagem valor={valor} formato={formato} />
       </p>
-      {nota ? <p className="m-0 mt-2 text-[0.9rem] leading-snug text-tinta2">{nota}</p> : null}
+      {nota ? <p className="m-0 mt-2 text-[0.875rem] leading-snug text-tinta3">{nota}</p> : null}
     </div>
   );
 }
 
-/** O resultado principal sempre à vista no celular, grudado acima da barra de baixo, enquanto a pessoa muda os campos. */
-export function BarraDoResultado({ rotulo, valor }: { rotulo: string; valor: string }) {
+/** O resultado principal sempre à vista no celular, grudado acima da barra de baixo; com um veredito, leva a cor dele. */
+export function BarraDoResultado({ rotulo, valor, situacao = null }: { rotulo: string; valor: string; situacao?: Situacao | null }) {
+  const cor = situacao ? `${SITUACOES[situacao].borda} ${SITUACOES[situacao].fundoBarra}` : "border-linha bg-folha/95";
   return (
-    <div className="nao-imprime fixed inset-x-0 z-30 border-t border-marca/30 bg-marca2/95 px-4 py-2 backdrop-blur md:hidden" style={{ bottom: "calc(3.5rem + env(safe-area-inset-bottom))" }} role="status" aria-live="polite">
+    <div className={`nao-imprime fixed inset-x-0 z-30 border-t-2 px-4 py-2 backdrop-blur md:hidden ${cor}`} style={{ bottom: "calc(3.5rem + env(safe-area-inset-bottom))" }} role="status" aria-live="polite">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="rotulo m-0 truncate text-marca">{rotulo}</span>
+        <span className={`rotulo m-0 truncate ${situacao ? SITUACOES[situacao].texto : ""}`}>{rotulo}</span>
         <strong className="display num whitespace-nowrap text-[1.35rem] leading-tight text-tinta">{valor}</strong>
       </div>
     </div>
@@ -136,18 +136,58 @@ export function BarraDoResultado({ rotulo, valor }: { rotulo: string; valor: str
 }
 
 /** O veredito de um preço pedido contra o valor justo da conta. */
-export function VeredictoDoPreco({ valorJusto, preco, custos, rotuloDoJusto = "o valor de hoje" }: { valorJusto: number; preco: number; custos: number; rotuloDoJusto?: string }) {
-  const a = avaliaPreco({ valorJusto, preco, custos });
-  if (!a) return null;
+// ------------------------------------------------------------------------------------------------ o veredito
+export type Situacao = "bom" | "limite" | "ruim";
+
+/** Verde, amarelo e vermelho, sempre com ícone e palavra: a cor sozinha não basta para quem não distingue cores. */
+const SITUACOES = {
+  bom: { titulo: "Compensa", Icone: CircleCheck, caixa: "border-ok bg-ok2", borda: "border-ok", fundoBarra: "bg-ok2/95", texto: "text-ok" },
+  limite: { titulo: "No limite", Icone: TriangleAlert, caixa: "border-aviso bg-aviso2", borda: "border-aviso", fundoBarra: "bg-aviso2/95", texto: "text-aviso" },
+  ruim: { titulo: "Não compensa", Icone: CircleX, caixa: "border-erro bg-erro2", borda: "border-erro", fundoBarra: "bg-erro2/95", texto: "text-erro" },
+} as const;
+
+export const tituloDaSituacao = (s: Situacao) => SITUACOES[s].titulo;
+
+/** "+R$ 12.000" ou "−R$ 3.000": o sinal sempre à vista, para o lucro não se confundir com o prejuízo. */
+export const comSinalReais = (v: number, casas = 0) => `${v < 0 && Math.round(Math.abs(v) * 10 ** casas) !== 0 ? "−" : "+"}${reais(Math.abs(v), casas)}`;
+export const comSinalPct = (v: number, casas = 1) => `${v < 0 && Math.round(Math.abs(v) * 10 ** casas) !== 0 ? "−" : "+"}${num(Math.abs(v), casas)}%`;
+
+export type ItemDoVeredito = { rotulo: string; valor: string; sub?: ReactNode; tom?: "bom" | "ruim" | "neutro" };
+
+/**
+ * O quadro que diz, antes de tudo, se o negócio compensa: a palavra grande e colorida, uma frase curta e três números
+ * em linhas separadas (lucro em reais, o que rende contra o que se exige, quanto sobra ou falta).
+ */
+export function Veredito({ situacao, frase, itens, rodape }: { situacao: Situacao; frase: ReactNode; itens: ItemDoVeredito[]; rodape?: ReactNode }) {
+  const v = SITUACOES[situacao];
+  const Icone = v.Icone;
+  const corDoNumero = { bom: "text-ok", ruim: "text-erro", neutro: "text-tinta" };
   return (
-    <div className={`rounded-2xl border p-4 ${a.cabe ? "border-ok/30 bg-ok2" : "border-aviso/40 bg-aviso2"}`}>
-      <p className="rotulo m-0">Com o preço pedido de {reais(preco, 0)}{custos > 0 ? ` mais ${reais(custos, 0)} de custos` : ""}</p>
-      <p className="m-0 mt-1 text-[0.97rem] leading-snug text-tinta">
-        {a.cabe ? `O preço cabe: sobram ${reais(a.folga)} contra ${rotuloDoJusto}.` : `O preço não cabe: passa ${reais(Math.abs(a.folga))} de ${rotuloDoJusto}.`} O preço máximo para empatar é <strong className="num">{reais(a.preco_maximo)}</strong>.
+    <section className={`rounded-2xl border-2 p-4 sm:p-5 ${v.caixa}`} aria-label={`O negócio: ${v.titulo}`}>
+      <p className={`m-0 flex items-center gap-1.5 text-[0.75rem] font-bold uppercase tracking-[0.12em] ${v.texto}`}>
+        <Icone size={17} aria-hidden /> O negócio
       </p>
-    </div>
+      <p className={`display m-0 mt-1 text-[2.1rem] font-semibold leading-none sm:text-[2.5rem] ${v.texto}`}>{v.titulo}</p>
+      <p className="m-0 mt-2 max-w-[62ch] text-[0.95rem] leading-snug text-tinta">{frase}</p>
+      <dl className="m-0 mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {itens.map((it) => (
+          <div key={it.rotulo} className="min-w-0 rounded-xl bg-folha px-3 py-2.5">
+            <dt className="rotulo m-0">{it.rotulo}</dt>
+            <dd className="m-0 mt-0.5">
+              <span className={`display num block break-words text-[1.4rem] font-semibold leading-tight ${corDoNumero[it.tom ?? "neutro"]}`}>{it.valor}</span>
+              {it.sub ? <span className="mt-0.5 block text-xs leading-snug text-tinta3">{it.sub}</span> : null}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      {rodape ? <p className="m-0 mt-3 text-[0.9rem] leading-snug text-tinta">{rodape}</p> : null}
+    </section>
   );
 }
+
+/** A linha do veredito para o resumo copiado. */
+export const linhaDoVeredito = (l: { situacao: Situacao; lucro: number; folga: number }) =>
+  `Veredito: ${tituloDaSituacao(l.situacao)} (lucro no fim de ${comSinalReais(l.lucro)}; ${l.folga >= 0 ? "sobra" : "falta"} ${reais(Math.abs(l.folga), 0)} sobre o retorno exigido, em valor de hoje)`;
 
 export function ComoFoiCalculado({ children }: { children: ReactNode }) {
   return (

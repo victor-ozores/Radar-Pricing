@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { EXEMPLOS, retornoDaOferta } from "../../../js/calc.js";
+import { EXEMPLOS, leituraDoNegocio, retornoDaOferta } from "../../../js/calc.js";
 import { dataBR, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { mesesDaConta, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Campo } from "../../ui/blocos";
 import { Delta } from "../../ui/Delta";
 import { Termo } from "../../ui/dicas";
-import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, Interruptor, Moldura, Nota, Resultado, SpreadDaConta } from "./pecas";
+import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, Interruptor, Moldura, Nota, Resultado, SpreadDaConta, Veredito, comSinalPct, comSinalReais, linhaDoVeredito, tituloDaSituacao } from "./pecas";
 
 const EXEMPLO = { ...EXEMPLOS.retorno, prazoEmData: false, prazoData: "", alvoAtivo: false, alvo: 12, custos: 0, usarSpread: false, spread: 5 };
 
@@ -21,12 +21,14 @@ export function Oferta() {
     [e.preco, e.valor, meses, e.corrigido, e.alvoAtivo, e.alvo, spread, e.custos, curvas, cdi],
   );
   const cabe = r ? r.folga >= 0 : false;
+  const leitura = r && meses ? leituraDoNegocio({ pagoHoje: r.pago, recebe: e.valor, valorJusto: r.preco_maximo + e.custos, meses }) : null;
   const resumo = () =>
     [
       `Radar Pricing · Retorno de uma oferta · foto de ${dataBR(foto.data)}`,
       `Pagando ${reais(e.preco, 0)}${e.custos > 0 ? ` + ${reais(e.custos, 0)} de custos` : ""} para receber ${reais(e.valor, 0)} em ${prazoEmTexto(meses ?? 0)} (${e.corrigido ? "corrigido pela inflação" : "sem correção"})`,
       r ? `Retorno: ${num(r.retorno_aa, 2)}% ao ano (ganho total de ${num(r.retorno_total, 1)}%)` : "Sem resultado para estes dados",
       r ? `Para ${num(r.alvo, 2)}% ao ano${r.alvo_padrao ? ` (Tesouro + spread de ${num(spread, 1)} p.p.${spread === parametros.spread_demonstracao_pp ? ", exemplo" : ""})` : ""}, o preço máximo é ${reais(r.preco_maximo)}: ${cabe ? "a oferta cabe" : "a oferta não cabe"}` : "",
+      ...(leitura ? [linhaDoVeredito(leitura)] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ]
       .filter(Boolean)
@@ -50,23 +52,47 @@ export function Oferta() {
     >
       {r && meses ? (
         <>
+          {leitura ? (
+            <Veredito
+              situacao={leitura.situacao}
+              frase={
+                <>
+                  Pagando <strong>{reais(r.pago, 0)}</strong>
+                  {e.custos > 0 ? " (com os custos)" : ""} para receber <strong>{reais(e.valor, 0)}</strong> em {prazoEmTexto(meses ?? 0)}
+                  {e.corrigido ? ", já corrigido pela inflação" : ""}:{" "}
+                  {leitura.situacao === "bom" ? "o preço está abaixo do máximo para o retorno que você exige." : leitura.situacao === "limite" ? "o preço é quase o máximo para o retorno que você exige, então sobra pouco." : "o preço passa do máximo para o retorno que você exige."}
+                </>
+              }
+              itens={[
+                { rotulo: "Lucro no fim", valor: comSinalReais(leitura.lucro), sub: `${comSinalPct(leitura.lucro_pct)} · recebe ${reais(e.valor, 0)}, paga ${reais(leitura.total_pago, 0)}`, tom: leitura.lucro >= 0 ? "bom" : "ruim" },
+                { rotulo: "Rende ao ano", valor: `${num(r.retorno_aa, 2)}%`, sub: `você exige ${num(r.alvo, 2)}%${r.alvo_padrao ? " (Tesouro + spread)" : ""}`, tom: leitura.folga >= 0 ? "bom" : "ruim" },
+                { rotulo: leitura.folga >= 0 ? "Sobra sobre o exigido" : "Falta para o exigido", valor: comSinalReais(leitura.folga), sub: "em valor de hoje", tom: leitura.folga >= 0 ? "bom" : "ruim" },
+              ]}
+              rodape={
+                leitura.situacao === "ruim" ? (
+                  <>
+                    Para atingir o retorno exigido, o preço teria de cair para no máximo <strong className="num">{reais(r.preco_maximo)}</strong> ({reais(Math.abs(r.folga), 0)} a menos).
+                  </>
+                ) : (
+                  <>
+                    Preço máximo para ainda atingir o retorno exigido: <strong className="num">{reais(r.preco_maximo)}</strong>
+                    {e.custos > 0 ? " (já separando os custos)" : ""}.
+                  </>
+                )
+              }
+            />
+          ) : null}
           <Resultado
             rotulo="Esta oferta rende"
             valor={r.retorno_aa}
             formato={(n) => `${num(n, 2)}% ao ano`}
             nota={
               <>
-                Pagando {reais(r.pago, 0)}{e.custos > 0 ? " (com os custos)" : ""} para receber {reais(e.valor, 0)} em {prazoEmTexto(meses)}, o ganho total é de {num(r.retorno_total, 1)}%{e.corrigido ? ", acima da inflação" : ""}. O <Termo id="desagio">deságio</Termo> é de {num((1 - e.preco / e.valor) * 100, 1)}%{e.custos > 0 ? ` sobre o preço (${num((1 - r.pago / e.valor) * 100, 1)}% contando os custos)` : ""}.
+                {e.corrigido ? "Retorno acima da inflação. " : ""}O <Termo id="desagio">deságio</Termo> é de {num((1 - e.preco / e.valor) * 100, 1)}%{e.custos > 0 ? ` sobre o preço (${num((1 - r.pago / e.valor) * 100, 1)}% contando os custos)` : ""}.
               </>
             }
           />
-          <BarraDoResultado rotulo="Rende" valor={`${num(r.retorno_aa, 2)}% a.a.`} />
-          <div className={`rounded-2xl border p-4 ${cabe ? "border-ok/30 bg-ok2" : "border-aviso/40 bg-aviso2"}`}>
-            <p className="rotulo m-0">Para um retorno de {num(r.alvo, 2)}% ao ano{r.alvo_padrao ? " (Tesouro + spread)" : ""}</p>
-            <p className="m-0 mt-1 text-[0.97rem] leading-snug text-tinta">
-              O preço máximo é <strong className="num">{reais(r.preco_maximo)}</strong>{e.custos > 0 ? " (já separando os custos)" : ""}. {cabe ? `A oferta está ${reais(r.folga)} abaixo disso: cabe no alvo.` : `A oferta está ${reais(Math.abs(r.folga))} acima disso: não chega no alvo.`}
-            </p>
-          </div>
+          <BarraDoResultado rotulo={leitura ? `${tituloDaSituacao(leitura.situacao)} · lucro` : "Rende"} valor={leitura ? comSinalReais(leitura.lucro) : `${num(r.retorno_aa, 2)}% a.a.`} situacao={leitura?.situacao ?? null} />
           <div className="rounded-2xl border border-linha bg-folha p-4">
             <h3 className="m-0 mb-2 font-sans text-sm font-semibold text-tinta">Contra as referências de hoje</h3>
             <ul className="m-0 flex list-none flex-col gap-2 p-0">

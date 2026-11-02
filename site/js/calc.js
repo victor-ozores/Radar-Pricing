@@ -249,6 +249,40 @@ export function agioDaCota({ preco, custos = 0, credito, saldoDevedor }) {
   return { sobre_credito_pct: (preco / credito) * 100, sobre_saldo_pct: (preco / saldoDevedor) * 100, custo_total: saldoDevedor + preco + custos };
 }
 
+// --------------------------------------------------------------------------------------------- lucro e situação
+/** A folga abaixo disso, em % do que sai do bolso hoje, ainda é "no limite" (o preço quase não deixa margem). */
+export const MARGEM_MINIMA_PCT = 5;
+
+/**
+ * O negócio em linguagem de lucro e prejuízo, igual para todas as calculadoras.
+ *  - `pagoHoje`: o que sai do bolso hoje (preço mais custos de transferência);
+ *  - `saidasFuturas`: o que ainda sai depois, sem descontar (as parcelas de uma cota ativa);
+ *  - `recebe`: o que entra (valor a receber, crédito, precatório depois das retenções);
+ *  - `valorJusto`: o valor de hoje do que entra, já descontado pela taxa exigida (Tesouro mais spread) e já sem as saídas
+ *    futuras: o máximo que dá para pagar hoje e ainda ganhar o retorno exigido.
+ * `lucro` é em dinheiro, sem descontar nada. `folga` é o que sobra (ou falta) sobre o retorno exigido, em valor de hoje.
+ * `situacao`: "ruim" (folga negativa: rende menos que o exigido), "limite" (folga menor que a margem mínima) ou "bom".
+ * Pode haver lucro em dinheiro e mesmo assim "ruim": ganhar menos que o Tesouro mais o spread também é perder.
+ * @returns {{ total_pago: number, lucro: number, lucro_pct: number, folga: number, folga_pct: number, retorno_aa: number | null, situacao: "bom" | "limite" | "ruim" } | null}
+ */
+export function leituraDoNegocio({ pagoHoje, saidasFuturas = 0, recebe, valorJusto, meses = /** @type {number | null} */ (null), margemPct = MARGEM_MINIMA_PCT }) {
+  if (![pagoHoje, recebe, valorJusto].every(Number.isFinite) || !(pagoHoje > 0) || !(saidasFuturas >= 0) || !(margemPct >= 0)) return null;
+  const totalPago = pagoHoje + saidasFuturas;
+  const lucro = recebe - totalPago;
+  const folga = valorJusto - pagoHoje;
+  const folgaPct = (folga / pagoHoje) * 100;
+  const comRetorno = saidasFuturas === 0 && Number.isFinite(meses) && meses >= 1 && recebe > 0;
+  return {
+    total_pago: totalPago,
+    lucro,
+    lucro_pct: (lucro / totalPago) * 100,
+    folga,
+    folga_pct: folgaPct,
+    retorno_aa: comRetorno ? ((recebe / pagoHoje) ** (12 / meses) - 1) * 100 : null,
+    situacao: folga < 0 ? "ruim" : folgaPct < margemPct ? "limite" : "bom",
+  };
+}
+
 // --------------------------------------------------------------------------------------------- precatório
 export const INDICES_DE_CORRECAO = ["selic", "ipca", "propria", "nenhum"];
 export const MAX_MESES_PRECATORIO = 360;

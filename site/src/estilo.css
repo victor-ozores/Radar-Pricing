@@ -95,6 +95,7 @@
   --color-aviso2: var(--aviso-2);
   --color-erro: var(--erro);
   --color-erro2: var(--erro-2);
+  --color-erro2: var(--erro-2);
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
 }
