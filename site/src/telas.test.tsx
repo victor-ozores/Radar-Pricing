@@ -68,6 +68,25 @@ describe("briefing", () => {
     semLixo();
   });
 
+  it("rótulos e textos certos: sem '1 meses', ABAC só acumula o que acumula, a diferença da frase fecha", async () => {
+    await abre("#/briefing");
+    await screen.findByText(/Volume de vendas no ano/);
+    const texto = textoDaPagina();
+    expect(texto).not.toMatch(/1 meses/);
+    expect(texto).toMatch(/TOTAL1 mês(?!es)/); // o prazo médio mudou 1 mês no trimestre
+    expect((texto.match(/acumulado até set\/2026/g) ?? []).length).toBe(4); // as quatro séries "no ano"
+    expect((texto.match(/em set\/2026/g) ?? []).length).toBeGreaterThanOrEqual(2); // participantes ativos e ticket médio
+    expect(texto).toMatch(/de 6,78% para 7,77% ao ano acima do IPCA \(\+0,99 p\.p\.\)/);
+  });
+
+  it("os 9 números do dia ocupam 3 colunas nas telas largas (nenhum cartão sozinho)", async () => {
+    await abre("#/briefing");
+    const lista = document.querySelector('section[aria-labelledby="numeros"] ul') as HTMLElement;
+    expect(lista.children).toHaveLength(9);
+    expect(lista.className).toContain("lg:grid-cols-3");
+    expect(lista.className).not.toContain("lg:grid-cols-4");
+  });
+
   it("mudar o spread refaz a manchete", async () => {
     await abre("#/briefing");
     const antes = screen.getByRole("heading", { level: 1 }).textContent;
@@ -95,6 +114,16 @@ describe("mercado", () => {
     fireEvent.change(screen.getByPlaceholderText(/Buscar título ou ano/), { target: { value: "2032" } });
     await waitFor(() => expect(within(tabela).getAllByRole("row")).toHaveLength(3)); // IPCA+ 2032 e Prefixado 2032
     semLixo();
+  });
+
+  it("Selic e inflação: série mensal mostra o mês, não o dia 1", async () => {
+    await abre("#/mercado/juros");
+    const tabela = await screen.findByRole("table", { name: /Selic, CDI e IPCA/ });
+    const linha = within(tabela).getByText("IPCA em 12 meses").closest("tr") as HTMLElement;
+    expect(linha.textContent).toMatch(/set\/2026/);
+    expect(linha.textContent).not.toMatch(/01\/09\/2026/);
+    const meta = within(tabela).getByText("Meta Selic").closest("tr") as HTMLElement;
+    expect(meta.textContent).toMatch(/31\/10\/2026/); // série diária segue com o dia
   });
 
   it.each([

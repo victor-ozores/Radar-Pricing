@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { comUnidade, dataBR, deltaComUnidade, num, pct } from "../../../js/formato.js";
+import { comUnidade, dataBR, deltaComUnidade, mesAno, num, pct } from "../../../js/formato.js";
 import { focusNoTempo, serieDe } from "../../../js/historico.js";
 import * as modelo from "../../../js/modelo.js";
 import { Balao, COR, EIXO, GRADE, Quadro } from "../../graficos/base";
@@ -10,7 +10,7 @@ import { Delta } from "../../ui/Delta";
 import { Spark } from "../../ui/Spark";
 import { Tabela } from "../../ui/Tabela";
 
-type Serie = { serie: string; rotulo: string; valor: number; unidade: string; data: string; d1: { delta: number } | null; d7: { delta: number } | null; d30: { delta: number } | null; historico: number[] };
+type Serie = { serie: string; rotulo: string; mensal: boolean; valor: number; unidade: string; data: string; d1: { delta: number } | null; d7: { delta: number } | null; d30: { delta: number } | null; historico: number[] };
 
 const CORES_FOCUS = [COR.s1, COR.s2, COR.s3, COR.s4];
 
@@ -86,7 +86,7 @@ export function MercadoJuros({ foto }: { foto: Foto }) {
     () => [
       { accessorKey: "rotulo", header: "Série", meta: { largura: "13rem", ajuda: "Indicador do Banco Central (SGS)." }, cell: (c) => <span className="font-semibold text-tinta">{c.getValue()}</span> },
       { accessorKey: "valor", header: "Último valor", meta: { numerica: true, ajuda: "O valor mais recente, na unidade da série.", csv: (l: Serie) => comUnidade(l.valor, l.unidade) }, cell: (c) => <span className="font-bold text-tinta">{comUnidade(c.row.original.valor, c.row.original.unidade)}</span> },
-      { accessorKey: "data", header: "Data", meta: { ajuda: "O dia (ou mês) a que o valor se refere." }, cell: (c) => <span className="num">{dataBR(c.getValue())}</span> },
+      { accessorKey: "data", header: "Data", meta: { ajuda: "O dia (ou mês) a que o valor se refere." }, cell: (c) => <span className="num">{c.row.original.mensal ? mesAno(c.getValue()) : dataBR(c.getValue())}</span> },
       ...(["d1", "d7", "d30"] as const).map<ColumnDef<Serie, any>>((k) => ({
         id: k,
         header: k === "d1" ? "1 dia" : k === "d7" ? "7 dias" : "30 dias",

@@ -2,7 +2,7 @@ import * as Switch from "@radix-ui/react-switch";
 import { useMemo, useState, type ReactNode } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { cotaAtiva, cotaCancelada, EXEMPLOS, MAX_PARCELAS, retornoDaOferta } from "../../js/calc.js";
-import { num, pct, prazoEmTexto, reais } from "../../js/formato.js";
+import { num, numComMenos, pct, prazoEmTexto, reais } from "../../js/formato.js";
 import { useDados, useEstado } from "../dados";
 import { Balao, COR, EIXO, GRADE } from "../graficos/base";
 import { enderecoDa } from "../rota";
@@ -257,7 +257,7 @@ function Ativa() {
                   <LineChart data={grafico} margin={{ top: 12, right: 14, bottom: 0, left: 0 }}>
                     <CartesianGrid {...GRADE} />
                     <XAxis dataKey="contemplacao" type="number" domain={[0, "dataMax"]} {...EIXO} tickFormatter={(v: number) => (v === 0 ? "já" : `${v}`)} label={{ value: "meses até a contemplação", position: "insideBottom", offset: -2, fill: "var(--tinta-3)", fontSize: 12 }} height={42} />
-                    <YAxis {...EIXO} axisLine={false} width={64} tickFormatter={(v: number) => num(v / 1000, 0) + " mil"} />
+                    <YAxis {...EIXO} axisLine={false} width={64} tickFormatter={(v: number) => `${numComMenos(v / 1000, 0)} mil`} />
                     <Tooltip
                       cursor={{ stroke: "var(--linha-2)" }}
                       content={({ active, payload }) => {

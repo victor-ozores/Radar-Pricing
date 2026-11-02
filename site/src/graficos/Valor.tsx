@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { CHOQUES_PP, impactoNoPrazo, sensibilidade } from "../../js/calc.js";
-import { num, pct, pp, prazoEmTexto, reais, sinal } from "../../js/formato.js";
+import { num, numComMenos, pct, pp, prazoEmTexto, reais, sinal } from "../../js/formato.js";
 import type { Estado } from "../tipos";
 import { Segmentado } from "../ui/blocos";
 import { Termo } from "../ui/dicas";
@@ -42,7 +42,7 @@ export function ImpactoNoValor({ estado }: { estado: Estado }) {
           <BarChart data={dados} margin={{ top: 22, right: 8, bottom: 0, left: 0 }} barCategoryGap="28%">
             <CartesianGrid {...GRADE} />
             <XAxis dataKey="rotulo" {...EIXO} />
-            <YAxis {...EIXO} axisLine={false} width={48} domain={[-limite, limite]} ticks={[-limite, -limite / 2, 0, limite / 2, limite]} tickFormatter={(v: number) => `${num(v, 0)}%`} />
+            <YAxis {...EIXO} axisLine={false} width={48} domain={[-limite, limite]} ticks={[-limite, -limite / 2, 0, limite / 2, limite]} tickFormatter={(v: number) => `${numComMenos(v, 0)}%`} />
             <ReferenceLine y={0} stroke="var(--linha-2)" />
             <Tooltip
               cursor={{ fill: "var(--folha-2)" }}

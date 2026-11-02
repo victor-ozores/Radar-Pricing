@@ -184,10 +184,11 @@ export function seriesDoBanco(foto) {
     ["ipca_mensal", "IPCA do mês"],
     ["ipca_12_meses", "IPCA em 12 meses"],
   ];
+  const mensais = new Set(["selic_acumulada_mes_anualizada", "ipca_mensal", "ipca_12_meses"]);
   return ordem
     .map(([serie, rotulo]) => {
       const e = entradaDeVariacao(foto, "bcb_sgs", serie);
-      return e && { serie, rotulo, valor: e.valor, unidade: e.unidade, data: e.data, d1: variacaoDe(e, 1), d7: variacaoDe(e, 7), d30: variacaoDe(e, 30) };
+      return e && { serie, rotulo, mensal: mensais.has(serie), valor: e.valor, unidade: e.unidade, data: e.data, d1: variacaoDe(e, 1), d7: variacaoDe(e, 7), d30: variacaoDe(e, 30) };
     })
     .filter(Boolean);
 }
@@ -240,7 +241,10 @@ export function abac(foto) {
     const ultimo = pontos.at(-1);
     const anterior = pontos.length > 1 ? pontos.at(-2) : null;
     const unidade = foto.registros.find((r) => r.serie === serie).unidade;
-    return { serie, rotulo, unidade, pontos, ultimo, anterior, delta: anterior ? ultimo.valor - anterior.valor : null };
+    // "…no ano" é acumulado do ano e recomeça em janeiro: de dezembro para janeiro não há variação para mostrar
+    const acumulado = serie.endsWith("_no_ano");
+    const viradaDoAno = acumulado && anterior !== null && ano(anterior.data) !== ano(ultimo.data);
+    return { serie, rotulo, unidade, acumulado, pontos, ultimo, anterior, delta: anterior && !viradaDoAno ? ultimo.valor - anterior.valor : null };
   }).filter(Boolean);
 }
 

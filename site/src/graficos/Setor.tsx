@@ -172,7 +172,7 @@ export function DestaquesDoSetor({ destaques }: { destaques: { grupo: string; li
 }
 
 // ------------------------------------------------------------------------------------------------ ABAC
-type SerieAbac = { serie: string; rotulo: string; unidade: string; pontos: { data: string; valor: number }[]; ultimo: { data: string; valor: number }; delta: number | null };
+type SerieAbac = { serie: string; rotulo: string; unidade: string; acumulado: boolean; pontos: { data: string; valor: number }[]; ultimo: { data: string; valor: number }; delta: number | null };
 
 export function PainelDaAbac({ itens }: { itens: SerieAbac[] }) {
   if (itens.length === 0) return null;
@@ -187,7 +187,7 @@ export function PainelDaAbac({ itens }: { itens: SerieAbac[] }) {
               <span className="ml-1 font-sans text-xs font-medium text-tinta3">{s.unidade}</span>
             </p>
             <p className="m-0 mt-1 text-xs text-tinta3">
-              acumulado até {mesAno(s.ultimo.data)}
+              {s.acumulado ? "acumulado até" : "em"} {mesAno(s.ultimo.data)}
               {s.delta !== null ? (
                 <>
                   {" "}

@@ -10,6 +10,7 @@ export function prazoDeReferencia(prazos) {
   return prazos.reduce((a, b) => (Math.abs(b - 36) < Math.abs(a - 36) ? b : a));
 }
 
+const arredonda2 = (x) => Math.round(x * 100) / 100;
 const palavraDoMovimento = (delta) => (delta > 0 ? "subiram" : "caíram");
 
 /**
@@ -49,7 +50,8 @@ function frasesDoTesouro(estado) {
     const curva = curvas[id];
     if (!curva) continue;
     const r = impactoNoPrazo(curva, meses, spread, par.valor_face);
-    if (r) partes.push(`de ${pct(r.taxa_antes)} para ${pct(r.taxa_hoje)} ao ano ${texto} (${pp(r.taxa_hoje - r.taxa_antes)})`);
+    // a diferença sai dos números como aparecem na frase (duas casas): quem subtrai os dois acha o mesmo resultado
+    if (r) partes.push(`de ${pct(r.taxa_antes)} para ${pct(r.taxa_hoje)} ao ano ${texto} (${pp(arredonda2(r.taxa_hoje) - arredonda2(r.taxa_antes))})`);
     else partes.push(`${pct(interpola(curva.pontos, meses / 12)[0])} ao ano ${texto}`);
   }
   if (partes.length === 0) return null;

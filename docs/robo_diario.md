@@ -17,7 +17,7 @@ Rodar de novo no mesmo dia é seguro: se a foto de hoje já existe, o robô sai 
 
 - **Horário:** 10:17 em Brasília (13:17 UTC), de segunda a sexta. O GitHub avisa que os agendamentos podem atrasar em horário de pico e que, em casos extremos, uma rodada pode ser descartada. No meu outro projeto (Radar PNCP) medi atrasos de 3 a 5 horas com o mesmo tipo de agendamento, por isso o horário é cedo e o Healthchecks tem 8 horas de tolerância.
 - **Desligamento por inatividade:** a documentação do GitHub diz que, em repositório público, os agendamentos são desligados depois de 60 dias sem atividade no repositório. Ela **não define** o que conta como atividade, então não sei se o commit que o próprio robô faz na branch `data` conta. Se o agendamento parar, o Healthchecks avisa e eu religo em *Actions → Coleta diária → Enable workflow*.
-- **Dados que não vêm de graça no dia:** o Focus é atualizado uma vez por semana, o Panorama de Consórcios é trimestral e o IPCA é mensal. A foto diária guarda o que cada fonte tinha naquele dia, com a idade do dado ao lado.
+- **Dados que não vêm de graça no dia:** o Focus é publicado em boletim toda semana, mas a pesquisa tem uma linha por dia útil, o Panorama de Consórcios é trimestral e o IPCA é mensal. A foto diária guarda o que cada fonte tinha naquele dia, com a idade do dado ao lado.
 - **IBGE:** não responde a partir dos servidores do GitHub (ver [`fontes_de_dados.md`](fontes_de_dados.md)). Ele só serve de conferência do IPCA do BCB, então a foto sai normal e a conferência fica sem dado.
 
 ## Testes

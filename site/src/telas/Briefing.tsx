@@ -119,7 +119,7 @@ function Numeros() {
       <h2 id="numeros" className="rotulo m-0 mb-3 font-sans">
         Os números do dia
       </h2>
-      <ul className="m-0 grid grid-cols-1 list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <ul className={`m-0 grid grid-cols-1 list-none gap-3 p-0 sm:grid-cols-2 ${itens.length % 4 === 0 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
         {itens.map((m) => (
           <Kpi key={m.id} m={m} foto={foto} />
         ))}

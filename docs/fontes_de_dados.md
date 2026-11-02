@@ -2,7 +2,7 @@
 
 Todas as linhas abaixo foram conferidas com chamada real em **30/10/2026** por [`scripts/verifica_fontes.py`](../scripts/verifica_fontes.py) (25 testes, 25 OK no meu computador; o que aconteceu a partir do GitHub Actions está mais abaixo). O relatório completo está em [`auditoria/`](auditoria/). Nenhuma fonte exige chave, cadastro ou pagamento.
 
-**Papel:** *essencial* = se faltar, o robô não publica o dia; *complementar* = pode faltar e o painel mostra "sem dado novo".
+**Papel:** *essencial* = se faltar (ou vier atrasada), o dia sai como "parcial": a foto é publicada mesmo assim, com o aviso do que faltou, e a rodada aparece como falha; *complementar* = pode faltar e o painel mostra "sem dado novo".
 
 ## O que o robô vai coletar
 

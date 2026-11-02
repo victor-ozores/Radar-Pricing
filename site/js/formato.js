@@ -31,6 +31,12 @@ export function sinal(v, casas = 2) {
   return `${v > 0 ? "+" : "−"}${num(Math.abs(v), casas)}`;
 }
 
+/** Número sem sinal de mais, com o sinal de menos de verdade (−) nos negativos: para eixos e rótulos de gráfico. */
+export function numComMenos(v, casas = 0) {
+  if (!ehNumero(v)) return VAZIO;
+  return v < 0 && Math.round(Math.abs(v) * 10 ** casas) !== 0 ? `−${num(Math.abs(v), casas)}` : num(Math.abs(v) < 0.5 * 10 ** -casas ? 0 : v, casas);
+}
+
 export function pp(v, casas = 2) {
   return ehNumero(v) ? `${sinal(v, casas)} p.p.` : VAZIO;
 }
@@ -72,6 +78,7 @@ export function comUnidade(v, unidade) {
   if (unidade === "% ao dia") return `${pct(v, 4)} ao dia`;
   const texto = num(v, Number.isInteger(v) ? 0 : 2);
   if (!unidade || unidade === "unidade") return texto;
+  if (unidade === "meses" && Math.abs(v) === 1) return `${texto} mês`;
   return unidade.startsWith("R$ ") ? `R$ ${texto} ${unidade.slice(3)}` : `${texto} ${unidade}`;
 }
 
@@ -82,6 +89,7 @@ export function deltaComUnidade(delta, unidade) {
   if (unidade === "% ao dia") return `${sinal(delta, 4)} p.p.`;
   const texto = sinal(delta, Number.isInteger(delta) ? 0 : 2);
   if (!unidade || unidade === "unidade") return texto;
+  if (unidade === "meses" && Math.abs(delta) === 1) return `${texto} mês`;
   if (!unidade.startsWith("R$ ")) return `${texto} ${unidade}`;
   const temSinal = texto.startsWith("+") || texto.startsWith("−");
   return `${temSinal ? texto[0] : ""}R$ ${temSinal ? texto.slice(1) : texto} ${unidade.slice(3)}`;
