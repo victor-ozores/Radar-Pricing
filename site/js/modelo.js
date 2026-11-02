@@ -2,6 +2,7 @@
 // além de medianas e percentis dos bancos, que o robô não grava por banco.
 
 import { pp } from "./formato.js";
+import { anosUteis, diasUteis } from "./prazo.js";
 
 export const NOMES_DAS_FONTES = {
   bcb_sgs: "Banco Central: séries do SGS (Selic, CDI, IPCA)",
@@ -132,11 +133,14 @@ export function curvas(foto) {
       descricao,
       titulo: curva.titulo,
       base: curva.base,
-      pontos: curva.pontos.map((p) => {
+      pontos: curva.pontos.filter((p) => !curva.base || diasUteis(curva.base, p.vencimento) > 0).map((p) => {
         const e = entradaDeVariacao(foto, "tesouro", "tesouro_taxa_compra", `titulo=${curva.titulo}|vencimento=${p.vencimento}`);
         const sete = variacaoDe(e, 7);
+        // o prazo é sempre refeito aqui, em dias úteis (base 252): uma foto antiga, de antes dessa conta, vem em dias corridos
+        const dias = curva.base ? diasUteis(curva.base, p.vencimento) : null;
         return {
           ...p,
+          ...(dias === null ? {} : { dias_uteis: dias, anos: anosUteis(dias) }),
           d1: variacaoDe(e, 1)?.delta ?? null,
           d7: sete?.delta ?? null,
           d30: variacaoDe(e, 30)?.delta ?? null,

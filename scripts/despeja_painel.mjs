@@ -45,12 +45,12 @@ const caminho = modelo.caminhoDeCorrecao(foto);
 const negocios = [];
 const nCancelada = (id, e, preco, custos) => {
   const r = calc.cotaCancelada({ ...e, spreadPP: spread }, curvas);
-  const l = calc.leituraDoNegocio({ pagoHoje: preco + custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, meses: e.meses });
+  const l = calc.leituraDoNegocio({ pagoHoje: preco + custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, anos: r.prazo_anos });
   negocios.push({ id, tipo: "cancelada", entrada: { ...e, preco, custos }, resultado: r, leitura: l });
 };
 const nOferta = (id, e) => {
   const r = calc.retornoDaOferta({ ...e, spreadPP: spread }, curvas, cdi);
-  const l = calc.leituraDoNegocio({ pagoHoje: r.pago, recebe: e.valor, valorJusto: r.preco_maximo + (e.custos ?? 0), meses: e.meses });
+  const l = calc.leituraDoNegocio({ pagoHoje: r.pago, recebe: e.valor, valorJusto: r.preco_maximo + (e.custos ?? 0), anos: r.prazo_anos });
   negocios.push({ id, tipo: "oferta", entrada: e, resultado: r, leitura: l });
 };
 const nAtiva = (id, e, preco, custos) => {
@@ -60,7 +60,7 @@ const nAtiva = (id, e, preco, custos) => {
 };
 const nPrecatorio = (id, e) => {
   const r = calc.precatorio({ ...e, spreadPP: spread }, curvas.nominal, caminho);
-  const l = calc.leituraDoNegocio({ pagoHoje: r.oferta.pago, recebe: r.liquido_esperado, valorJusto: r.valor_presente, meses: e.meses });
+  const l = calc.leituraDoNegocio({ pagoHoje: r.oferta.pago, recebe: r.liquido_esperado, valorJusto: r.valor_presente, anos: r.prazo_anos });
   negocios.push({ id, tipo: "precatorio", entrada: e, resultado: r, leitura: l });
 };
 nCancelada("cancelada: exemplo da tela", { valor: ex.cancelada.valor, meses: ex.cancelada.meses, corrigido: true }, 38000, 0);

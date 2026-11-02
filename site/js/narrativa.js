@@ -1,7 +1,7 @@
 // A história do briefing: a manchete e a frase que cada capítulo defende, montadas só com números da foto.
 // Regra: uma frase só diz o que os dados mostram. Sem dado, a função devolve null e o capítulo usa um título neutro.
 
-import { impactoNoPrazo, interpola } from "./calc.js";
+import { anosDoPrazo, impactoNoPrazo, interpola } from "./calc.js";
 import { num, pct, pp, prazoEmTexto } from "./formato.js";
 import { prazoDeReferencia } from "./leitura.js";
 import * as modelo from "./modelo.js";
@@ -20,7 +20,7 @@ export function manchetePrincipal(estado) {
   const prazo = prazoEmTexto(meses);
   const r = impactoNoPrazo(curva, meses, spread, par.valor_face);
   if (!r) {
-    const [taxa] = interpola(curva.pontos, meses / 12);
+    const [taxa] = interpola(curva.pontos, anosDoPrazo(curva, meses));
     return { antes: `A taxa do Tesouro para ${prazo} é de `, destaque: `${pct(taxa)} ao ano`, depois: ".", sentido: "neutro" };
   }
   const pouco = Math.abs(r.variacao_pct) < SEM_MUDANCA;

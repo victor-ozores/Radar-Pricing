@@ -18,6 +18,7 @@ import json
 import shutil
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import openpyxl
@@ -255,6 +256,10 @@ CENARIOS = [
 ]
 
 
+def _serial(x: object) -> object:
+    return (x - datetime(1899, 12, 30)).total_seconds() / 86400 if isinstance(x, datetime) else x
+
+
 def formulas_e_guardados(caminho: Path) -> dict[tuple[str, str], tuple[str, object]]:
     """Cada célula com fórmula: (aba, endereço) -> (fórmula, valor que o painel deixou guardado)."""
     com_formula = openpyxl.load_workbook(caminho)
@@ -269,6 +274,8 @@ def formulas_e_guardados(caminho: Path) -> dict[tuple[str, str], tuple[str, obje
 
 
 def parecidos(a: object, b: object) -> bool:
+    # o openpyxl devolve as datas guardadas como datetime; o Excel (Value2) devolve o número de série do dia
+    a, b = (_serial(x) for x in (a, b))
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
         return abs(a - b) <= 1e-9 * max(1.0, abs(b))
     return a == b
@@ -341,7 +348,7 @@ def confere(caminho: Path, foto: Path, pasta_pdf: Path | None) -> int:
             f"1. Recalculado pelo Excel: {len(guardados) - len(erros) - len(diferentes)} iguais, "
             f"{len(diferentes)} diferentes, {len(erros)} com erro"
         )
-        for item in (erros + diferentes)[:15]:
+        for item in (erros + diferentes)[:40]:
             print("   ", item)
         problemas += len(erros) + len(diferentes)
 

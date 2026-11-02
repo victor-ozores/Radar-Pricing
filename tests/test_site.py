@@ -9,6 +9,7 @@ import json
 import os
 import shutil
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,7 @@ from radar_pricing.amostras import ClienteGravado
 from radar_pricing.coleta import coletar_tudo
 from radar_pricing.derivados import interpola, valor_presente
 from radar_pricing.fontes import tesouro
+from tests import calendario_ingenuo as ing
 
 RAIZ = Path(__file__).resolve().parent.parent
 AJUDA = Path(__file__).parent / "node" / "ajuda.mjs"
@@ -88,13 +90,16 @@ def test_calculadora_do_painel_da_o_mesmo_valor_presente_que_o_robo(foto_json, t
     do_js = json.loads(node("calc", str(foto_json), str(caminho)))
 
     for caso, js in zip(casos, do_js, strict=True):
-        taxa, extrapolado = interpola(curvas[caso["curva"]]["pontos"], caso["meses"] / 12)
+        curva = curvas[caso["curva"]]
+        anos = ing.anos_do_prazo(curva["base"], caso["meses"])  # o prazo contado dia a dia, em dias úteis
+        taxa, extrapolado = interpola(curva["pontos"], anos)
         demo = taxa + caso["spread"]
         esperado = {
+            "dias_uteis": round(anos * 252),
             "taxa_ancora": round(taxa, 4),
             "taxa_demonstracao": round(demo, 4),
-            "vp_ancora": round(valor_presente(caso["valor"], taxa, caso["meses"]), 2),
-            "vp_demonstracao": round(valor_presente(caso["valor"], demo, caso["meses"]), 2),
+            "vp_ancora": round(valor_presente(caso["valor"], taxa, anos), 2),
+            "vp_demonstracao": round(valor_presente(caso["valor"], demo, anos), 2),
             "extrapolado": extrapolado,
         }
         assert js == esperado, caso
@@ -142,21 +147,32 @@ def test_o_painel_enxerga_as_curvas_e_o_panorama_da_foto(foto_json):
         "real": len(ancoras["curva_real"]["pontos"]),
     }
     assert {c["id"]: c["pontos"] for c in js["curvas"]} == esperado
+    # o prazo de cada vencimento: o painel (JavaScript) refaz em dias úteis e tem de dar o mesmo que o robô gravou
+    for c in js["curvas"]:
+        gravados = ancoras["curva_nominal" if c["id"] == "nominal" else "curva_real"]["pontos"]
+        assert c["dias_uteis"] == [p["dias_uteis"] for p in gravados]
+        assert c["anos"] == [p["anos"] for p in gravados]
     assert js["panorama_linhas"] == len(foto["derivados"]["setor"])
     assert len(js["manchetes"]) >= 6 and all(m["valor"] is not None for m in js["manchetes"])
 
 
 # ------------------------------------------------------------------------------------------ calculadoras
-def _taxa(curva: dict, meses: float) -> float:
-    return interpola(curva["pontos"], meses / 12)[0]
+def _anos(curva: dict, meses: int) -> float:
+    """O prazo em anos de 252 dias úteis, contado dia a dia (tests/calendario_ingenuo.py)."""
+    return ing.anos_do_prazo(curva["base"], meses)
+
+
+def _taxa(curva: dict, meses: int) -> float:
+    return interpola(curva["pontos"], _anos(curva, meses))[0]
 
 
 def _cancelada(e: dict, curvas: dict) -> dict:
     propria = e.get("correcaoPct") is not None  # a taxa própria prevalece e desconta pela curva Prefixada
-    ancora = _taxa(curvas["real" if e["corrigido"] and not propria else "nominal"], e["meses"])
+    curva = curvas["real" if e["corrigido"] and not propria else "nominal"]
+    ancora = _taxa(curva, e["meses"])
     desconto = ancora + e["spreadPP"]
     no_pagamento = e["valor"] * (1 + e["correcaoPct"] / 100) ** (e["meses"] / 12) if propria else e["valor"]
-    vp = valor_presente(no_pagamento, desconto, e["meses"])
+    vp = valor_presente(no_pagamento, desconto, _anos(curva, e["meses"]))
     return {
         "taxa_ancora": ancora,
         "taxa_desconto": desconto,
@@ -167,11 +183,12 @@ def _cancelada(e: dict, curvas: dict) -> dict:
 
 
 def _retorno(e: dict, curvas: dict) -> dict:
-    ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
+    curva = curvas["real" if e["corrigido"] else "nominal"]
+    ancora = _taxa(curva, e["meses"])
     alvo = e["alvoPct"] if e.get("alvoPct") is not None else ancora + e["spreadPP"]
-    maximo = valor_presente(e["valor"], alvo, e["meses"])
+    maximo = valor_presente(e["valor"], alvo, _anos(curva, e["meses"]))
     return {
-        "retorno_aa": ((e["valor"] / e["preco"]) ** (12 / e["meses"]) - 1) * 100,
+        "retorno_aa": ((e["valor"] / e["preco"]) ** (1 / _anos(curva, e["meses"])) - 1) * 100,
         "retorno_total": (e["valor"] / e["preco"] - 1) * 100,
         "taxa_ancora": ancora,
         "alvo": alvo,
@@ -186,8 +203,13 @@ def _ativa(e: dict, curvas: dict) -> dict:
     def desconto(meses: int) -> float:
         return _taxa(curvas["real"], meses) + spread
 
-    vp_parcelas = sum(valor_presente(e["parcela"], desconto(t), t) for t in range(1, e["parcelas"] + 1))
-    vp_credito = e["credito"] if k == 0 else valor_presente(e["credito"], desconto(k), k)
+    vp_parcelas = sum(
+        valor_presente(e["parcela"], desconto(t), _anos(curvas["real"], t))
+        for t in range(1, e["parcelas"] + 1)
+    )
+    vp_credito = (
+        e["credito"] if k == 0 else valor_presente(e["credito"], desconto(k), _anos(curvas["real"], k))
+    )
     return {
         "vp_credito": vp_credito,
         "vp_parcelas": vp_parcelas,
@@ -310,7 +332,8 @@ def _precatorio(e: dict, curva: dict, caminho) -> dict:
     esperado = e["valor"] * fator
     liquido = esperado * (1 - e["retencaoPct"] / 100)
     desconto = _taxa(curva, e["meses"]) + e["spreadPP"]
-    vp = valor_presente(liquido, desconto, e["meses"])
+    anos = _anos(curva, e["meses"])
+    vp = valor_presente(liquido, desconto, anos)
     saida = {
         "fator": fator,
         "valor_esperado": esperado,
@@ -322,7 +345,7 @@ def _precatorio(e: dict, curva: dict, caminho) -> dict:
         pago = e["valor"] * (1 - e["desagioPct"] / 100) + e["custos"]
         saida |= {
             "pago": pago,
-            "retorno_aa": ((liquido / pago) ** (12 / e["meses"]) - 1) * 100,
+            "retorno_aa": ((liquido / pago) ** (1 / anos) - 1) * 100,
             "folga": vp - pago,
             "preco_maximo": vp - e["custos"],
         }
@@ -410,11 +433,10 @@ def test_retorno_da_oferta_com_custos_bate_com_uma_conta_feita_em_python(foto_js
     for caso, js in zip(casos, json.loads(r.stdout), strict=True):
         e = caso["entrada"]
         pago = e["preco"] + e["custos"]
-        ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
-        maximo = valor_presente(e["valor"], ancora + e["spreadPP"], e["meses"])
-        assert js["retorno_aa"] == pytest.approx(
-            ((e["valor"] / pago) ** (12 / e["meses"]) - 1) * 100, rel=1e-9
-        )
+        curva = curvas["real" if e["corrigido"] else "nominal"]
+        anos = _anos(curva, e["meses"])
+        maximo = valor_presente(e["valor"], _taxa(curva, e["meses"]) + e["spreadPP"], anos)
+        assert js["retorno_aa"] == pytest.approx(((e["valor"] / pago) ** (1 / anos) - 1) * 100, rel=1e-9)
         assert js["folga"] == pytest.approx(maximo - pago, rel=1e-9, abs=1e-9)
         assert js["preco_maximo"] == pytest.approx(maximo - e["custos"], rel=1e-9, abs=1e-9)
 
@@ -429,6 +451,8 @@ ABAS_DO_EXCEL = [
     "Cota ativa (cálculo)",
     "Precatório",
     "Custo do dinheiro",
+    "Prazos",
+    "Feriados",
     "Crédito concorrente",
     "Setor",
     "Mudanças",
@@ -493,14 +517,15 @@ def test_excel_abre_no_openpyxl_com_os_numeros_da_foto(foto_json, tmp_path):
     prazos = foto["derivados"]["parametros"]["prazos_meses"]
     linhas = [
         r
-        for r in guardados["Hoje"].iter_rows(min_col=2, max_col=9)
+        for r in guardados["Hoje"].iter_rows(min_col=2, max_col=10)
         if r[0].value in prazos and isinstance(r[1].value, float)
     ]
     assert len(linhas) == 2 * len(prazos)
     esperadas = [linha[ch] for ch in ("nominal", "real") for linha in foto["derivados"]["valor_presente"]]
     for r, esperada in zip(linhas, esperadas, strict=True):
-        assert r[1].value == pytest.approx(esperada["taxa_ancora"], abs=6e-5)
-        assert r[5].value == pytest.approx(esperada["vp_demonstracao"], abs=0.006)
+        assert r[1].value == pytest.approx(esperada["dias_uteis"] / 252, abs=1e-12)  # o prazo, em anos úteis
+        assert r[2].value == pytest.approx(esperada["taxa_ancora"], abs=6e-5)
+        assert r[6].value == pytest.approx(esperada["vp_demonstracao"], abs=0.006)
 
     # calculadoras: células de digitar com validação; Leia-me com um link por aba
     for nome in ("Cota cancelada", "Retorno da oferta", "Cota ativa"):
@@ -542,7 +567,8 @@ def test_toda_formula_aponta_para_celulas_que_existem_e_tem_numero(foto_json, tm
                     if "!" not in ref and ":" not in ref:
                         continue  # célula da própria aba (algumas, como o retorno-alvo, podem ficar em branco)
                     for alvo in celulas(ref, ws.title):
-                        assert isinstance(alvo.value, (int, float)) or alvo.data_type == "f", (
+                        # datas são números no Excel; o openpyxl as devolve como datetime
+                        assert isinstance(alvo.value, (int, float, datetime)) or alvo.data_type == "f", (
                             ws.title,
                             c.coordinate,
                             ref,

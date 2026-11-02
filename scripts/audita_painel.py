@@ -21,7 +21,65 @@ from itertools import pairwise
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-DIAS_NO_ANO = 365.25  # prazo de um título em anos: dias até o vencimento ÷ 365,25
+
+# O prazo, como o Tesouro conta: dias úteis (segunda a sexta, sem feriados nacionais) do dia seguinte à
+# data-base até o vencimento, divididos por 252. A contagem é feita dia a dia e os feriados que seguem a
+# Páscoa saem desta tabela (as datas oficiais da Páscoa), não da fórmula do robô.
+PASCOA = {
+    2024: "2024-03-31", 2025: "2025-04-20", 2026: "2026-04-05", 2027: "2027-03-28", 2028: "2028-04-16",
+    2029: "2029-04-01", 2030: "2030-04-21", 2031: "2031-04-13", 2032: "2032-03-28", 2033: "2033-04-17",
+    2034: "2034-04-09", 2035: "2035-03-25", 2036: "2036-04-13", 2037: "2037-04-05", 2038: "2038-04-25",
+    2039: "2039-04-10", 2040: "2040-04-01", 2041: "2041-04-21", 2042: "2042-04-06", 2043: "2043-03-29",
+    2044: "2044-04-17", 2045: "2045-04-09", 2046: "2046-03-25", 2047: "2047-04-14", 2048: "2048-04-05",
+    2049: "2049-04-18", 2050: "2050-04-10", 2051: "2051-04-02", 2052: "2052-04-21", 2053: "2053-04-06",
+    2054: "2054-03-29", 2055: "2055-04-18", 2056: "2056-04-02", 2057: "2057-04-22", 2058: "2058-04-14",
+    2059: "2059-03-30", 2060: "2060-04-18", 2061: "2061-04-10", 2062: "2062-03-26", 2063: "2063-04-15",
+    2064: "2064-04-06", 2065: "2065-03-29", 2066: "2066-04-11", 2067: "2067-04-03", 2068: "2068-04-22",
+    2069: "2069-04-14", 2070: "2070-03-30", 2071: "2071-04-19", 2072: "2072-04-10", 2073: "2073-03-26",
+    2074: "2074-04-15", 2075: "2075-04-07", 2076: "2076-04-19", 2077: "2077-04-11", 2078: "2078-04-03",
+    2079: "2079-04-23", 2080: "2080-04-07",
+}  # fmt: skip
+
+
+def _feriados() -> set[date]:
+    saida: set[date] = set()
+    for ano, p in PASCOA.items():
+        pascoa = date.fromisoformat(p)
+        saida |= {pascoa + timedelta(days=k) for k in (-48, -47, -2, 60)}
+        fixos = ["01-01", "04-21", "05-01", "09-07", "10-12", "11-02", "11-15", "12-25"] + (
+            ["11-20"] if ano >= 2024 else []
+        )
+        saida |= {date.fromisoformat(f"{ano}-{f}") for f in fixos}
+    return saida
+
+
+FERIADOS = _feriados()
+
+
+def dias_uteis(de: str, ate: str) -> int:
+    """Dias úteis em (de, ate], contados um a um."""
+    n, d, fim = 0, date.fromisoformat(de) + timedelta(days=1), date.fromisoformat(ate)
+    while d <= fim:
+        n += d.weekday() < 5 and d not in FERIADOS
+        d += timedelta(days=1)
+    return n
+
+
+def soma_meses(iso: str, meses: int) -> str:
+    """O mesmo dia `meses` depois; mês de chegada mais curto: o último dia dele."""
+    b = date.fromisoformat(iso)
+    total = b.year * 12 + b.month - 1 + meses
+    ano, mes = total // 12, total % 12 + 1
+    for dia in range(b.day, 0, -1):
+        try:
+            return date(ano, mes, dia).isoformat()
+        except ValueError:
+            continue
+    raise AssertionError("data inválida")
+
+
+def anos_do_prazo(base: str, meses: int) -> float:
+    return dias_uteis(base, soma_meses(base, meses)) / 252
 
 
 class Auditoria:
@@ -29,6 +87,7 @@ class Auditoria:
         self.foto = foto
         self.js = painel
         self.registros = foto["registros"]
+        self.bases: dict[str, str] = {}  # a data-base de cada curva (título -> data), preenchida em curva()
         self.conferidos = 0
         self.divergencias: list[tuple[str, str, object, object]] = []
 
@@ -85,14 +144,20 @@ class Auditoria:
     def curva(self, nome: str, dias_antes: int = 0) -> list[tuple[float, float]]:
         titulos = self.titulos()
         base = max(d for (t, _), pts in titulos.items() if t == nome for d, _ in pts)
+        self.bases[nome] = base
         alvo = (date.fromisoformat(base) - timedelta(days=dias_antes)).isoformat()
         pontos = []
         for (t, vencimento), pts in titulos.items():
             valor = self.valor_ate(pts, alvo)
-            anos = (date.fromisoformat(vencimento) - date.fromisoformat(base)).days / DIAS_NO_ANO
+            anos = dias_uteis(base, vencimento) / 252
             if t == nome and valor and anos > 0:
                 pontos.append((anos, valor[1]))
         return sorted(pontos)
+
+    def anos(self, nome: str, meses: int) -> float:
+        """O prazo de `meses` na curva do título `nome`, em anos de 252 dias úteis, da data-base dela."""
+        self.curva(nome)  # garante a data-base
+        return anos_do_prazo(self.bases[nome], meses)
 
     def tesouro(self) -> None:
         titulos = self.titulos()
@@ -115,7 +180,7 @@ class Auditoria:
         for chave, nome in nomes.items():
             hoje_pts, antes_pts = self.curva(nome), self.curva(nome, 7)
             for i, meses in enumerate(prazos):
-                anos = meses / 12
+                anos = self.anos(nome, meses)
                 taxa_h, taxa_a = self.interpola(hoje_pts, anos), self.interpola(antes_pts, anos)
                 vp_h = face / (1 + (taxa_h + spread) / 100) ** anos
                 vp_a = face / (1 + (taxa_a + spread) / 100) ** anos
@@ -148,14 +213,38 @@ class Auditoria:
         )
         linha36 = next(x for x in self.foto["derivados"]["valor_presente"] if x["meses"] == 36)
         for chave, nome in nomes.items():
-            ancora = self.interpola(self.curva(nome), 3)
-            self.confere(
-                "âncora",
-                f"{chave} 36 meses (tabela do robô)",
-                ancora,
-                linha36[chave]["taxa_ancora"],
-                tol=6e-5,
-            )
+            ancora = self.interpola(self.curva(nome), self.anos(nome, 36))
+            if "dias_uteis" in linha36[chave]:  # foto feita depois da contagem em dias úteis
+                self.confere(
+                    "âncora",
+                    f"{chave} 36 meses (dias úteis, tabela do robô)",
+                    self.anos(nome, 36) * 252,
+                    linha36[chave]["dias_uteis"],
+                )
+                self.confere(
+                    "âncora",
+                    f"{chave} 36 meses (tabela do robô)",
+                    ancora,
+                    linha36[chave]["taxa_ancora"],
+                    tol=6e-5,
+                )
+            else:  # foto antiga, de antes da troca: o robô contava dias corridos ÷ 365,25 e meses ÷ 12
+                base = date.fromisoformat(self.bases[nome])
+                antiga = self.interpola(
+                    [
+                        ((date.fromisoformat(v) - base).days / 365.25, pts[-1][1])
+                        for (t, v), pts in sorted(self.titulos().items(), key=lambda kv: kv[0][1])
+                        if t == nome and date.fromisoformat(v) > base
+                    ],
+                    3,
+                )
+                self.confere(
+                    "âncora",
+                    f"{chave} 36 meses (tabela do robô, foto no formato antigo)",
+                    antiga,
+                    linha36[chave]["taxa_ancora"],
+                    tol=6e-5,
+                )
             self.confere(
                 "âncora", f"{chave} 36 meses (série do painel)", ancora, self.js["ancora36"][chave]["valor"]
             )
@@ -263,28 +352,30 @@ class Auditoria:
         spread = self.js["spread"]
         real = self.curva("Tesouro IPCA+")
         ex = self.js["exemplos"]
-        ancora = self.interpola(real, 2)
+        a24 = self.anos("Tesouro IPCA+", 24)
+        ancora = self.interpola(real, a24)
         self.confere(
             "calculadora",
             "cota cancelada: valor presente",
-            50000 / (1 + (ancora + spread) / 100) ** 2,
+            50000 / (1 + (ancora + spread) / 100) ** a24,
             ex["cancelada"]["valor_presente"],
         )
         self.confere(
             "calculadora",
             "oferta: retorno ao ano",
-            ((50000 / 38000) ** (12 / 24) - 1) * 100,
+            ((50000 / 38000) ** (1 / a24) - 1) * 100,
             ex["retorno"]["retorno_aa"],
         )
         self.confere(
             "calculadora",
             "oferta: preço máximo",
-            50000 / (1 + (ancora + spread) / 100) ** 2,
+            50000 / (1 + (ancora + spread) / 100) ** a24,
             ex["retorno"]["preco_maximo"],
         )
 
         def fator(meses: int) -> float:
-            return (1 + (self.interpola(real, meses / 12) + spread) / 100) ** (meses / 12)
+            a = self.anos("Tesouro IPCA+", meses)
+            return (1 + (self.interpola(real, a) + spread) / 100) ** a
 
         vp_parcelas = sum(1900 / fator(t) for t in range(1, 61))
         vp_credito = 100000 / fator(12)
@@ -325,14 +416,14 @@ class Auditoria:
         return fator
 
     def _leitura(
-        self, pago_hoje: float, saidas: float, recebe: float, valor_justo: float, meses: int | None
+        self, pago_hoje: float, saidas: float, recebe: float, valor_justo: float, anos: float | None
     ) -> dict:
         total = pago_hoje + saidas
         folga = valor_justo - pago_hoje
         folga_pct = folga / pago_hoje * 100
         situacao = "ruim" if folga < 0 else "limite" if folga_pct < self.MARGEM_PCT else "bom"
         retorno = (
-            ((recebe / pago_hoje) ** (12 / meses) - 1) * 100 if saidas == 0 and meses and recebe > 0 else None
+            ((recebe / pago_hoje) ** (1 / anos) - 1) * 100 if saidas == 0 and anos and recebe > 0 else None
         )
         return {
             "total_pago": total,
@@ -351,37 +442,37 @@ class Auditoria:
             area = f"negócio ({n['id']})"
             if n["tipo"] == "cancelada":
                 propria = e.get("correcaoPct") is not None
-                curva = real if e["corrigido"] and not propria else nominal
+                nome = "Tesouro IPCA+" if e["corrigido"] and not propria else "Tesouro Prefixado"
+                curva = real if nome == "Tesouro IPCA+" else nominal
+                a = self.anos(nome, e["meses"])
                 recebe = (
                     e["valor"] * (1 + e["correcaoPct"] / 100) ** (e["meses"] / 12) if propria else e["valor"]
                 )
-                vp = recebe / (1 + (self.interpola(curva, e["meses"] / 12) + spread) / 100) ** (
-                    e["meses"] / 12
-                )
+                vp = recebe / (1 + (self.interpola(curva, a) + spread) / 100) ** a
                 self.confere(area, "valor no pagamento", recebe, r["valor_no_pagamento"])
                 self.confere(area, "valor presente", vp, r["valor_presente"])
-                esp = self._leitura(e["preco"] + e["custos"], 0, recebe, vp, e["meses"])
+                self.confere(area, "prazo em anos de 252 dias úteis", a, r["prazo_anos"])
+                esp = self._leitura(e["preco"] + e["custos"], 0, recebe, vp, a)
             elif n["tipo"] == "oferta":
+                nome = "Tesouro IPCA+" if e["corrigido"] else "Tesouro Prefixado"
                 curva = real if e["corrigido"] else nominal
+                a = self.anos(nome, e["meses"])
                 custos = e.get("custos", 0)
-                alvo = (
-                    e["alvoPct"]
-                    if e.get("alvoPct") is not None
-                    else self.interpola(curva, e["meses"] / 12) + spread
-                )
-                bruto = e["valor"] / (1 + alvo / 100) ** (e["meses"] / 12)
+                alvo = e["alvoPct"] if e.get("alvoPct") is not None else self.interpola(curva, a) + spread
+                bruto = e["valor"] / (1 + alvo / 100) ** a
                 self.confere(area, "preço máximo (já sem os custos)", bruto - custos, r["preco_maximo"])
                 self.confere(
                     area,
                     "retorno ao ano",
-                    ((e["valor"] / (e["preco"] + custos)) ** (12 / e["meses"]) - 1) * 100,
+                    ((e["valor"] / (e["preco"] + custos)) ** (1 / a) - 1) * 100,
                     r["retorno_aa"],
                 )
-                esp = self._leitura(e["preco"] + custos, 0, e["valor"], bruto, e["meses"])
+                esp = self._leitura(e["preco"] + custos, 0, e["valor"], bruto, a)
             elif n["tipo"] == "ativa":
 
                 def fator(m: int) -> float:
-                    return (1 + (self.interpola(real, m / 12) + spread) / 100) ** (m / 12)
+                    a = self.anos("Tesouro IPCA+", m)
+                    return (1 + (self.interpola(real, a) + spread) / 100) ** a
 
                 vp_par = sum(e["parcela"] / fator(t) for t in range(1, e["parcelas"] + 1))
                 vp_cre = e["credito"] if e["contemplacao"] == 0 else e["credito"] / fator(e["contemplacao"])
@@ -401,7 +492,8 @@ class Auditoria:
                     else self._fator_selic(meses)
                 )
                 liquido = e["valor"] * fator * (1 - e["retencaoPct"] / 100)
-                vp = liquido / (1 + (self.interpola(nominal, meses / 12) + spread) / 100) ** (meses / 12)
+                a = self.anos("Tesouro Prefixado", meses)
+                vp = liquido / (1 + (self.interpola(nominal, a) + spread) / 100) ** a
                 self.confere(area, "valor líquido no pagamento", liquido, r["liquido_esperado"])
                 self.confere(area, "valor presente", vp, r["valor_presente"])
                 pago = e["valor"] * (1 - e["desagioPct"] / 100) + e["custos"]
@@ -411,7 +503,7 @@ class Auditoria:
                     (1 - (vp - e["custos"]) / e["valor"]) * 100,
                     r["oferta"]["desagio_minimo_pct"],
                 )
-                esp = self._leitura(pago, 0, liquido, vp, meses)
+                esp = self._leitura(pago, 0, liquido, vp, a)
             for campo in ("total_pago", "lucro", "lucro_pct", "folga", "folga_pct", "retorno_aa"):
                 self.confere(area, campo, esp[campo], js[campo])
             self.confere(area, "situação (verde, amarelo ou vermelho)", esp["situacao"], js["situacao"])
@@ -439,18 +531,21 @@ class Auditoria:
                     propria = corr not in ("", "ipca", "sem")
                     taxa = num(corr) if propria else None
                     curva = real if corr in ("", "ipca") else nominal
+                    nome = "Tesouro IPCA+" if corr in ("", "ipca") else "Tesouro Prefixado"
+                    a = self.anos(nome, meses)
                     recebe = valor * (1 + taxa / 100) ** (meses / 12) if propria else valor
-                    vp = recebe / (1 + (self.interpola(curva, meses / 12) + spread) / 100) ** (meses / 12)
+                    vp = recebe / (1 + (self.interpola(curva, a) + spread) / 100) ** a
                     preco, custos = (
                         num(c[3]) if len(c) > 3 else None,
                         (num(c[4]) if len(c) > 4 else None) or 0,
                     )
-                    esp = self._leitura(preco + custos, 0, recebe, vp, meses) if preco else None
+                    esp = self._leitura(preco + custos, 0, recebe, vp, a) if preco else None
                 else:
                     credito, parcela, n_par, k = num(c[0]), num(c[1]), int(num(c[2])), int(num(c[3]))
 
                     def fator(m: int) -> float:
-                        return (1 + (self.interpola(real, m / 12) + spread) / 100) ** (m / 12)
+                        a = self.anos("Tesouro IPCA+", m)
+                        return (1 + (self.interpola(real, a) + spread) / 100) ** a
 
                     vp = (credito if k == 0 else credito / fator(k)) - sum(
                         parcela / fator(t) for t in range(1, n_par + 1)
@@ -488,13 +583,14 @@ class Auditoria:
         for m in range(1, 37):
             fator *= (1 + taxa(ano_base + (mes_base + m) // 12) / 100) ** (1 / 12)
         esperado = 100000 * fator
-        desconto = self.interpola(self.curva("Tesouro Prefixado"), 3) + spread
-        vp = esperado / (1 + desconto / 100) ** 3
+        a36 = self.anos("Tesouro Prefixado", 36)
+        desconto = self.interpola(self.curva("Tesouro Prefixado"), a36) + spread
+        vp = esperado / (1 + desconto / 100) ** a36
         ex = self.js["exemplos"]["precatorio"]
         self.confere("precatório", "fator de correção (Selic, 36 meses)", fator, ex["fator"])
         self.confere("precatório", "valor esperado no pagamento", esperado, ex["valor_esperado"])
         self.confere("precatório", "valor presente", vp, ex["valor_presente"])
-        retorno = ((esperado / 60000) ** (1 / 3) - 1) * 100
+        retorno = ((esperado / 60000) ** (1 / a36) - 1) * 100
         self.confere(
             "precatório", "retorno de quem compra com 40% de deságio", retorno, ex["oferta"]["retorno_aa"]
         )

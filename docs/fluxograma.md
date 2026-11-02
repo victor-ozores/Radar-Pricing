@@ -197,17 +197,17 @@ O **spread de risco** (5 p.p. de exemplo) é uma premissa só: trocar em uma tel
 
 ## 5. O número do dia: como o valor de hoje é calculado
 
-Arquivo: [`site/js/calc.js`](../site/js/calc.js) (`interpola`, `valorPresente`, `impactoNoPrazo`). A mesma conta está escrita em Python em [`derivados.py`](../src/radar_pricing/derivados.py), e um teste compara as duas ao centavo.
+Arquivo: [`site/js/calc.js`](../site/js/calc.js) (`interpola`, `valorPresente`, `impactoNoPrazo`). A mesma conta está escrita em Python em [`derivados.py`](../src/radar_pricing/derivados.py) e [`prazo.py`](../src/radar_pricing/prazo.py) (a contagem de dias úteis, também em [`prazo.js`](../site/js/prazo.js)), e um teste compara as duas ao centavo.
 
 ```mermaid
 flowchart TD
-    A["Taxa de compra de cada vencimento<br/>do Tesouro, hoje"] --> B["Prazo de cada vencimento em anos<br/>dias até o vencimento ÷ 365,25"]
+    A["Taxa de compra de cada vencimento<br/>do Tesouro, hoje"] --> B["Prazo de cada vencimento em anos<br/>dias úteis até o vencimento ÷ 252"]
     B --> C["Curva: taxa por prazo"]
     C --> D["Interpola linearmente entre os dois<br/>vencimentos vizinhos do prazo pedido<br/>fora da curva usa a ponta mais próxima"]
     D --> E["Taxa do Tesouro para o prazo"]
     E --> F["+ spread de risco<br/>exemplo: 5 p.p."]
     F --> G["Taxa de desconto"]
-    G --> H["Valor presente =<br/>valor a receber ÷ (1 + taxa de desconto)<br/>elevado a meses ÷ 12"]
+    G --> H["Valor presente =<br/>valor a receber ÷ (1 + taxa de desconto)<br/>elevado ao prazo: dias úteis ÷ 252"]
 
     A2["Taxa de cada vencimento<br/>há 7 dias, guardada pelo robô"] --> B2["Mesma conta<br/>com a curva de 7 dias atrás"]
     B2 --> H2["Valor presente há 7 dias"]
@@ -221,7 +221,7 @@ flowchart TD
     class J fim
 ```
 
-**Convenções** (iguais no JavaScript, no Python e no Excel): taxa efetiva ao ano, capitalização composta, 1 mês = 1/12 de ano. Valor corrigido pela inflação usa a curva **IPCA+** e o resultado fica em reais de hoje; valor sem correção usa a curva **Prefixada**.
+**Convenções** (iguais no JavaScript, no Python e no Excel): taxa efetiva ao ano, capitalização composta, prazo em dias úteis (sem fins de semana nem feriados nacionais) ÷ 252, contado da data-base da curva até o mesmo dia do mês, N meses depois. O que segue um índice por calendário (a correção do precatório, a taxa própria) fica em meses corridos, 1 mês = 1/12 de ano. Valor corrigido pela inflação usa a curva **IPCA+** e o resultado fica em reais de hoje; valor sem correção usa a curva **Prefixada**.
 
 ---
 
@@ -267,7 +267,7 @@ flowchart TD
         C1["Ruff: erros e formato"] --> C2["Instala o painel<br/>npm ci --ignore-scripts"]
         C2 --> C3["Tipos, testes de contas e de telas<br/>e a construção do site"]
         C3 --> C4["npm audit<br/>só informa"]
-        C4 --> C5["Pytest: 135 testes offline<br/>inclusive o JavaScript contra o robô"]
+        C4 --> C5["Pytest: 156 testes offline<br/>inclusive o JavaScript contra o robô"]
     end
 
     subgraph PG["pages.yml: Painel (só se algo em site/ mudou)"]

@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { agioDaCota, avaliaPreco, cotaAtiva, cotaCancelada, interpola, MAX_PARCELAS } from "../js/calc.js";
 import { calculaLote, EXEMPLO_DE_LOTE, MAX_LINHAS, TIPOS_DE_LOTE } from "../js/lote.js";
+import { anosDoPrazoIngenuo, diasUteisIngenuo, somaMesesIngenuo } from "./calendario_ingenuo.mjs";
 import { curvas as curvasDaFoto, observacoesDaFonte, textoDoAviso } from "../js/modelo.js";
 
 const foto = JSON.parse(readFileSync(new URL("./fixtures/foto-2026-10-31.json", import.meta.url), "utf8"));
@@ -11,17 +12,18 @@ const lista = curvasDaFoto(foto);
 const curvas = { nominal: lista.find((c) => c.id === "nominal"), real: lista.find((c) => c.id === "real") };
 const ctx = { curvas, spreadPP: 5 };
 const perto = (a, b, tol = 1e-9) => assert.ok(Math.abs(a - b) < tol, `${a} contra ${b}`);
+const A = (meses) => anosDoPrazoIngenuo(curvas.nominal.base, meses); // anos de 252 dias úteis, contados dia a dia
 
 // --------------------------------------------------------------------------------------------- cota cancelada com taxa própria
 test("taxa própria: o valor de hoje cresce à taxa informada e é descontado pela curva Prefixada mais o spread", () => {
   const meses = 36;
   const c = 4.5;
   const r = cotaCancelada({ valor: 80000, meses, corrigido: true, correcaoPct: c, spreadPP: 5 }, curvas);
-  const [ancora] = interpola(curvas.nominal.pontos, meses / 12);
-  const noPagamento = 80000 * (1 + c / 100) ** (meses / 12);
+  const [ancora] = interpola(curvas.nominal.pontos, A(meses));
+  const noPagamento = 80000 * (1 + c / 100) ** (meses / 12); // a taxa própria segue o calendário: 1 mês = 1/12 de ano
   perto(r.valor_no_pagamento, noPagamento);
   perto(r.taxa_ancora, ancora);
-  perto(r.valor_presente, noPagamento / (1 + (ancora + 5) / 100) ** (meses / 12));
+  perto(r.valor_presente, noPagamento / (1 + (ancora + 5) / 100) ** A(meses));
   perto(r.pct_do_valor, (r.valor_presente / 80000) * 100);
 });
 
@@ -41,7 +43,7 @@ test("taxa própria de 0% é o mesmo que sem correção, e sem taxa própria nad
 test("taxa própria: os prazos e os spreads vizinhos usam a mesma conta, e uma taxa inválida dá null", () => {
   const r = cotaCancelada({ valor: 50000, meses: 36, corrigido: false, correcaoPct: 6, spreadPP: 5 }, curvas);
   for (const p of r.prazos) perto(p.valor_no_pagamento, 50000 * 1.06 ** (p.meses / 12));
-  for (const s of r.spreads) perto(s.valor_presente, (50000 * 1.06 ** 3) / (1 + (r.taxa_ancora + s.spread) / 100) ** 3);
+  for (const s of r.spreads) perto(s.valor_presente, (50000 * 1.06 ** 3) / (1 + (r.taxa_ancora + s.spread) / 100) ** A(36));
   assert.equal(cotaCancelada({ valor: 50000, meses: 36, corrigido: false, correcaoPct: Number.NaN, spreadPP: 5 }, curvas), null);
   assert.equal(cotaCancelada({ valor: 50000, meses: 36, corrigido: false, correcaoPct: -100, spreadPP: 5 }, curvas), null);
 });

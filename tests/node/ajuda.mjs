@@ -67,7 +67,7 @@ if (comando === "calc") {
       mediana_veiculos: veiculos?.resumo.mediana,
       n_veiculos: veiculos?.n,
       manchetes: m.manchetes(foto).map((x) => ({ id: x.id, valor: x.valor, data: x.data })),
-      curvas: m.curvas(foto).map((c) => ({ id: c.id, pontos: c.pontos.length, d7: c.pontos.map((p) => p.d7) })),
+      curvas: m.curvas(foto).map((c) => ({ id: c.id, pontos: c.pontos.length, d7: c.pontos.map((p) => p.d7), anos: c.pontos.map((p) => p.anos), dias_uteis: c.pontos.map((p) => p.dias_uteis) })),
       panorama_grupos: m.panorama(foto).grupos.length,
       panorama_linhas: m.panorama(foto).grupos.reduce((s, g) => s + g.linhas.length, 0),
     }),

@@ -1,7 +1,7 @@
 // A leitura do dia em português simples, montada só com números da foto: o número grande do topo e as três frases
 // do "resumo de hoje". Nenhuma frase afirma o que não está nos dados.
 
-import { impactoNoPrazo, interpola } from "./calc.js";
+import { anosDoPrazo, impactoNoPrazo, interpola } from "./calc.js";
 import { mesAno, num, pct, pp, prazoEmTexto, reais, sinal } from "./formato.js";
 import * as modelo from "./modelo.js";
 
@@ -25,7 +25,7 @@ export function heroDoDia(estado) {
   const r = impactoNoPrazo(curva, meses, spread, par.valor_face);
   const prazo = prazoEmTexto(meses);
   if (!r) {
-    const [taxa] = interpola(curva.pontos, meses / 12);
+    const [taxa] = interpola(curva.pontos, anosDoPrazo(curva, meses));
     return { numero: pct(taxa), sentido: "neutro", legenda: `ao ano é a taxa do Tesouro para ${prazo} (em R$ fixos)`, antes: null, hoje: null, porque: "Esta foto não traz a taxa de 7 dias atrás, então não há comparação." };
   }
   const delta = r.taxa_hoje - r.taxa_antes;
@@ -52,7 +52,7 @@ function frasesDoTesouro(estado) {
     const r = impactoNoPrazo(curva, meses, spread, par.valor_face);
     // a diferença sai dos números como aparecem na frase (duas casas): quem subtrai os dois acha o mesmo resultado
     if (r) partes.push(`de ${pct(r.taxa_antes)} para ${pct(r.taxa_hoje)} ao ano ${texto} (${pp(arredonda2(r.taxa_hoje) - arredonda2(r.taxa_antes))})`);
-    else partes.push(`${pct(interpola(curva.pontos, meses / 12)[0])} ao ano ${texto}`);
+    else partes.push(`${pct(interpola(curva.pontos, anosDoPrazo(curva, meses))[0])} ao ano ${texto}`);
   }
   if (partes.length === 0) return null;
   return `Tesouro de ${prazoEmTexto(meses)}: ${partes.join(" e ")}.`;

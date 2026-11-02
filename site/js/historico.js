@@ -2,6 +2,7 @@
 // 25 semanas de Focus. Só organiza e conta; o que desenha está em src/.
 
 import { interpola } from "./calc.js";
+import { anosAteOVencimento, diasUteisDoPrazo, DIAS_UTEIS_NO_ANO } from "./prazo.js";
 import { mediana, percentil } from "./modelo.js";
 import { somaDias } from "./foto.js";
 
@@ -53,11 +54,10 @@ export function dataAteO(datas, alvo) {
   return antes.length ? antes.at(-1) : (datas[0] ?? null);
 }
 
-const DIAS_NO_ANO = 365.25; // o mesmo que o robô usa para medir o prazo de um título (src/radar_pricing/derivados.py)
-
 /**
  * A taxa de um título do Tesouro para o prazo de `meses`, dia a dia: em cada data, interpola a curva daquele dia
- * (a mesma conta da âncora do painel). Só entram os dias em que a curva tem pelo menos dois vencimentos.
+ * (a mesma conta da âncora do painel, com o prazo em dias úteis contado dessa data). Só entram os dias em que a curva
+ * tem pelo menos dois vencimentos.
  */
 export function ancoraNoTempo(foto, titulo, meses) {
   const todos = titulosDoTesouro(foto).filter((t) => t.titulo === titulo);
@@ -65,11 +65,11 @@ export function ancoraNoTempo(foto, titulo, meses) {
   const saida = [];
   for (const data of datas) {
     const pontos = todos
-      .map((t) => ({ anos: (new Date(`${t.vencimento}T00:00:00Z`) - new Date(`${data}T00:00:00Z`)) / 86_400_000 / DIAS_NO_ANO, taxa: t.pontos.find((p) => p.data === data)?.valor }))
+      .map((t) => ({ anos: anosAteOVencimento(data, t.vencimento), taxa: t.pontos.find((p) => p.data === data)?.valor }))
       .filter((p) => p.anos > 0 && p.taxa !== undefined)
       .sort((a, b) => a.anos - b.anos);
     if (pontos.length < 2) continue;
-    saida.push({ data, valor: interpola(pontos, meses / 12)[0] });
+    saida.push({ data, valor: interpola(pontos, diasUteisDoPrazo(data, meses) / DIAS_UTEIS_NO_ANO)[0] });
   }
   return saida;
 }

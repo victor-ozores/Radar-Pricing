@@ -2,11 +2,12 @@
 // status, uma frase dizendo para que serve a aba, seções e tabelas iguais. As calculadoras são fórmulas de verdade,
 // com o valor já calculado guardado: dá para mexer nas células amarelas e tudo se recalcula.
 
-import { cotaAtiva, cotaCancelada, curvaDeSeteDiasAtras, EXEMPLOS, interpola, MAX_MESES_PRECATORIO, MAX_PARCELAS, precatorio, retornoDaOferta, valorPresente } from "./calc.js";
+import { anosDoPrazo, cotaAtiva, cotaCancelada, curvaDeSeteDiasAtras, EXEMPLOS, interpola, MAX_MESES_PRECATORIO, MAX_PARCELAS, precatorio, retornoDaOferta, valorPresente } from "./calc.js";
 import { COR, E, FORMATO, Folha } from "./folha.js";
 import { dataBR, horaBRT, mesAno } from "./formato.js";
 import * as modelo from "./modelo.js";
-import { celulaData, letraDaColuna, montaXlsx } from "./xlsx.js";
+import { DIAS_UTEIS_NO_ANO, diasUteisDoPrazo, listaDeFeriados, numeroDoDia, somaMeses } from "./prazo.js";
+import { celulaData, letraDaColuna, montaXlsx, serialDoExcel } from "./xlsx.js";
 
 export const AVISO =
   "Projeto independente, sem vínculo com empresa. Dados públicos. O spread e os valores dos exemplos são de DEMONSTRAÇÃO.";
@@ -23,6 +24,8 @@ const NOME = {
   ativa: "Cota ativa",
   precatorio: "Precatório",
   custo: "Custo do dinheiro",
+  prazos: "Prazos",
+  feriados: "Feriados",
   credito: "Crédito concorrente",
   setor: "Setor",
   mudancas: "Mudanças",
@@ -52,6 +55,16 @@ const tesouro = (corrigido, x, faixas) => `IF(${corrigido}="${SIM}",${interpolac
 const formula = (f, v, e) => ({ f, v, e });
 const pontoDaCurva = (curva, anos) => interpola(curva.pontos, anos)[0];
 
+// O prazo é contado em dias úteis (base 252), como o Tesouro conta: a aba Prazos tem uma linha por mês (de 0 a MESES_NA_ABA)
+// e os nomes AnosPrefixado e AnosIPCA apontam para a coluna "Anos úteis" de cada curva (a linha do mês m é a m + 1).
+const MESES_NA_ABA = 720;
+const NOME_DA_FAIXA = { nominal: "AnosPrefixado", real: "AnosIPCA" };
+const NOME_DA_BASE = { nominal: "BasePrefixado", real: "BaseIPCA" };
+/** O prazo, em anos de 252 dias úteis, de `m` meses na curva de `id` (nominal ou real). */
+const prazoNaCurva = (id, m) => `INDEX(${NOME_DA_FAIXA[id]},${m}+1)`;
+/** O mesmo, com a curva escolhida pela célula "Corrigido pela inflação?" (Sim: IPCA+; Não: Prefixado). */
+const prazoEscolhido = (corrigido, m) => `IF(${corrigido}="${SIM}",${prazoNaCurva("real", m)},${prazoNaCurva("nominal", m)})`;
+
 // --------------------------------------------------------------------------------------------- Custo do dinheiro
 function abaCusto(ctx) {
   const { foto } = ctx;
@@ -64,19 +77,20 @@ function abaCusto(ctx) {
   const faixas = {};
   for (const c of modelo.curvas(foto)) {
     folha.secao(`Tesouro ${c.nome}: ${c.descricao}`);
+    const r0 = folha.proxima + 1;
     const t = folha.tabela({
       colunas: [
         { t: "Vencimento", tipo: "data", formato: FORMATO.data },
-        { t: "Prazo (anos)", tipo: "numero", formato: FORMATO.num2 },
+        { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
         { t: "Taxa hoje (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
         { t: "Taxa há 7 dias (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
         { t: "Mudou em 1 dia (p.p.)", tipo: "numero", formato: FORMATO.variacao },
         { t: "Mudou em 7 dias (p.p.)", tipo: "numero", formato: FORMATO.variacao },
         { t: "Mudou em 30 dias (p.p.)", tipo: "numero", formato: FORMATO.variacao },
       ],
-      linhas: c.pontos.map((p) => [celulaData(p.vencimento), p.anos, p.taxa, p.ref7, p.d1, p.d7, p.d30]),
+      linhas: c.pontos.map((p, i) => [celulaData(p.vencimento), formula(`NETWORKDAYS(${NOME_DA_BASE[c.id]}+1,B${r0 + i},Feriados)/${DIAS_UTEIS_NO_ANO}`, p.anos), p.taxa, p.ref7, p.d1, p.d7, p.d30]),
     });
-    folha.nota(`Taxa de compra do Tesouro Direto em ${dataBR(c.base)}. As calculadoras interpolam entre os vencimentos desta tabela.`, 18);
+    folha.nota(`Taxa de compra do Tesouro Direto em ${dataBR(c.base)}. As calculadoras interpolam entre os vencimentos desta tabela. O prazo é de dias úteis ÷ 252, como o Tesouro conta (abas Prazos e Feriados).`, 30);
     faixas[c.id] = { x: `'${NOME.custo}'!$C$${t.primeira}:$C$${t.ultima}`, y: `'${NOME.custo}'!$D$${t.primeira}:$D$${t.ultima}` };
     folha.espaco();
   }
@@ -130,10 +144,90 @@ function abaCusto(ctx) {
   return { folha, faixas };
 }
 
+// --------------------------------------------------------------------------------------------- Prazos e Feriados
+const CURVAS_DO_PRAZO = [["nominal", "Prefixado"], ["real", "IPCA+"]];
+
+/** A tabela de prazos: uma linha por mês, de hoje (a data-base da curva) até o mesmo dia `m` meses depois, em dias úteis. */
+function abaPrazos(ctx) {
+  const { foto, curvas } = ctx;
+  const ativas = CURVAS_DO_PRAZO.filter(([id]) => curvas[id]);
+  const folha = new Folha(NOME.prazos, { larguras: [34, ...ativas.flatMap(() => [16, 14, 14])], corAba: COR.abaBruta });
+  folha.cabecalho({
+    titulo: "Prazos: dias úteis, como o Tesouro conta",
+    subtitulo: subtituloDa(foto),
+    paraQue:
+      "O Tesouro cota a taxa \"ao ano, base 252 dias úteis\": o preço é valor ÷ (1 + taxa)^(dias úteis ÷ 252). Os dias úteis vão do dia seguinte à data-base até a data do pagamento (a data-base não conta, a do pagamento conta), sem sábados, domingos nem os feriados da aba Feriados. A data do pagamento é o mesmo dia do mês, N meses depois. Todas as calculadoras leem o prazo desta tabela.",
+    alturaParaQue: 72,
+  });
+  const nomes = [];
+  folha.secao("Data-base de cada curva");
+  for (const [id, rotulo] of ativas) {
+    const c = folha.campo(`Data-base do Tesouro ${rotulo}`, celulaData(curvas[id].base), { nota: "O dia da taxa de compra do Tesouro Direto usada na curva" });
+    nomes.push({ nome: NOME_DA_BASE[id], ref: `'${NOME.prazos}'!${c.refAbsoluta}` });
+  }
+  folha.espaco();
+  folha.secao("Prazo de cada número de meses");
+  const colunas = [{ t: "Meses", tipo: "centro", formato: FORMATO.inteiro }];
+  for (const [, rotulo] of ativas) {
+    colunas.push(
+      { t: `Data do pagamento (${rotulo})`, tipo: "data", formato: FORMATO.data },
+      { t: `Dias úteis (${rotulo})`, tipo: "numero", formato: FORMATO.inteiro },
+      { t: `Anos úteis (${rotulo})`, tipo: "numero", formato: FORMATO.num4 },
+    );
+  }
+  const r0 = folha.proxima + 1;
+  const linhas = [];
+  for (let m = 0; m <= MESES_NA_ABA; m++) {
+    const row = r0 + m;
+    const celulas = [m];
+    ativas.forEach(([id], k) => {
+      const base = curvas[id].base;
+      const letraData = letraDaColuna(2 + 3 * k);
+      const letraDias = letraDaColuna(3 + 3 * k);
+      const dias = diasUteisDoPrazo(base, m);
+      celulas.push(
+        formula(`EDATE(${NOME_DA_BASE[id]},B${row})`, serialDoExcel(somaMeses(base, m)), { formato: FORMATO.data }),
+        formula(`IF(B${row}=0,0,NETWORKDAYS(${NOME_DA_BASE[id]}+1,${letraData}${row},Feriados))`, dias),
+        formula(`${letraDias}${row}/${DIAS_UTEIS_NO_ANO}`, dias / DIAS_UTEIS_NO_ANO),
+      );
+    });
+    linhas.push(celulas);
+  }
+  const t = folha.tabela({ colunas, linhas });
+  folha.congelar = { linhas: t.cab };
+  ativas.forEach(([id], k) => {
+    const letra = letraDaColuna(4 + 3 * k);
+    nomes.push({ nome: NOME_DA_FAIXA[id], ref: `'${NOME.prazos}'!$${letra}$${t.primeira}:$${letra}$${t.ultima}` });
+  });
+  return { folha, nomes };
+}
+
+/** A lista dos feriados nacionais que a aba Prazos desconta (do ano da foto até depois do último mês da tabela). */
+function abaFeriados(ctx) {
+  const { foto } = ctx;
+  const folha = new Folha(NOME.feriados, { larguras: [16, 18, 40], corAba: COR.abaBruta });
+  folha.cabecalho({
+    titulo: "Feriados nacionais",
+    subtitulo: subtituloDa(foto),
+    paraQue:
+      "Os feriados nacionais que não contam como dia útil: os fixos, o Carnaval (segunda e terça), a Sexta-feira Santa e o Corpus Christi (que seguem a Páscoa) e o Dia da Consciência Negra, nacional desde 2024. É a lista da Anbima. Não entram ponte nem feriado só de banco.",
+    alturaParaQue: 44,
+  });
+  const ano0 = Number(foto.data.slice(0, 4));
+  const dias = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+  const lista = listaDeFeriados(ano0, ano0 + Math.ceil(MESES_NA_ABA / 12) + 2);
+  const t = folha.tabela({
+    colunas: [{ t: "Data", tipo: "data", formato: FORMATO.data }, { t: "Dia da semana", tipo: "centro" }, { t: "Feriado", tipo: "texto" }],
+    linhas: lista.map((f) => [celulaData(f.data), dias[(((numeroDoDia(f.data) + 4) % 7) + 7) % 7], f.nome]),
+  });
+  folha.congelar = { linhas: t.cab };
+  return { folha, nomes: [{ nome: "Feriados", ref: `'${NOME.feriados}'!$B$${t.primeira}:$B$${t.ultima}` }] };
+}
+
 // --------------------------------------------------------------------------------------------- Hoje
 function abaHoje(ctx) {
   const { foto, par, curvas } = ctx;
-  const folha = new Folha(NOME.hoje, { larguras: [42, 15, 15, 15, 17, 22, 22, 14] });
+  const folha = new Folha(NOME.hoje, { larguras: [42, 15, 15, 15, 15, 17, 22, 22, 14] });
   folha.cabecalho({
     titulo: "Hoje: o que mudou e quanto isso mexe no preço",
     subtitulo: subtituloDa(foto),
@@ -158,6 +252,7 @@ function abaHoje(ctx) {
     folha.tabela({
       colunas: [
         { t: "Prazo (meses)", tipo: "centro", formato: FORMATO.inteiro },
+        { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
         { t: "Taxa hoje (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
         { t: "Taxa há 7 dias (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
         { t: "Mudou (p.p.)", tipo: "numero", formato: FORMATO.variacao },
@@ -168,26 +263,28 @@ function abaHoje(ctx) {
       ],
       linhas: prazos.map((m, i) => {
         const r = r0 + i;
-        const hoje = pontoDaCurva(curva, m / 12);
-        const ant = antes ? pontoDaCurva(antes, m / 12) : null;
-        const vpHoje = valorPresente(ctx.valorRef, hoje + ctx.spread, m);
-        const vpAntes = ant === null ? null : valorPresente(ctx.valorRef, ant + ctx.spread, m);
+        const anos = anosDoPrazo(curva, m);
+        const hoje = pontoDaCurva(curva, anos);
+        const ant = antes ? pontoDaCurva(antes, anos) : null;
+        const vpHoje = valorPresente(ctx.valorRef, hoje + ctx.spread, anos);
+        const vpAntes = ant === null ? null : valorPresente(ctx.valorRef, ant + ctx.spread, anos);
         return [
           m,
+          formula(prazoNaCurva(id, `B${r}`), anos),
           hoje,
           ant,
-          ant === null ? null : formula(`C${r}-D${r}`, hoje - ant),
-          formula(`C${r}+Spread`, hoje + ctx.spread),
-          formula(`ValorRef/(1+(C${r}+Spread)/100)^(B${r}/12)`, vpHoje),
-          ant === null ? null : formula(`ValorRef/(1+(D${r}+Spread)/100)^(B${r}/12)`, vpAntes),
-          ant === null ? null : formula(`(G${r}/H${r}-1)*100`, (vpHoje / vpAntes - 1) * 100),
+          ant === null ? null : formula(`D${r}-E${r}`, hoje - ant),
+          formula(`D${r}+Spread`, hoje + ctx.spread),
+          formula(`ValorRef/(1+(D${r}+Spread)/100)^C${r}`, vpHoje),
+          ant === null ? null : formula(`ValorRef/(1+(E${r}+Spread)/100)^C${r}`, vpAntes),
+          ant === null ? null : formula(`(H${r}/I${r}-1)*100`, (vpHoje / vpAntes - 1) * 100),
         ];
       }),
     });
     folha.nota(
       id === "real"
         ? "Corrigido pelo IPCA: o resultado fica em reais de hoje. Para prazos menores que o primeiro vencimento da curva IPCA+, a taxa desse vencimento é usada."
-        : "Em R$ fixos: sem correção pela inflação. Valor presente = valor de referência ÷ (1 + taxa de desconto)^(prazo em anos).",
+        : "Em R$ fixos: sem correção pela inflação. Valor presente = valor de referência ÷ (1 + taxa de desconto)^(prazo em anos úteis).",
       18,
     );
     folha.espaco();
@@ -263,10 +360,11 @@ function abaCotaCancelada(ctx, faixas) {
 
   const r = cotaCancelada({ valor: ex.valor, meses: ex.meses, corrigido: ex.corrigido, spreadPP: ctx.spread }, { nominal: curvas.nominal, real: curvas.real });
   folha.secao("2. Resultado");
-  const ancora = folha.campo("Taxa do Tesouro no prazo (% a.a.)", formula(tesouro(corr, `${meses.refAbsoluta}/12`, faixas), r.taxa_ancora), { formato: FORMATO.taxa, nota: "Interpolada entre os vencimentos da aba Custo do dinheiro" });
+  const prazo = folha.campo("Prazo até receber (anos úteis)", formula(prazoEscolhido(corr, meses.refAbsoluta), r.prazo_anos), { formato: FORMATO.num4, nota: "Dias úteis até receber ÷ 252, como o Tesouro conta (aba Prazos)" });
+  const ancora = folha.campo("Taxa do Tesouro no prazo (% a.a.)", formula(tesouro(corr, prazo.refAbsoluta, faixas), r.taxa_ancora), { formato: FORMATO.taxa, nota: "Interpolada entre os vencimentos da aba Custo do dinheiro" });
   const desconto = folha.campo("Taxa de desconto (% a.a.)", formula(`${ancora.refAbsoluta}+${spread.refAbsoluta}`, r.taxa_desconto), { formato: FORMATO.taxa, nota: "Tesouro + spread" });
   const futuro = folha.campo("Valor no pagamento (R$)", formula(noPagamento(meses.refAbsoluta), r.valor_no_pagamento), { formato: FORMATO.reais, nota: "Com taxa própria, o valor de hoje cresce até a data; sem ela, é o mesmo valor" });
-  const vp = folha.campo("Valor presente (R$)", formula(`${futuro.refAbsoluta}/(1+${desconto.refAbsoluta}/100)^(${meses.refAbsoluta}/12)`, r.valor_presente), { estilo: E.resultado, formato: FORMATO.reais, nota: "O que o valor a receber vale hoje" });
+  const vp = folha.campo("Valor presente (R$)", formula(`${futuro.refAbsoluta}/(1+${desconto.refAbsoluta}/100)^${prazo.refAbsoluta}`, r.valor_presente), { estilo: E.resultado, formato: FORMATO.reais, nota: "O que o valor a receber vale hoje" });
   const pct = folha.campo("Em % do valor a receber", formula(`${vp.refAbsoluta}/${valor.refAbsoluta}*100`, r.pct_do_valor), { estilo: E.resultado, formato: FORMATO.taxa });
   folha.campo("Desconto sobre o valor (%)", formula(`100-${pct.refAbsoluta}`, 100 - r.pct_do_valor), { formato: FORMATO.taxa, nota: "O deságio: quanto fica de fora do valor a receber" });
   folha.espaco();
@@ -276,6 +374,7 @@ function abaCotaCancelada(ctx, faixas) {
   folha.tabela({
     colunas: [
       { t: "Prazo (meses)", tipo: "centro", formato: FORMATO.inteiro },
+      { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
       { t: "Taxa do Tesouro (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
       { t: "Taxa de desconto (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
       { t: "Valor presente (R$)", tipo: "numero", formato: FORMATO.num2 },
@@ -288,10 +387,11 @@ function abaCotaCancelada(ctx, faixas) {
       const um = ok ? cotaCancelada({ valor: ex.valor, meses: m, corrigido: ex.corrigido, spreadPP: ctx.spread }, curvas) : null;
       return [
         formula(`${meses.refAbsoluta}+(${d})`, m),
-        formula(`IF(B${row}<1,"${TRACO}",${tesouro(corr, `B${row}/12`, faixas)})`, ok ? um.taxa_ancora : TRACO),
-        formula(`IF(B${row}<1,"${TRACO}",C${row}+${spread.refAbsoluta})`, ok ? um.taxa_desconto : TRACO),
-        formula(`IF(B${row}<1,"${TRACO}",${noPagamento(`B${row}`)}/(1+D${row}/100)^(B${row}/12))`, ok ? um.valor_presente : TRACO),
-        formula(`IF(B${row}<1,"${TRACO}",E${row}/${valor.refAbsoluta}*100)`, ok ? um.pct_do_valor : TRACO),
+        formula(`IF(B${row}<1,"${TRACO}",${prazoEscolhido(corr, `B${row}`)})`, ok ? um.prazo_anos : TRACO),
+        formula(`IF(B${row}<1,"${TRACO}",${tesouro(corr, `C${row}`, faixas)})`, ok ? um.taxa_ancora : TRACO),
+        formula(`IF(B${row}<1,"${TRACO}",D${row}+${spread.refAbsoluta})`, ok ? um.taxa_desconto : TRACO),
+        formula(`IF(B${row}<1,"${TRACO}",${noPagamento(`B${row}`)}/(1+E${row}/100)^C${row})`, ok ? um.valor_presente : TRACO),
+        formula(`IF(B${row}<1,"${TRACO}",F${row}/${valor.refAbsoluta}*100)`, ok ? um.pct_do_valor : TRACO),
       ];
     }),
   });
@@ -314,7 +414,7 @@ function abaCotaCancelada(ctx, faixas) {
       return [
         formula(`${spread.refAbsoluta}+(${d})`, s),
         formula(`IF(B${row}<0,"${TRACO}",${ancora.refAbsoluta}+B${row})`, ok ? um.taxa_desconto : TRACO),
-        formula(`IF(B${row}<0,"${TRACO}",${futuro.refAbsoluta}/(1+C${row}/100)^(${meses.refAbsoluta}/12))`, ok ? um.valor_presente : TRACO),
+        formula(`IF(B${row}<0,"${TRACO}",${futuro.refAbsoluta}/(1+C${row}/100)^${prazo.refAbsoluta})`, ok ? um.valor_presente : TRACO),
         formula(`IF(B${row}<0,"${TRACO}",D${row}/${valor.refAbsoluta}*100)`, ok ? um.pct_do_valor : TRACO),
       ];
     }),
@@ -371,9 +471,10 @@ function abaRetorno(ctx, faixas) {
   const m = meses.refAbsoluta;
   folha.secao("2. Resultado");
   const pago = folha.campo("Total que sai do bolso (R$)", formula(`${preco.refAbsoluta}+${custos.refAbsoluta}`, r.pago), { formato: FORMATO.reais, nota: "Preço mais custos de transferência" });
-  const retorno = folha.campo("Retorno ao ano (% a.a.)", formula(`((${valor.refAbsoluta}/${pago.refAbsoluta})^(12/${m})-1)*100`, r.retorno_aa), { estilo: E.resultado, formato: FORMATO.taxa, nota: "O que a oferta rende por ano, em juros compostos" });
+  const prazo = folha.campo("Prazo até receber (anos úteis)", formula(prazoEscolhido(corrigido.refAbsoluta, m), r.prazo_anos), { formato: FORMATO.num4, nota: "Dias úteis até receber ÷ 252, como o Tesouro conta (aba Prazos)" });
+  const retorno = folha.campo("Retorno ao ano (% a.a.)", formula(`((${valor.refAbsoluta}/${pago.refAbsoluta})^(1/${prazo.refAbsoluta})-1)*100`, r.retorno_aa), { estilo: E.resultado, formato: FORMATO.taxa, nota: "O que a oferta rende por ano de 252 dias úteis, em juros compostos" });
   folha.campo("Retorno no prazo todo (%)", formula(`(${valor.refAbsoluta}/${pago.refAbsoluta}-1)*100`, r.retorno_total), { formato: FORMATO.taxa });
-  const ancora = folha.campo("Taxa do Tesouro no prazo (% a.a.)", formula(tesouro(corrigido.refAbsoluta, `${m}/12`, faixas), r.taxa_ancora), { formato: FORMATO.taxa, nota: "IPCA+ se corrigido, Prefixado se não" });
+  const ancora = folha.campo("Taxa do Tesouro no prazo (% a.a.)", formula(tesouro(corrigido.refAbsoluta, prazo.refAbsoluta, faixas), r.taxa_ancora), { formato: FORMATO.taxa, nota: "IPCA+ se corrigido, Prefixado se não" });
   folha.campo("Diferença para o Tesouro (p.p.)", formula(`${retorno.refAbsoluta}-${ancora.refAbsoluta}`, r.retorno_aa - r.taxa_ancora), { formato: FORMATO.variacao });
   const cdiCampo = folha.campo("CDI de hoje, anualizado (% a.a.)", cdi, { formato: FORMATO.taxa, nota: "Só se compara quando não é corrigido pela inflação" });
   folha.campo("Diferença para o CDI (p.p.)", formula(`IF(${corrigido.refAbsoluta}="${SIM}","${TRACO}",${retorno.refAbsoluta}-${cdiCampo.refAbsoluta})`, ex.corrigido ? TRACO : r.retorno_aa - cdi), { formato: FORMATO.variacao });
@@ -381,7 +482,7 @@ function abaRetorno(ctx, faixas) {
 
   folha.secao("3. Preço máximo para o retorno-alvo");
   const alvoUsado = folha.campo("Retorno-alvo usado (% a.a.)", formula(`IF(ISNUMBER(${alvo.refAbsoluta}),${alvo.refAbsoluta},${ancora.refAbsoluta}+${spread.refAbsoluta})`, r.alvo), { formato: FORMATO.taxa });
-  const bruto = `${valor.refAbsoluta}/(1+${alvoUsado.refAbsoluta}/100)^(${m}/12)`;
+  const bruto = `${valor.refAbsoluta}/(1+${alvoUsado.refAbsoluta}/100)^${prazo.refAbsoluta}`;
   const maximo = folha.campo("Preço máximo (R$)", formula(`${bruto}-${custos.refAbsoluta}`, r.preco_maximo), { estilo: E.resultado, formato: FORMATO.reais, nota: "Pagando até aqui (já separando os custos), o retorno é pelo menos o alvo" });
   const folga = folha.campo("Folga (R$)", formula(`${maximo.refAbsoluta}-${preco.refAbsoluta}`, r.folga), { formato: '"R$" #,##0.00;-"R$" #,##0.00', nota: "Positiva: o preço está abaixo do máximo" });
   folha.campo(
@@ -394,7 +495,7 @@ function abaRetorno(ctx, faixas) {
   );
   folha.espaco();
   folha.nota(exemploAviso, 30);
-  folha.nota("Como ler: o retorno ao ano é (valor ÷ preço)^(12 ÷ meses) − 1. Ele só diz se a oferta paga mais ou menos que as alternativas; não mede o risco de a administradora atrasar.", 30);
+  folha.nota("Como ler: o retorno ao ano é (valor ÷ preço)^(1 ÷ prazo em anos úteis) − 1. Ele só diz se a oferta paga mais ou menos que as alternativas; não mede o risco de a administradora atrasar.", 30);
   return { folha };
 }
 
@@ -447,13 +548,13 @@ function abaCotaAtiva(ctx, faixas) {
   const linhas = [];
   for (let t = 1; t <= MAX_PARCELAS; t++) {
     const row = c0 + t - 1;
-    const anos = t / 12;
+    const anos = anosDoPrazo(curvas.real, t);
     const taxa = pontoDaCurva(curvas.real, anos);
     const desc = taxa + ctx.spread;
     const parc = t <= ex.parcelas ? ex.parcela : 0;
     linhas.push([
       t,
-      formula(`B${row}/12`, anos),
+      formula(prazoNaCurva("real", `B${row}`), anos),
       formula(interpolacao(`C${row}`, faixas.real), taxa),
       formula(`D${row}+Spread`, desc),
       formula(`IF(B${row}<=${doDigitado(parcelas)},${doDigitado(parcela)},0)`, parc),
@@ -463,7 +564,7 @@ function abaCotaAtiva(ctx, faixas) {
   const tabelaCalculo = calculo.tabela({
     colunas: [
       { t: "Mês", tipo: "centro", formato: FORMATO.inteiro },
-      { t: "Prazo (anos)", tipo: "numero", formato: FORMATO.num4 },
+      { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
       { t: "Taxa do Tesouro IPCA+ (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
       { t: "Taxa de desconto (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
       { t: "Parcela (R$)", tipo: "numero", formato: FORMATO.num2 },
@@ -476,7 +577,8 @@ function abaCotaAtiva(ctx, faixas) {
 
   const r = cotaAtiva({ ...ex, spreadPP: ctx.spread }, curvas.real);
   folha.secao("2. Resultado");
-  const vpCredito = `IF(${contemplacao.refAbsoluta}=0,${credito.refAbsoluta},${credito.refAbsoluta}/(1+(${interpolacao(`${contemplacao.refAbsoluta}/12`, faixas.real)}+${spread.refAbsoluta})/100)^(${contemplacao.refAbsoluta}/12))`;
+  const prazoCredito = folha.campo("Prazo até a contemplação (anos úteis)", formula(prazoNaCurva("real", contemplacao.refAbsoluta), anosDoPrazo(curvas.real, ex.contemplacao)), { formato: FORMATO.num4, nota: "Dias úteis até o mês da contemplação ÷ 252 (aba Prazos); 0 se já contemplada" });
+  const vpCredito = `IF(${contemplacao.refAbsoluta}=0,${credito.refAbsoluta},${credito.refAbsoluta}/(1+(${interpolacao(prazoCredito.refAbsoluta, faixas.real)}+${spread.refAbsoluta})/100)^${prazoCredito.refAbsoluta})`;
   const cCredito = folha.campo("Valor presente do crédito (R$)", formula(vpCredito, r.vp_credito), { formato: FORMATO.reais, nota: "O crédito descontado até o mês da contemplação" });
   const cParcelas = folha.campo("Valor presente das parcelas (R$)", formula(`SUM(${colunaVP})`, r.vp_parcelas), { formato: FORMATO.reais, nota: "Todas as parcelas que faltam, descontadas" });
   const cValor = folha.campo("Valor da cota hoje (R$)", formula(`${cCredito.refAbsoluta}-${cParcelas.refAbsoluta}`, r.valor_da_cota), { estilo: E.resultado, formato: '"R$" #,##0.00;-"R$" #,##0.00', nota: "Negativo: nesse cenário as parcelas pesam mais que o crédito" });
@@ -489,6 +591,7 @@ function abaCotaAtiva(ctx, faixas) {
   folha.tabela({
     colunas: [
       { t: "Contemplação em (meses)", tipo: "centro", formato: FORMATO.inteiro },
+      { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
       { t: "Valor presente do crédito (R$)", tipo: "numero", formato: FORMATO.num2 },
       { t: "Valor da cota hoje (R$)", tipo: "numero", formato: "#,##0.00;-#,##0.00" },
       { t: "Em % do crédito", tipo: "numero", formato: FORMATO.taxa },
@@ -500,12 +603,13 @@ function abaCotaAtiva(ctx, faixas) {
       const cen = dentro ? cotaAtiva({ ...ex, contemplacao: mes, spreadPP: ctx.spread }, curvas.real) : null;
       return [
         i === 0 ? formula(contemplacao.refAbsoluta, mes) : mes,
+        formula(`IF(B${row}>${parcelas.refAbsoluta},"${TRACO}",${prazoNaCurva("real", `B${row}`)})`, dentro ? anosDoPrazo(curvas.real, mes) : TRACO),
         formula(
-          `IF(B${row}>${parcelas.refAbsoluta},"${TRACO}",IF(B${row}=0,${credito.refAbsoluta},${credito.refAbsoluta}/(1+(${interpolacao(`B${row}/12`, faixas.real)}+${spread.refAbsoluta})/100)^(B${row}/12)))`,
+          `IF(B${row}>${parcelas.refAbsoluta},"${TRACO}",IF(B${row}=0,${credito.refAbsoluta},${credito.refAbsoluta}/(1+(${interpolacao(`C${row}`, faixas.real)}+${spread.refAbsoluta})/100)^C${row}))`,
           dentro ? cen.vp_credito : TRACO,
         ),
-        formula(`IF(ISNUMBER(C${row}),C${row}-${cParcelas.refAbsoluta},"${TRACO}")`, dentro ? cen.valor_da_cota : TRACO),
-        formula(`IF(ISNUMBER(D${row}),D${row}/${credito.refAbsoluta}*100,"${TRACO}")`, dentro ? cen.pct_do_credito : TRACO),
+        formula(`IF(ISNUMBER(D${row}),D${row}-${cParcelas.refAbsoluta},"${TRACO}")`, dentro ? cen.valor_da_cota : TRACO),
+        formula(`IF(ISNUMBER(E${row}),E${row}/${credito.refAbsoluta}*100,"${TRACO}")`, dentro ? cen.pct_do_credito : TRACO),
       ];
     }),
   });
@@ -569,9 +673,10 @@ function abaPrecatorio(ctx, faixas) {
   folha.secao("2. Resultado");
   const esperado = folha.campo("Valor esperado no pagamento (R$)", formula(`${valor.refAbsoluta}*${fator(m)}`, r.valor_esperado), { formato: FORMATO.reais, nota: "O valor de hoje corrigido até a data" });
   const liquido = folha.campo("Depois das retenções (R$)", formula(`${esperado.refAbsoluta}*(1-${retencao.refAbsoluta}/100)`, r.liquido_esperado), { formato: FORMATO.reais });
-  const ancora = folha.campo("Taxa do Tesouro Prefixado no prazo (% a.a.)", formula(interpolacao(`${m}/12`, faixas.nominal), r.taxa_ancora), { formato: FORMATO.taxa, nota: "Prefixada porque a correção já embute inflação" });
+  const prazo = folha.campo("Prazo até o pagamento (anos úteis)", formula(prazoNaCurva("nominal", m), r.prazo_anos), { formato: FORMATO.num4, nota: "Dias úteis até o pagamento ÷ 252, como o Tesouro conta (aba Prazos). A correção segue o calendário." });
+  const ancora = folha.campo("Taxa do Tesouro Prefixado no prazo (% a.a.)", formula(interpolacao(prazo.refAbsoluta, faixas.nominal), r.taxa_ancora), { formato: FORMATO.taxa, nota: "Prefixada porque a correção já embute inflação" });
   const desconto = folha.campo("Taxa de desconto (% a.a.)", formula(`${ancora.refAbsoluta}+${spread.refAbsoluta}`, r.taxa_desconto), { formato: FORMATO.taxa, nota: "Tesouro + spread" });
-  const vp = folha.campo("Vale hoje (R$)", formula(`${liquido.refAbsoluta}/(1+${desconto.refAbsoluta}/100)^(${m}/12)`, r.valor_presente), { estilo: E.resultado, formato: FORMATO.reais, nota: "O valor presente do que será pago" });
+  const vp = folha.campo("Vale hoje (R$)", formula(`${liquido.refAbsoluta}/(1+${desconto.refAbsoluta}/100)^${prazo.refAbsoluta}`, r.valor_presente), { estilo: E.resultado, formato: FORMATO.reais, nota: "O valor presente do que será pago" });
   const pct = folha.campo("Em % do valor atualizado", formula(`${vp.refAbsoluta}/${valor.refAbsoluta}*100`, r.pct_do_valor), { estilo: E.resultado, formato: FORMATO.taxa });
   folha.campo("Deságio justo (%)", formula(`100-${pct.refAbsoluta}`, r.desagio_justo_pct), { formato: FORMATO.taxa, nota: "Quanto abaixo do valor atualizado o preço teria de ficar para quem compra ganhar o Tesouro mais o spread" });
   folha.espaco();
@@ -581,7 +686,7 @@ function abaPrecatorio(ctx, faixas) {
   const tem = `ISNUMBER(${desagio.refAbsoluta})`;
   const preco = folha.campo("Preço da oferta (R$)", formula(`IF(${tem},${valor.refAbsoluta}*(1-${desagio.refAbsoluta}/100),"${TRACO}")`, o.preco), { formato: FORMATO.reais });
   const pago = folha.campo("Total que sai do bolso (R$)", formula(`IF(${tem},${preco.refAbsoluta}+${custos.refAbsoluta},"${TRACO}")`, o.pago), { formato: FORMATO.reais, nota: "Preço mais custos de transferência" });
-  folha.campo("Retorno de quem compra (% a.a.)", formula(`IF(${tem},((${liquido.refAbsoluta}/${pago.refAbsoluta})^(12/${m})-1)*100,"${TRACO}")`, o.retorno_aa), { estilo: E.resultado, formato: FORMATO.taxa, nota: "Compare com a taxa de desconto acima" });
+  folha.campo("Retorno de quem compra (% a.a.)", formula(`IF(${tem},((${liquido.refAbsoluta}/${pago.refAbsoluta})^(1/${prazo.refAbsoluta})-1)*100,"${TRACO}")`, o.retorno_aa), { estilo: E.resultado, formato: FORMATO.taxa, nota: "Compare com a taxa de desconto acima" });
   const folga = folha.campo("Folga (R$)", formula(`IF(${tem},${vp.refAbsoluta}-${pago.refAbsoluta},"${TRACO}")`, o.folga), { formato: '"R$" #,##0.00;-"R$" #,##0.00', nota: "Positiva: a oferta cabe no valor de hoje" });
   folha.campo("Preço máximo (R$)", formula(`${vp.refAbsoluta}-${custos.refAbsoluta}`, o.preco_maximo), { estilo: E.resultado, formato: FORMATO.reais, nota: "O máximo que dá para pagar, já separando os custos" });
   folha.campo("Deságio mínimo (%)", formula(`(1-(${vp.refAbsoluta}-${custos.refAbsoluta})/${valor.refAbsoluta})*100`, o.desagio_minimo_pct), { formato: FORMATO.taxa, nota: "O menor deságio que ainda paga a conta" });
@@ -594,11 +699,12 @@ function abaPrecatorio(ctx, faixas) {
 
   folha.secao("4. E se o prazo mudar?");
   const r0 = folha.proxima + 1;
-  const ancoraEm = (mm) => interpola(curvas.nominal.pontos, mm / 12)[0];
+  const ancoraEm = (mm) => interpola(curvas.nominal.pontos, anosDoPrazo(curvas.nominal, mm))[0];
   const taxaEx = r.correcao_aa_pct;
   folha.tabela({
     colunas: [
       { t: "Prazo (meses)", tipo: "centro", formato: FORMATO.inteiro },
+      { t: "Prazo (anos úteis)", tipo: "numero", formato: FORMATO.num4 },
       { t: "Valor esperado (R$)", tipo: "numero", formato: FORMATO.num2 },
       { t: "Taxa do Tesouro (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
       { t: "Taxa de desconto (% a.a.)", tipo: "numero", formato: FORMATO.taxa },
@@ -611,14 +717,16 @@ function abaPrecatorio(ctx, faixas) {
       const esp = ex.valor * (1 + taxaEx / 100) ** (mm / 12);
       const anc = ancoraEm(mm);
       const desc = anc + ctx.spread;
-      const vpm = (esp * (1 - ex.retencaoPct / 100)) / (1 + desc / 100) ** (mm / 12);
+      const anosM = anosDoPrazo(curvas.nominal, mm);
+      const vpm = (esp * (1 - ex.retencaoPct / 100)) / (1 + desc / 100) ** anosM;
       return [
         i === 0 ? formula(m, mm) : mm,
+        formula(prazoNaCurva("nominal", `B${row}`), anosM),
         formula(`${valor.refAbsoluta}*(1+${taxa.refAbsoluta}/100)^(B${row}/12)`, esp),
-        formula(interpolacao(`B${row}/12`, faixas.nominal), anc),
-        formula(`D${row}+${spread.refAbsoluta}`, desc),
-        formula(`C${row}*(1-${retencao.refAbsoluta}/100)/(1+E${row}/100)^(B${row}/12)`, vpm),
-        formula(`F${row}/${valor.refAbsoluta}*100`, (vpm / ex.valor) * 100),
+        formula(interpolacao(`C${row}`, faixas.nominal), anc),
+        formula(`E${row}+${spread.refAbsoluta}`, desc),
+        formula(`D${row}*(1-${retencao.refAbsoluta}/100)/(1+F${row}/100)^C${row}`, vpm),
+        formula(`G${row}/${valor.refAbsoluta}*100`, (vpm / ex.valor) * 100),
       ];
     }),
   });
@@ -808,10 +916,11 @@ function abaLeiaMe(ctx, abas) {
   folha.espaco();
   folha.secao("Convenções");
   for (const [rotulo, texto] of [
-    ["Taxas", "Em % ao ano, efetivas, com juros compostos. Um mês vale 1/12 de ano."],
+    ["Taxas", "Em % ao ano, efetivas, com juros compostos."],
+    ["Prazo", "Contado em dias úteis (sem fins de semana nem feriados nacionais) e dividido por 252, como o Tesouro conta. O prazo de N meses vai até o mesmo dia do mês, N meses depois. Veja as abas Prazos e Feriados."],
     ["p.p.", "Pontos percentuais: a diferença entre duas taxas (de 13,00% para 13,25% são +0,25 p.p.)."],
     ["Mudou em 7 dias", "Compara com o mesmo número 7 dias antes, que a própria fonte informa."],
-    ["Valor presente", "Quanto um valor a receber no futuro vale hoje: valor ÷ (1 + taxa de desconto)^(prazo em anos)."],
+    ["Valor presente", "Quanto um valor a receber no futuro vale hoje: valor ÷ (1 + taxa de desconto)^(prazo em anos úteis)."],
     ["Taxa de desconto", "A taxa do Tesouro para o prazo mais o spread de risco (que você pode trocar na aba Hoje)."],
   ]) folha.linha([{ v: rotulo, e: { ...E.rotulo, fonte: { n: true } } }, { v: texto, e: { ...E.rotulo, quebra: true } }], 22);
   folha.espaco();
@@ -834,6 +943,8 @@ export function excelDaFoto(foto) {
   const curvas = { nominal: lista.find((c) => c.id === "nominal") ?? null, real: lista.find((c) => c.id === "real") ?? null };
   const ctx = { foto, par, curvas, spread: par.spread_demonstracao_pp, valorRef: par.valor_face };
   const custo = abaCusto(ctx);
+  const prazos = curvas.nominal || curvas.real ? abaPrazos(ctx) : null;
+  const feriados = prazos ? abaFeriados(ctx) : null;
   const hoje = abaHoje(ctx);
   const calculadoras =
     curvas.nominal && curvas.real
@@ -857,6 +968,12 @@ export function excelDaFoto(foto) {
         ]
       : []),
     { folha: custo.folha, oQue: "Curvas do Tesouro Prefixado e IPCA+, expectativas do Focus, Selic, CDI e IPCA.", quando: "Para ver de onde vêm as taxas." },
+    ...(prazos
+      ? [
+          { folha: prazos.folha, oQue: "O prazo de 0 a 720 meses em dias úteis (÷ 252), como o Tesouro conta. Todas as calculadoras leem esta tabela.", quando: "Para conferir o prazo de uma conta." },
+          { folha: feriados.folha, oQue: "Os feriados nacionais que não contam como dia útil.", quando: "Para conferir a contagem de dias úteis." },
+        ]
+      : []),
     { folha: credito.folha, oQue: "Taxas de financiamento imobiliário e de veículos, por banco.", quando: "Para comparar com o crédito concorrente." },
     { folha: setor.folha, oQue: "ABAC e Panorama de Consórcios do Banco Central.", quando: "Para ler o setor (inadimplência, exclusão, prazos)." },
     { folha: mudancas.folha, oQue: "A lista completa das mudanças do dia.", quando: "Quando a aba Hoje chamar atenção." },
@@ -868,6 +985,7 @@ export function excelDaFoto(foto) {
   const nomes = [
     { nome: "Spread", ref: `'${NOME.hoje}'!${hoje.spread}` },
     { nome: "ValorRef", ref: `'${NOME.hoje}'!${hoje.valorRef}` },
+    ...(prazos ? [...prazos.nomes, ...feriados.nomes] : []),
   ];
   const abas = [leia.folha, ...indice.map((x) => x.folha)].map((f) => f.paraAba());
   return montaXlsx(abas, { nomes });

@@ -9,7 +9,7 @@ const foto = JSON.parse(readFileSync(new URL("./fixtures/foto-2026-10-31.json", 
 
 const ponto = (anos, taxa, d7) => ({ vencimento: `${2026 + Math.round(anos)}-01-01`, anos, taxa, d7, ref7: d7 === null ? null : taxa - d7, dias7: 7 });
 const curva = (pontos) => ({ id: "nominal", nome: "Prefixado", pontos });
-const estadoCom = (nominal, spread = 5) => ({ parametros: { prazos_meses: [6, 12, 24, 36, 48], valor_face: 1000 }, curvas: { nominal, real: null }, spread });
+const estadoCom = (nominal, spread = 5) => ({ parametros: { prazos_meses: [6, 12, 24, 36, 48], valor_face: 1000 }, curvas: { nominal: nominal && { base: "2026-10-29", ...nominal }, real: null }, spread });
 
 test("manchete: taxa que sobe faz o valor de hoje cair", () => {
   const e = estadoCom({ pontos: [{ ...ponto(1, 10, 1) }, { ...ponto(5, 12, 2) }], titulo: "x", base: "2026-10-29" });

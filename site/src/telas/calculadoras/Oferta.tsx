@@ -21,7 +21,7 @@ export function Oferta() {
     [e.preco, e.valor, meses, e.corrigido, e.alvoAtivo, e.alvo, spread, e.custos, curvas, cdi],
   );
   const cabe = r ? r.folga >= 0 : false;
-  const leitura = r && meses ? leituraDoNegocio({ pagoHoje: r.pago, recebe: e.valor, valorJusto: r.preco_maximo + e.custos, meses }) : null;
+  const leitura = r && meses ? leituraDoNegocio({ pagoHoje: r.pago, recebe: e.valor, valorJusto: r.preco_maximo + e.custos, anos: r.prazo_anos }) : null;
   const resumo = () =>
     [
       `Radar Pricing · Retorno de uma oferta · foto de ${dataBR(foto.data)}`,
@@ -111,10 +111,11 @@ export function Oferta() {
           <AcoesDaConta resumo={resumo} aoVoltar={volta} />
           <ComoFoiCalculado>
             <p className="m-0 num">
-              Retorno = ({reais(e.valor, 0)} ÷ {reais(r.pago, 0)})<sup>12/{meses}</sup> − 1 = <strong>{pct(r.retorno_aa, 4)}</strong> ao ano.
+              Retorno = ({reais(e.valor, 0)} ÷ {reais(r.pago, 0)})<sup>1/{num(r.prazo_anos, 4)}</sup> − 1 = <strong>{pct(r.retorno_aa, 4)}</strong> ao ano.
             </p>
+            <p className="m-0 mt-2">Prazo: {r.dias_uteis} dias úteis ÷ 252 = {num(r.prazo_anos, 4)} anos (de 252 dias úteis cada; o Tesouro conta assim: sem fins de semana nem feriados nacionais).</p>
             <p className="m-0 mt-2 num">
-              Máximo que pode sair do bolso = {reais(e.valor, 0)} ÷ (1 + {num(r.alvo, 2)}%)<sup>{meses}/12</sup> = {reais(r.preco_maximo + e.custos)}; menos os custos de {reais(e.custos, 0)}, o preço máximo é <strong>{reais(r.preco_maximo)}</strong>.
+              Máximo que pode sair do bolso = {reais(e.valor, 0)} ÷ (1 + {num(r.alvo, 2)}%)<sup>{num(r.prazo_anos, 4)}</sup> = {reais(r.preco_maximo + e.custos)}; menos os custos de {reais(e.custos, 0)}, o preço máximo é <strong>{reais(r.preco_maximo)}</strong>.
             </p>
             <p className="m-0 mt-2 text-tinta3">Demonstração: o alvo padrão é a taxa do Tesouro para o prazo ({pct(r.taxa_ancora)}) mais o spread de {num(spread, 1)} p.p. Não considera imposto nem o risco de a administradora atrasar.</p>
           </ComoFoiCalculado>

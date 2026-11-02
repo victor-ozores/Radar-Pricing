@@ -123,9 +123,9 @@ export function Ativa() {
           <ESe titulo="E se o spread de risco fosse outro?" linhas={r.spreads.map((s: any) => ({ rotulo: `${num(s.spread, 1)} p.p.`, valor: s.valor_da_cota, texto: reais(s.valor_da_cota, 0), atual: s.spread === spread, extra: `${num(s.pct_do_credito, 0)}%` }))} />
           <AcoesDaConta resumo={resumo} aoVoltar={volta} />
           <ComoFoiCalculado>
-            <p className="m-0">Crédito e parcelas são corrigidos pelo mesmo índice, então tudo é descontado pela curva do Tesouro IPCA+ mais o spread de {num(spread, 1)} p.p., e o resultado fica em reais de hoje.</p>
+            <p className="m-0">Crédito e parcelas são corrigidos pelo mesmo índice, então tudo é descontado pela curva do Tesouro IPCA+ mais o spread de {num(spread, 1)} p.p., e o resultado fica em reais de hoje. O prazo de cada parcela e do crédito é contado em dias úteis ÷ 252, a partir da data-base da curva até o mesmo dia do mês certo (o Tesouro conta assim: sem fins de semana nem feriados nacionais).</p>
             <p className="m-0 mt-2 num">
-              Valor da cota = crédito ÷ (1 + taxa)<sup>{k}/12</sup> − Σ parcela ÷ (1 + taxa)<sup>mês/12</sup> = {reais(r.vp_credito)} − {reais(r.vp_parcelas)} = <strong>{reais(r.valor_da_cota)}</strong>.
+              Valor da cota = crédito ÷ (1 + taxa)<sup>prazo</sup> − Σ parcela ÷ (1 + taxa)<sup>prazo</sup> = {reais(r.vp_credito)} − {reais(r.vp_parcelas)} = <strong>{reais(r.valor_da_cota)}</strong>.
             </p>
             <p className="m-0 mt-2 text-tinta3">
               Total de parcelas sem desconto: {reais(r.total_das_parcelas, 0)}. Um aumento do spread desconta o crédito <em>e</em> as parcelas, e o efeito líquido depende do prazo: nem sempre derruba o valor da cota. Demonstração: não considera lance, seguro, fundo de reserva nem as regras de cada grupo.

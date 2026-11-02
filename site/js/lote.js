@@ -54,7 +54,7 @@ function leCancelada(c, { curvas, spreadPP }) {
   const r = cotaCancelada({ valor, meses, corrigido: corr.corrigido, correcaoPct: corr.correcaoPct, spreadPP }, curvas);
   if (!r) return { erro: "sem a curva do Tesouro nesta foto" };
   const a = preco === null ? null : avaliaPreco({ valorJusto: r.valor_presente, preco, custos });
-  const lei = preco === null ? null : leituraDoNegocio({ pagoHoje: preco + custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, meses });
+  const lei = preco === null ? null : leituraDoNegocio({ pagoHoje: preco + custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, anos: r.prazo_anos });
   return {
     entrada: { valor, meses, correcao: corr.rotulo, preco, custos },
     ...(lei ? { lucro: lei.lucro, lucro_pct: lei.lucro_pct, situacao: lei.situacao } : {}),

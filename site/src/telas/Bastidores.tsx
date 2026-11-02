@@ -236,6 +236,7 @@ function Como() {
           <ul className="m-0 mt-2 list-disc pl-5 text-[0.9rem] leading-relaxed text-tinta2">
             <li>A taxa para um prazo qualquer sai de uma interpolação entre os dois vencimentos vizinhos do Tesouro.</li>
             <li>O valor de hoje é o valor a receber dividido por (1 + taxa de desconto) elevado ao prazo em anos. A taxa de desconto é a do Tesouro mais o spread.</li>
+            <li>O prazo é contado como o Tesouro conta: dias úteis (sem fins de semana nem feriados nacionais) divididos por 252. Com essa contagem, o preço de um Tesouro Prefixado sai igual ao que o Tesouro publica; contar dias corridos erraria de 0,1% a 0,6%.</li>
             <li>O JavaScript do painel e o Python do robô fazem a mesma conta, e um teste compara os dois ao centavo com a foto de verdade.</li>
             <li>O Excel foi aberto no Excel de verdade para conferir que as fórmulas dão o mesmo resultado do painel.</li>
           </ul>

@@ -1,7 +1,12 @@
 // As contas do painel. A primeira parte repete src/radar_pricing/derivados.py (interpola, valor_presente,
 // monta_tabela); tests/test_site.py compara os dois lados ao centavo com uma foto de verdade. A segunda parte são
 // as calculadoras (cota cancelada, retorno de uma oferta, cota ativa): modelos simples de DEMONSTRAÇÃO, só com o que
-// a pessoa digita e as curvas do dia. Taxas em % ao ano (efetivas); 1 mês = 1/12 de ano; capitalização composta.
+// a pessoa digita e as curvas do dia. Taxas em % ao ano (efetivas); capitalização composta. O prazo de um valor a
+// receber daqui a N meses é contado como o Tesouro conta: dias úteis da data-base da curva até o mesmo dia N meses
+// depois, divididos por 252 (js/prazo.js). Só o que segue um índice por calendário (a correção mês a mês do precatório,
+// a taxa própria de correção) continua em meses corridos, 1 mês = 1/12 de ano.
+
+import { DIAS_UTEIS_NO_ANO, diasUteisDoPrazo } from "./prazo.js";
 
 /**
  * Taxa para o prazo `anos` por interpolação linear entre os dois vencimentos vizinhos.
@@ -24,10 +29,21 @@ export function interpola(pontos, anos) {
   throw new Error("prazo dentro da curva sem par de vencimentos vizinhos");
 }
 
-/** Valor de hoje de `valor` recebido daqui a `meses`; taxa efetiva ao ano, capitalização composta. */
-export function valorPresente(valor, taxaPct, meses) {
-  return valor / (1 + taxaPct / 100) ** (meses / 12);
+/** Valor de hoje de `valor` recebido daqui a `anos` (anos de 252 dias úteis); taxa efetiva ao ano, capitalização composta. */
+export function valorPresente(valor, taxaPct, anos) {
+  return valor / (1 + taxaPct / 100) ** anos;
 }
+
+const ehData = (s) => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+
+/** A curva serve para as contas: tem vencimentos e a data-base de onde o prazo é contado. */
+export const curvaUsavel = (c) => Boolean(c && c.pontos && c.pontos.length > 0 && ehData(c.base));
+
+/** Dias úteis de hoje (a data-base da curva) até o mesmo dia `meses` depois. */
+export const diasDoPrazo = (curva, meses) => diasUteisDoPrazo(curva.base, meses);
+
+/** O prazo em anos de 252 dias úteis: o que se interpola na curva e o expoente do desconto. */
+export const anosDoPrazo = (curva, meses) => diasDoPrazo(curva, meses) / DIAS_UTEIS_NO_ANO;
 
 /** Arredonda pelo valor binário exato, como o `round` do Python. Só um empate exato (0,125) sai diferente
  *  (JS sobe, Python vai para o par), e as contas de desconto não caem em empate. */
@@ -40,14 +56,17 @@ export function arredonda(x, casas) {
  * arredondados como o robô arredonda. `curva` é um item de derivados.ancoras; null se a foto não tem a curva.
  */
 export function desconta(curva, valorFace, meses, spreadPP) {
-  if (!curva || !curva.pontos || curva.pontos.length === 0) return null;
-  const [taxa, extrapolado] = interpola(curva.pontos, meses / 12);
+  if (!curvaUsavel(curva)) return null;
+  const dias = diasDoPrazo(curva, meses);
+  const anos = dias / DIAS_UTEIS_NO_ANO;
+  const [taxa, extrapolado] = interpola(curva.pontos, anos);
   const demo = taxa + spreadPP;
   return {
+    dias_uteis: dias,
     taxa_ancora: arredonda(taxa, 4),
     taxa_demonstracao: arredonda(demo, 4),
-    vp_ancora: arredonda(valorPresente(valorFace, taxa, meses), 2),
-    vp_demonstracao: arredonda(valorPresente(valorFace, demo, meses), 2),
+    vp_ancora: arredonda(valorPresente(valorFace, taxa, anos), 2),
+    vp_demonstracao: arredonda(valorPresente(valorFace, demo, anos), 2),
     extrapolado,
   };
 }
@@ -65,11 +84,12 @@ export function curvaDeSeteDiasAtras(curva) {
  */
 export function impactoNoPrazo(curva, meses, spreadPP, valor = 1000) {
   const antes = curvaDeSeteDiasAtras(curva);
-  if (!antes) return null;
-  const [taxaHoje] = interpola(curva.pontos, meses / 12);
-  const [taxaAntes] = interpola(antes.pontos, meses / 12);
-  const vpHoje = valorPresente(valor, taxaHoje + spreadPP, meses);
-  const vpAntes = valorPresente(valor, taxaAntes + spreadPP, meses);
+  if (!antes || !curvaUsavel(curva)) return null;
+  const anos = anosDoPrazo(curva, meses);
+  const [taxaHoje] = interpola(curva.pontos, anos);
+  const [taxaAntes] = interpola(antes.pontos, anos);
+  const vpHoje = valorPresente(valor, taxaHoje + spreadPP, anos);
+  const vpAntes = valorPresente(valor, taxaAntes + spreadPP, anos);
   return {
     meses,
     dias: curva.pontos[0].dias7 ?? 7,
@@ -86,8 +106,10 @@ const positivo = (x) => Number.isFinite(x) && x > 0;
 
 function escolheCurva(curvas, corrigido) {
   const c = corrigido ? curvas.real : curvas.nominal;
-  return c && c.pontos && c.pontos.length ? c : null;
+  return curvaUsavel(c) ? c : null;
 }
+
+const mesesInteiros = (m) => Number.isInteger(m) && m >= 1;
 
 /**
  * Cota cancelada: a administradora devolve `valor` daqui a `meses` (no fim do grupo). Quanto isso vale hoje?
@@ -102,13 +124,15 @@ export function cotaCancelada({ valor, meses, corrigido, correcaoPct = null, spr
   const propria = correcaoPct !== null && correcaoPct !== undefined;
   if (propria && !(Number.isFinite(correcaoPct) && correcaoPct > -100)) return null;
   const curva = escolheCurva(curvas, propria ? false : corrigido);
-  if (!curva || !positivo(valor) || !(meses >= 1) || !(spreadPP >= 0)) return null;
+  if (!curva || !positivo(valor) || !mesesInteiros(meses) || !(spreadPP >= 0)) return null;
   const um = (m, s) => {
-    const [ancora, extrapolado] = interpola(curva.pontos, m / 12);
+    const dias = diasDoPrazo(curva, m);
+    const anos = dias / DIAS_UTEIS_NO_ANO;
+    const [ancora, extrapolado] = interpola(curva.pontos, anos);
     const desconto = ancora + s;
     const noPagamento = propria ? valor * (1 + correcaoPct / 100) ** (m / 12) : valor;
-    const vp = valorPresente(noPagamento, desconto, m);
-    return { meses: m, spread: s, taxa_ancora: ancora, taxa_desconto: desconto, valor_no_pagamento: noPagamento, valor_presente: vp, pct_do_valor: (vp / valor) * 100, extrapolado };
+    const vp = valorPresente(noPagamento, desconto, anos);
+    return { meses: m, dias_uteis: dias, prazo_anos: anos, spread: s, taxa_ancora: ancora, taxa_desconto: desconto, valor_no_pagamento: noPagamento, valor_presente: vp, pct_do_valor: (vp / valor) * 100, extrapolado };
   };
   return {
     ...um(meses, spreadPP),
@@ -124,15 +148,19 @@ export function cotaCancelada({ valor, meses, corrigido, correcaoPct = null, spr
  */
 export function retornoDaOferta({ preco, valor, meses, corrigido, alvoPct, spreadPP, custos = 0 }, curvas, cdiAnualPct) {
   const curva = escolheCurva(curvas, corrigido);
-  if (!curva || !positivo(preco) || !positivo(valor) || !(meses >= 1) || !(spreadPP >= 0) || !(custos >= 0)) return null;
-  const [ancora, extrapolado] = interpola(curva.pontos, meses / 12);
+  if (!curva || !positivo(preco) || !positivo(valor) || !mesesInteiros(meses) || !(spreadPP >= 0) || !(custos >= 0)) return null;
+  const dias = diasDoPrazo(curva, meses);
+  const anos = dias / DIAS_UTEIS_NO_ANO;
+  const [ancora, extrapolado] = interpola(curva.pontos, anos);
   const pago = preco + custos; // o que sai do bolso: o preço e os custos de transferência
-  const retorno = ((valor / pago) ** (12 / meses) - 1) * 100;
+  const retorno = ((valor / pago) ** (1 / anos) - 1) * 100; // ao ano de 252 dias úteis, como as taxas do Tesouro
   const alvo = Number.isFinite(alvoPct) ? alvoPct : ancora + spreadPP;
-  const precoMaximo = valor / (1 + alvo / 100) ** (meses / 12);
+  const precoMaximo = valor / (1 + alvo / 100) ** anos;
   const referencias = [{ nome: corrigido ? "Tesouro IPCA+ no prazo (acima do IPCA)" : "Tesouro Prefixado no prazo", taxa: ancora }];
   if (!corrigido && Number.isFinite(cdiAnualPct)) referencias.push({ nome: "CDI de hoje (anualizado)", taxa: cdiAnualPct });
   return {
+    dias_uteis: dias,
+    prazo_anos: anos,
     retorno_aa: retorno,
     retorno_total: (valor / pago - 1) * 100,
     pago,
@@ -166,7 +194,7 @@ export const MAX_PARCELAS = 240; // 20 anos: o maior prazo de um grupo de imóve
  * regras de cada grupo.
  */
 export function cotaAtiva({ credito, parcela, parcelas, contemplacao, spreadPP }, curvaReal) {
-  const curva = curvaReal && curvaReal.pontos && curvaReal.pontos.length ? curvaReal : null;
+  const curva = curvaUsavel(curvaReal) ? curvaReal : null;
   if (
     !curva || !positivo(credito) || !positivo(parcela) || !(spreadPP >= 0) ||
     !Number.isInteger(parcelas) || parcelas < 1 || parcelas > MAX_PARCELAS ||
@@ -176,9 +204,10 @@ export function cotaAtiva({ credito, parcela, parcelas, contemplacao, spreadPP }
   }
   let extrapolado = false;
   const fator = (m, s) => {
-    const [ancora, ext] = interpola(curva.pontos, m / 12);
+    const anos = anosDoPrazo(curva, m);
+    const [ancora, ext] = interpola(curva.pontos, anos);
     extrapolado ||= ext;
-    return (1 + (ancora + s) / 100) ** (m / 12);
+    return (1 + (ancora + s) / 100) ** anos;
   };
   const vpDasParcelas = (s) => {
     let soma = 0;
@@ -212,16 +241,17 @@ export const CHOQUES_PP = [-3, -2, -1, 0, 1, 2, 3];
  * @returns {{ meses: number, taxa: number, base: number, celulas: { choque: number, valor: number, variacao_pct: number }[] }[] | null}
  */
 export function sensibilidade(curva, prazos, spreadPP, valor = 1000, choques = CHOQUES_PP) {
-  if (!curva || !curva.pontos || curva.pontos.length === 0 || !positivo(valor) || !(spreadPP >= 0)) return null;
+  if (!curvaUsavel(curva) || !positivo(valor) || !(spreadPP >= 0)) return null;
   return prazos.map((meses) => {
-    const [taxa] = interpola(curva.pontos, meses / 12);
-    const base = valorPresente(valor, taxa + spreadPP, meses);
+    const anos = anosDoPrazo(curva, meses);
+    const [taxa] = interpola(curva.pontos, anos);
+    const base = valorPresente(valor, taxa + spreadPP, anos);
     return {
       meses,
       taxa,
       base,
       celulas: choques.map((choque) => {
-        const v = valorPresente(valor, Math.max(0, taxa + spreadPP + choque), meses);
+        const v = valorPresente(valor, Math.max(0, taxa + spreadPP + choque), anos);
         return { choque, valor: v, variacao_pct: (v / base - 1) * 100 };
       }),
     };
@@ -259,26 +289,27 @@ export const MARGEM_MINIMA_PCT = 5;
  *  - `saidasFuturas`: o que ainda sai depois, sem descontar (as parcelas de uma cota ativa);
  *  - `recebe`: o que entra (valor a receber, crédito, precatório depois das retenções);
  *  - `valorJusto`: o valor de hoje do que entra, já descontado pela taxa exigida (Tesouro mais spread) e já sem as saídas
- *    futuras: o máximo que dá para pagar hoje e ainda ganhar o retorno exigido.
+ *    futuras: o máximo que dá para pagar hoje e ainda ganhar o retorno exigido;
+ *  - `anos`: o prazo até receber, em anos de 252 dias úteis (o `prazo_anos` das calculadoras), para o retorno ao ano.
  * `lucro` é em dinheiro, sem descontar nada. `folga` é o que sobra (ou falta) sobre o retorno exigido, em valor de hoje.
  * `situacao`: "ruim" (folga negativa: rende menos que o exigido), "limite" (folga menor que a margem mínima) ou "bom".
  * Pode haver lucro em dinheiro e mesmo assim "ruim": ganhar menos que o Tesouro mais o spread também é perder.
  * @returns {{ total_pago: number, lucro: number, lucro_pct: number, folga: number, folga_pct: number, retorno_aa: number | null, situacao: "bom" | "limite" | "ruim" } | null}
  */
-export function leituraDoNegocio({ pagoHoje, saidasFuturas = 0, recebe, valorJusto, meses = /** @type {number | null} */ (null), margemPct = MARGEM_MINIMA_PCT }) {
+export function leituraDoNegocio({ pagoHoje, saidasFuturas = 0, recebe, valorJusto, anos = /** @type {number | null} */ (null), margemPct = MARGEM_MINIMA_PCT }) {
   if (![pagoHoje, recebe, valorJusto].every(Number.isFinite) || !(pagoHoje > 0) || !(saidasFuturas >= 0) || !(margemPct >= 0)) return null;
   const totalPago = pagoHoje + saidasFuturas;
   const lucro = recebe - totalPago;
   const folga = valorJusto - pagoHoje;
   const folgaPct = (folga / pagoHoje) * 100;
-  const comRetorno = saidasFuturas === 0 && Number.isFinite(meses) && meses >= 1 && recebe > 0;
+  const comRetorno = saidasFuturas === 0 && Number.isFinite(anos) && anos > 0 && recebe > 0;
   return {
     total_pago: totalPago,
     lucro,
     lucro_pct: (lucro / totalPago) * 100,
     folga,
     folga_pct: folgaPct,
-    retorno_aa: comRetorno ? ((recebe / pagoHoje) ** (12 / meses) - 1) * 100 : null,
+    retorno_aa: comRetorno ? ((recebe / pagoHoje) ** (1 / anos) - 1) * 100 : null,
     situacao: folga < 0 ? "ruim" : folgaPct < margemPct ? "limite" : "bom",
   };
 }
@@ -321,7 +352,7 @@ export function fatorDeCorrecao({ meses, indice, jurosPP = 0, propriaPct = 0 }, 
  * compra. Modelo simples de DEMONSTRAÇÃO: não sabe a ordem de pagamento, o ente devedor nem a regra de cada caso.
  */
 export function precatorio({ valor, meses, indice, jurosPP = 0, propriaPct = 0, retencaoPct = 0, desagioPct = null, custos = 0, spreadPP }, curvaNominal, caminho) {
-  const curva = curvaNominal && curvaNominal.pontos && curvaNominal.pontos.length ? curvaNominal : null;
+  const curva = curvaUsavel(curvaNominal) ? curvaNominal : null;
   if (!curva || !positivo(valor) || !Number.isInteger(meses) || meses < 1 || meses > MAX_MESES_PRECATORIO || !(spreadPP >= 0)) return null;
   if (!(jurosPP >= 0) || !(retencaoPct >= 0 && retencaoPct < 100) || !(custos >= 0)) return null;
   if (desagioPct !== null && !(desagioPct >= 0 && desagioPct < 100)) return null;
@@ -329,9 +360,11 @@ export function precatorio({ valor, meses, indice, jurosPP = 0, propriaPct = 0, 
   if (fator === null) return null;
   const esperado = valor * fator;
   const liquido = esperado * (1 - retencaoPct / 100);
-  const [ancora, extrapolado] = interpola(curva.pontos, meses / 12);
+  const dias = diasDoPrazo(curva, meses);
+  const anos = dias / DIAS_UTEIS_NO_ANO;
+  const [ancora, extrapolado] = interpola(curva.pontos, anos);
   const desconto = ancora + spreadPP;
-  const vp = valorPresente(liquido, desconto, meses);
+  const vp = valorPresente(liquido, desconto, anos);
   let oferta = null;
   if (desagioPct !== null) {
     const preco = valor * (1 - desagioPct / 100);
@@ -340,7 +373,7 @@ export function precatorio({ valor, meses, indice, jurosPP = 0, propriaPct = 0, 
       preco,
       pago,
       custos,
-      retorno_aa: ((liquido / pago) ** (12 / meses) - 1) * 100,
+      retorno_aa: ((liquido / pago) ** (1 / anos) - 1) * 100,
       retorno_total: (liquido / pago - 1) * 100,
       folga: vp - pago,
       preco_maximo: vp - custos,
@@ -348,6 +381,8 @@ export function precatorio({ valor, meses, indice, jurosPP = 0, propriaPct = 0, 
     };
   }
   return {
+    dias_uteis: dias,
+    prazo_anos: anos,
     fator,
     correcao_total_pct: (fator - 1) * 100,
     correcao_aa_pct: (fator ** (12 / meses) - 1) * 100,

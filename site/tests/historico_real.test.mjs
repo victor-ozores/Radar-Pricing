@@ -3,19 +3,30 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import { anosDoPrazoIngenuo, diasUteisIngenuo } from "./calendario_ingenuo.mjs";
 import { ancoraNoTempo, custoDoDinheiro, dataAteO, focusNoTempo, titulosDoTesouro } from "../js/historico.js";
 import { somaDias } from "../js/foto.js";
 import * as modelo from "../js/modelo.js";
 
 const foto = JSON.parse(readFileSync(new URL("./fixtures/foto-2026-10-31.json", import.meta.url), "utf8"));
 
-test("a âncora de 3 anos de hoje é a mesma que o robô calculou", () => {
-  const linha = foto.derivados.valor_presente.find((l) => l.meses === 36);
+test("a âncora de 3 anos de hoje é a que sai dos registros brutos, com o prazo em dias úteis", () => {
+  // a tabela guardada nesta foto de 31/10 é de antes da contagem em dias úteis (dias corridos ÷ 365,25): por isso a conta é
+  // refeita aqui, só com os registros brutos e a contagem dia a dia, e não lida da tabela
   for (const [titulo, chave] of [["Tesouro Prefixado", "nominal"], ["Tesouro IPCA+", "real"]]) {
     const serie = ancoraNoTempo(foto, titulo, 36);
     assert.ok(serie.length >= 20, `${titulo}: série curta demais (${serie.length})`);
-    assert.equal(serie.at(-1).data, foto.derivados.ancoras[chave === "nominal" ? "curva_nominal" : "curva_real"].base);
-    assert.ok(Math.abs(serie.at(-1).valor - linha[chave].taxa_ancora) < 0.00006, `${titulo}: ${serie.at(-1).valor} contra ${linha[chave].taxa_ancora}`);
+    const base = foto.derivados.ancoras[chave === "nominal" ? "curva_nominal" : "curva_real"].base;
+    assert.equal(serie.at(-1).data, base);
+    const pontos = foto.registros
+      .filter((r) => r.serie === "tesouro_taxa_compra" && r.data_ref === base && r.dimensao.startsWith(`titulo=${titulo}|`))
+      .map((r) => ({ anos: diasUteisIngenuo(base, r.dimensao.split("vencimento=")[1]) / 252, taxa: r.valor }))
+      .filter((p) => p.anos > 0)
+      .sort((a, b) => a.anos - b.anos);
+    const x = anosDoPrazoIngenuo(base, 36);
+    const i = pontos.findIndex((p, k) => k < pontos.length - 1 && p.anos <= x && x <= pontos[k + 1].anos);
+    const taxa = pontos[i].taxa + ((x - pontos[i].anos) / (pontos[i + 1].anos - pontos[i].anos)) * (pontos[i + 1].taxa - pontos[i].taxa);
+    assert.ok(Math.abs(serie.at(-1).valor - taxa) < 1e-9, `${titulo}: ${serie.at(-1).valor} contra ${taxa}`);
   }
 });
 

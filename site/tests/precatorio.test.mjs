@@ -5,6 +5,7 @@ import test from "node:test";
 import { agioDaCota, avaliaPreco, fatorDeCorrecao, MAX_MESES_PRECATORIO, precatorio, retornoDaOferta } from "../js/calc.js";
 import { mesesEntre, somaMeses } from "../js/foto.js";
 import { caminhoDeCorrecao, curvas as curvasDaFoto } from "../js/modelo.js";
+import { anosDoPrazoIngenuo } from "./calendario_ingenuo.mjs";
 
 const foto = JSON.parse(readFileSync(new URL("./fixtures/foto-2026-10-31.json", import.meta.url), "utf8"));
 const perto = (a, b, tol = 1e-9) => assert.ok(Math.abs(a - b) < tol, `${a} contra ${b}`);
@@ -53,16 +54,19 @@ test("taxa própria, sem correção e entradas ruins", () => {
 });
 
 // --------------------------------------------------------------------------------------------- o precatório
-const curva = { pontos: [{ anos: 1, taxa: 10 }, { anos: 3, taxa: 12 }] };
+const BASE = "2026-10-29";
+const A = (meses) => anosDoPrazoIngenuo(BASE, meses); // anos de 252 dias úteis, contados dia a dia
+const curva = { base: BASE, pontos: [{ anos: 1, taxa: 10 }, { anos: 3, taxa: 12 }] };
 
-test("precatório em forma fechada: valor × correção × (1 − retenção) ÷ (1 + Tesouro + spread)^(meses ÷ 12)", () => {
+test("precatório em forma fechada: valor × correção × (1 − retenção) ÷ (1 + Tesouro + spread)^(prazo em anos úteis)", () => {
   const r = precatorio({ valor: 100000, meses: 24, indice: "propria", propriaPct: 8, retencaoPct: 10, spreadPP: 5 }, curva, null);
   perto(r.fator, 1.08 ** 2);
   perto(r.valor_esperado, 100000 * 1.08 ** 2);
   perto(r.liquido_esperado, 100000 * 1.08 ** 2 * 0.9);
-  perto(r.taxa_ancora, 11); // 2 anos: no meio de 10% (1 ano) e 12% (3 anos)
-  perto(r.taxa_desconto, 16);
-  perto(r.valor_presente, (100000 * 1.08 ** 2 * 0.9) / 1.16 ** 2);
+  perto(r.taxa_ancora, 10 + (A(24) - 1)); // entre 10% (1 ano) e 12% (3 anos), em anos de 252 dias úteis
+  perto(r.taxa_desconto, 10 + (A(24) - 1) + 5);
+  perto(r.valor_presente, (100000 * 1.08 ** 2 * 0.9) / (1 + (10 + (A(24) - 1) + 5) / 100) ** A(24));
+  perto(r.prazo_anos, A(24));
   perto(r.pct_do_valor + r.desagio_justo_pct, 100);
   perto(r.correcao_aa_pct, 8);
   assert.equal(r.oferta, null);
@@ -75,7 +79,7 @@ test("oferta de compra: o preço sai do deságio, o retorno do que chega ÷ o qu
   const liquido = 100000 * 1.08 ** 2 * 0.9;
   perto(r.oferta.preco, 60000);
   perto(r.oferta.pago, 61000);
-  perto(r.oferta.retorno_aa, ((liquido / 61000) ** (1 / 2) - 1) * 100);
+  perto(r.oferta.retorno_aa, ((liquido / 61000) ** (1 / A(24)) - 1) * 100);
   perto(r.oferta.folga, r.valor_presente - 61000);
   perto(r.oferta.preco_maximo, r.valor_presente - 1000);
   // pagando exatamente o preço máximo, o retorno é a taxa de desconto
@@ -156,7 +160,7 @@ test("ágio nas duas bases (crédito e saldo devedor) e o custo total de quem co
 });
 
 test("retorno da oferta com custos: o que sai do bolso é preço + custos, e sem custos nada muda", () => {
-  const nominal = { pontos: [{ anos: 1, taxa: 10 }, { anos: 3, taxa: 12 }] };
+  const nominal = { base: BASE, pontos: [{ anos: 1, taxa: 10 }, { anos: 3, taxa: 12 }] };
   const curvas = { nominal, real: null };
   const base = { preco: 38000, valor: 50000, meses: 24, corrigido: false, spreadPP: 5 };
   const sem = retornoDaOferta(base, curvas, 13);

@@ -33,7 +33,7 @@ export function Cancelada() {
     [e.valor, meses, indice, e.propriaPct, spread, curvas],
   );
   const curva = indice === "ipca" ? curvas.real : curvas.nominal;
-  const leitura = r && meses && e.temPreco ? leituraDoNegocio({ pagoHoje: e.preco + e.custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, meses }) : null;
+  const leitura = r && meses && e.temPreco ? leituraDoNegocio({ pagoHoje: e.preco + e.custos, recebe: r.valor_no_pagamento, valorJusto: r.valor_presente, anos: r.prazo_anos }) : null;
   const textoDoIndice = indice === "ipca" ? "corrigido pela inflação" : indice === "propria" ? `corrigido a ${num(e.propriaPct, 2)}% ao ano` : "sem correção";
   const resumo = () =>
     [
@@ -109,13 +109,14 @@ export function Cancelada() {
             <p className="m-0">
               Taxa do Tesouro {indice === "ipca" ? "IPCA+" : "Prefixado"} para {prazoEmTexto(meses)}: {pct(r.taxa_ancora, 4)} (interpolada entre os vencimentos vizinhos). Somando o spread de {num(spread, 1)} p.p., a taxa de desconto é {pct(r.taxa_desconto, 4)} ao ano.
             </p>
+            <p className="m-0 mt-2">Prazo: {r.dias_uteis} dias úteis ÷ 252 = {num(r.prazo_anos, 4)} anos (de 252 dias úteis cada; o Tesouro conta assim: sem fins de semana nem feriados nacionais).</p>
             {indice === "propria" ? (
               <p className="m-0 mt-2 num">
                 {reais(e.valor)} × (1 + {num(e.propriaPct, 2)}%)<sup>{meses}/12</sup> = {reais(r.valor_no_pagamento)} no pagamento
               </p>
             ) : null}
             <p className="m-0 mt-2 num">
-              {reais(indice === "propria" ? r.valor_no_pagamento : e.valor)} ÷ (1 + {num(r.taxa_desconto, 4)}%)<sup>{meses}/12</sup> = <strong>{reais(r.valor_presente)}</strong>
+              {reais(indice === "propria" ? r.valor_no_pagamento : e.valor)} ÷ (1 + {num(r.taxa_desconto, 4)}%)<sup>{num(r.prazo_anos, 4)}</sup> = <strong>{reais(r.valor_presente)}</strong>
             </p>
             <p className="m-0 mt-2 text-tinta3">{indice === "ipca" ? "Com correção pelo IPCA, o valor e a taxa são reais: o resultado já está em reais de hoje." : indice === "propria" ? "Com a sua taxa, o valor cresce até a data e a conta usa a curva do Tesouro Prefixado (taxa fixa), porque a correção já embute a inflação." : "Sem correção, a conta usa a curva do Tesouro Prefixado (taxa fixa)."} Exemplo de demonstração: não é preço nem recomendação.</p>
           </ComoFoiCalculado>

@@ -40,7 +40,7 @@ export function Precatorio() {
   const base = { valor: e.valor, indice, jurosPP: e.jurosPP, propriaPct: e.propriaPct, retencaoPct: e.retencaoPct, custos: e.custos, spreadPP: spread };
   const conta = (m: number, i: Indice = indice, desagio: number | null = null) => precatorio({ ...base, meses: m, indice: i, desagioPct: desagio as any }, curvas.nominal, caminho);
   const r = useMemo(() => (meses ? conta(meses, indice, e.temOferta ? e.desagioPct : null) : null), [meses, indice, e, spread, curvas.nominal, caminho]); // eslint-disable-line react-hooks/exhaustive-deps
-  const leitura = r?.oferta && meses ? leituraDoNegocio({ pagoHoje: r.oferta.pago, recebe: r.liquido_esperado, valorJusto: r.valor_presente, meses }) : null;
+  const leitura = r?.oferta && meses ? leituraDoNegocio({ pagoHoje: r.oferta.pago, recebe: r.liquido_esperado, valorJusto: r.valor_presente, anos: r.prazo_anos }) : null;
   const animar = !(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const serie = useMemo(() => PRAZOS_DO_GRAFICO.map((m) => ({ meses: m, desagio: conta(m)?.desagio_justo_pct ?? null })).filter((p) => p.desagio !== null), [e, spread, indice, curvas.nominal, caminho]); // eslint-disable-line react-hooks/exhaustive-deps
   const semDado = indice === "selic" && caminho.selicDoAno(caminho.anoBase) === null ? "a Selic" : indice === "ipca" && caminho.ipcaDoAno(caminho.anoBase) === null ? "o IPCA esperado" : null;
@@ -184,10 +184,10 @@ export function Precatorio() {
               {reais(e.valor)} × {num(r.fator, 6)}{e.retencaoPct > 0 ? ` × (1 − ${num(e.retencaoPct, 1)}%)` : ""} = {reais(r.liquido_esperado)}
             </p>
             <p className="m-0 mt-2">
-              <strong>2. Valor de hoje.</strong> Taxa do Tesouro Prefixado para {prazoEmTexto(meses)}: {pct(r.taxa_ancora, 4)}. Com o spread de {num(spread, 1)} p.p., a taxa de desconto é {pct(r.taxa_desconto, 4)} ao ano.
+              <strong>2. Valor de hoje.</strong> Taxa do Tesouro Prefixado para {prazoEmTexto(meses)}: {pct(r.taxa_ancora, 4)}. Com o spread de {num(spread, 1)} p.p., a taxa de desconto é {pct(r.taxa_desconto, 4)} ao ano. Prazo: {r.dias_uteis} dias úteis ÷ 252 = {num(r.prazo_anos, 4)} anos (de 252 dias úteis cada; o Tesouro conta assim: sem fins de semana nem feriados nacionais).
             </p>
             <p className="m-0 mt-2 num">
-              {reais(r.liquido_esperado)} ÷ (1 + {num(r.taxa_desconto, 4)}%)<sup>{meses}/12</sup> = <strong>{reais(r.valor_presente)}</strong>
+              {reais(r.liquido_esperado)} ÷ (1 + {num(r.taxa_desconto, 4)}%)<sup>{num(r.prazo_anos, 4)}</sup> = <strong>{reais(r.valor_presente)}</strong>
             </p>
             <p className="m-0 mt-2 text-tinta3">Usa a curva Prefixada porque a correção já embute inflação: o valor esperado está em reais do dia do pagamento. Não considera ordem de pagamento, risco do ente devedor nem litígios.</p>
             {r.oferta ? (

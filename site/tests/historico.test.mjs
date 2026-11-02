@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { anosDoPrazoIngenuo, diasUteisIngenuo } from "./calendario_ingenuo.mjs";
 import { ancoraNoTempo, cdiAnualizado, creditoNoTempo, custoDoDinheiro, dataAteO, focusNoTempo, serieDe, titulosDoTesouro } from "../js/historico.js";
 
 const reg = (fonte, serie, dimensao, data_ref, valor) => ({ fonte, serie, dimensao, data_ref, valor, unidade: "", descricao: "" });
@@ -75,7 +76,12 @@ test("âncora no tempo: interpola a curva de cada dia, e dia com um vencimento s
   const serie = ancoraNoTempo(dois, "Tesouro Prefixado", 24); // 2 anos: no meio dos dois vencimentos de 1 e 3 anos
   assert.equal(serie.length, 1);
   assert.equal(serie[0].data, "2026-01-01");
-  assert.ok(Math.abs(serie[0].valor - 12) < 0.01, `esperava ~12, veio ${serie[0].valor}`);
+  // o prazo é contado em dias úteis a partir do próprio dia da curva (2026-01-01), não do dia de hoje
+  const a1 = diasUteisIngenuo("2026-01-01", "2027-01-01") / 252;
+  const a2 = diasUteisIngenuo("2026-01-01", "2029-01-01") / 252;
+  const esperado = 10 + ((anosDoPrazoIngenuo("2026-01-01", 24) - a1) / (a2 - a1)) * 4;
+  assert.ok(Math.abs(serie[0].valor - esperado) < 1e-9, `esperava ${esperado}, veio ${serie[0].valor}`);
+  assert.ok(Math.abs(esperado - 12) < 0.05);
   assert.deepEqual(ancoraNoTempo(dois, "Não existe", 24), []);
 });
 

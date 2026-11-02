@@ -3,10 +3,12 @@ import test from "node:test";
 
 import { fraseDaCurva, fraseDasBarras, heroDoDia, leituraDoDia, metricaDoPanorama, prazoDeReferencia } from "../js/leitura.js";
 import { cotasDoSetor } from "../js/modelo.js";
+import { anosDoPrazoIngenuo } from "./calendario_ingenuo.mjs";
 
 const ponto = (anos, taxa, ref7) => ({ vencimento: "2030-01-01", anos, taxa, ref7, dias7: ref7 === null ? null : 7 });
 /** Uma curva simples: sobe de 13 para 15 e, 7 dias antes, estava 1 ponto abaixo. */
-const curva = (taxas, ref = (t) => t - 1) => ({ titulo: "t", base: "2026-10-29", pontos: taxas.map((t, i) => ponto(i + 1, t, ref(t))) });
+const MESES = [6, 12, 24, 36, 48]; // os prazos da tabela: cada ponto da curva fica em um deles, então a taxa do prazo é a do ponto
+const curva = (taxas, ref = (t) => t - 1) => ({ titulo: "t", base: "2026-10-29", pontos: taxas.map((t, i) => ponto(anosDoPrazoIngenuo("2026-10-29", MESES[i]), t, ref(t))) });
 
 const linhaDoSetor = (descricao, valor, delta, unidade = "%", data = "2026-06-30") => ({ serie: "x", grupo: "g", descricao, unidade, data, valor, data_anterior: "2026-03-31", anterior: valor - delta, delta });
 

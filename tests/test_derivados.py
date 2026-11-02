@@ -15,6 +15,7 @@ from radar_pricing.coleta import coletar_tudo
 from radar_pricing.config import ParamsDerivados, carrega
 from radar_pricing.datas import parse_br
 from radar_pricing.modelo import Registro
+from tests import calendario_ingenuo as ing
 from tests.conftest import PASTA
 
 RAIZ = PASTA.parent.parent
@@ -71,16 +72,18 @@ def test_a_referencia_e_a_mais_nova_que_tenha_pelo_menos_o_prazo_pedido():
 
 # ------------------------------------------------------------------------------------------------ contas simples
 def test_valor_presente_bate_com_a_conta_de_cabeca():
-    assert d.valor_presente(1000, 10, 12) == pytest.approx(909.0909, abs=1e-4)  # 1000 / 1,10
-    assert d.valor_presente(1000, 10, 24) == pytest.approx(826.4463, abs=1e-4)  # 1000 / 1,10^2
-    assert d.valor_presente(1000, 0, 36) == 1000
-    assert d.valor_presente(1000, 21, 6) == pytest.approx(1000 / 1.21**0.5)  # meio ano = raiz do fator anual
+    assert d.valor_presente(1000, 10, 1) == pytest.approx(909.0909, abs=1e-4)  # 1000 / 1,10
+    assert d.valor_presente(1000, 10, 2) == pytest.approx(826.4463, abs=1e-4)  # 1000 / 1,10^2
+    assert d.valor_presente(1000, 0, 3) == 1000
+    assert d.valor_presente(1000, 21, 0.5) == pytest.approx(
+        1000 / 1.21**0.5
+    )  # meio ano = raiz do fator anual
 
 
 def test_valor_presente_cai_com_o_prazo_e_com_a_taxa():
-    prazos = [d.valor_presente(1000, 12, m) for m in (6, 12, 24, 48)]
+    prazos = [d.valor_presente(1000, 12, a) for a in (0.5, 1, 2, 4)]
     assert prazos == sorted(prazos, reverse=True)
-    assert d.valor_presente(1000, 20, 24) < d.valor_presente(1000, 10, 24)
+    assert d.valor_presente(1000, 20, 2) < d.valor_presente(1000, 10, 2)
 
 
 def test_cdi_anualizado():
@@ -130,6 +133,12 @@ def test_as_curvas_do_tesouro_vem_ordenadas_e_na_data_base_mais_nova(foto):
         assert curva["titulo"] == titulo and len(curva["pontos"]) >= 4
         anos = [p["anos"] for p in curva["pontos"]]
         assert anos == sorted(anos) and anos[0] > 0
+        base = date.fromisoformat(curva["base"])
+        for p in curva[
+            "pontos"
+        ]:  # o prazo é de dias úteis, base 252 (conferido dia a dia, sem a conta do pacote)
+            assert p["dias_uteis"] == ing.dias_uteis(base, date.fromisoformat(p["vencimento"]))
+            assert p["anos"] == p["dias_uteis"] / 252
         assert (
             curva["base"]
             == max(r.data_ref for r in foto.registros if r.serie == "tesouro_taxa_compra").isoformat()
@@ -151,7 +160,13 @@ def test_tabela_de_valor_presente_na_foto(foto, cfg):
     # a curva real não chega aos prazos curtos: tem de dizer que extrapolou, e só nesses
     primeiro_real = foto.derivados["ancoras"]["curva_real"]["pontos"][0]["anos"]
     for x in linhas:
-        assert x["real"]["extrapolado"] == (x["anos"] < primeiro_real)
+        assert x["real"]["extrapolado"] == (x["real"]["dias_uteis"] / 252 < primeiro_real)
+    # o prazo de cada linha são os dias úteis de hoje até o mesmo dia `meses` depois
+    for chave in ("nominal", "real"):
+        base = foto.derivados["ancoras"][f"curva_{chave}"]["base"]
+        assert [x[chave]["dias_uteis"] / 252 for x in linhas] == [
+            ing.anos_do_prazo(base, x["meses"]) for x in linhas
+        ]
 
 
 def test_conta_a_mao_contra_o_csv_do_tesouro_e_o_cdi_do_dia(foto, cli, cfg):
@@ -165,11 +180,15 @@ def test_conta_a_mao_contra_o_csv_do_tesouro_e_o_cdi_do_dia(foto, cli, cfg):
         for r in linhas
         if r["Tipo Titulo"] == "Tesouro Prefixado" and parse_br(r["Data Base"]) == base
     )
-    anos = [((v - base).days / 365.25, t) for v, t in ltn]
-    (a1, t1), (a2, t2) = next((p, q) for p, q in pairwise(anos) if p[0] <= 1.0 <= q[0])
-    taxa_12m = t1 + (1.0 - a1) / (a2 - a1) * (t2 - t1)
-    esperado_vp = round(1000 / (1 + taxa_12m / 100), 2)
-    esperado_demo = round(1000 / (1 + (taxa_12m + cfg.derivados.spread_demonstracao_pp) / 100), 2)
+    anos = [(ing.dias_uteis(base, v) / 252, t) for v, t in ltn]
+    prazo_12m = ing.anos_do_prazo(base.isoformat(), 12)  # os dias úteis até o mesmo dia, um ano depois
+    anos = [(ing.dias_uteis(base, v) / 252, t) for v, t in ltn]
+    (a1, t1), (a2, t2) = next((p, q) for p, q in pairwise(anos) if p[0] <= prazo_12m <= q[0])
+    taxa_12m = t1 + (prazo_12m - a1) / (a2 - a1) * (t2 - t1)
+    esperado_vp = round(1000 / (1 + taxa_12m / 100) ** prazo_12m, 2)
+    esperado_demo = round(
+        1000 / (1 + (taxa_12m + cfg.derivados.spread_demonstracao_pp) / 100) ** prazo_12m, 2
+    )
     linha = next(x for x in foto.derivados["valor_presente"] if x["meses"] == 12)["nominal"]
     assert linha["taxa_ancora"] == pytest.approx(taxa_12m, abs=1e-4)
     assert linha["vp_ancora"] == esperado_vp and linha["vp_demonstracao"] == esperado_demo

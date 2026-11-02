@@ -14,10 +14,9 @@ from typing import Any
 
 from .config import ParamsDerivados
 from .modelo import Registro
+from .prazo import DIAS_UTEIS_NO_ANO, anos_uteis, dias_uteis, dias_uteis_do_prazo
 
-DIAS_UTEIS_NO_ANO = 252
 OLHADAS = (1, 7, 30)  # variação em 1, 7 e 30 dias
-DIAS_NO_ANO = 365.25  # só para medir o prazo de um título (eixo da interpolação), não para descontar
 
 Obs = list[tuple[date, float]]
 
@@ -135,7 +134,8 @@ def cdi_anualizado(cdi_diario_pct: float) -> float:
 
 
 def monta_curva(registros: list[Registro], titulo: str) -> dict[str, Any] | None:
-    """Pontos (vencimento, prazo em anos, taxa de compra) de um título do Tesouro, na data base mais nova."""
+    """Pontos (vencimento, prazo, taxa de compra) de um título do Tesouro, na data base mais nova. O prazo
+    é contado em dias úteis e dado em anos de 252 dias úteis (`anos`), como o Tesouro cota a taxa."""
     pontos = [
         r
         for r in registros
@@ -147,9 +147,16 @@ def monta_curva(registros: list[Registro], titulo: str) -> dict[str, Any] | None
     saida = []
     for r in sorted((r for r in pontos if r.data_ref == base), key=lambda r: r.dimensao):
         vencimento = date.fromisoformat(r.dimensao.split("vencimento=")[1])
-        anos = (vencimento - base).days / DIAS_NO_ANO
-        if anos > 0:
-            saida.append({"vencimento": vencimento.isoformat(), "anos": anos, "taxa": r.valor})
+        dias = dias_uteis(base, vencimento)
+        if dias > 0:
+            saida.append(
+                {
+                    "vencimento": vencimento.isoformat(),
+                    "dias_uteis": dias,
+                    "anos": anos_uteis(dias),
+                    "taxa": r.valor,
+                }
+            )
     saida.sort(key=lambda p: p["anos"])
     return {"titulo": titulo, "base": base.isoformat(), "pontos": saida} if saida else None
 
@@ -168,10 +175,10 @@ def interpola(pontos: list[dict[str, Any]], anos: float) -> tuple[float, bool]:
     raise AssertionError("prazo dentro da curva sem par de vencimentos vizinhos")  # pragma: no cover
 
 
-def valor_presente(valor: float, taxa_pct: float, meses: int) -> float:
-    """Valor de hoje de `valor` recebido daqui a `meses`, taxa efetiva ao ano, capitalização composta
-    (1 mês = 1/12 de ano, o mesmo que 21 dias úteis na base 252)."""
-    return valor / (1 + taxa_pct / 100) ** (meses / 12)
+def valor_presente(valor: float, taxa_pct: float, anos: float) -> float:
+    """Valor de hoje de `valor` recebido daqui a `anos` (anos de 252 dias úteis, veja prazo.py), taxa
+    efetiva ao ano, capitalização composta."""
+    return valor / (1 + taxa_pct / 100) ** anos
 
 
 def monta_tabela(
@@ -179,7 +186,8 @@ def monta_tabela(
 ) -> list[dict[str, Any]]:
     """Valor presente de `valor_face` recebido em cada prazo: (a) em R$ fixos, descontado pela curva de
     Prefixados; (b) corrigido pelo IPCA, em reais de hoje, descontado pela curva de IPCA+. Cada um na taxa da
-    âncora e na taxa de demonstração (âncora + spread)."""
+    âncora e na taxa de demonstração (âncora + spread). O prazo de cada linha é contado em dias úteis a
+    partir da data-base da própria curva: `meses` depois, no mesmo dia do mês."""
     linhas = []
     for meses in p.prazos_meses:
         linha: dict[str, Any] = {"meses": meses, "anos": round(meses / 12, 4)}
@@ -187,13 +195,16 @@ def monta_tabela(
             if curva is None:
                 linha[chave] = None
                 continue
-            taxa, extrapolado = interpola(curva["pontos"], meses / 12)
+            dias = dias_uteis_do_prazo(date.fromisoformat(curva["base"]), meses)
+            anos = anos_uteis(dias)
+            taxa, extrapolado = interpola(curva["pontos"], anos)
             demo = taxa + p.spread_demonstracao_pp
             linha[chave] = {
+                "dias_uteis": dias,
                 "taxa_ancora": round(taxa, 4),
                 "taxa_demonstracao": round(demo, 4),
-                "vp_ancora": round(valor_presente(p.valor_face, taxa, meses), 2),
-                "vp_demonstracao": round(valor_presente(p.valor_face, demo, meses), 2),
+                "vp_ancora": round(valor_presente(p.valor_face, taxa, anos), 2),
+                "vp_demonstracao": round(valor_presente(p.valor_face, demo, anos), 2),
                 "extrapolado": extrapolado,
             }
         linhas.append(linha)
@@ -228,7 +239,8 @@ def calcula(registros: list[Registro], p: ParamsDerivados) -> dict[str, Any]:
             "spread_demonstracao_pp": p.spread_demonstracao_pp,
             "aviso": "o spread é de DEMONSTRAÇÃO: não é de nenhuma empresa nem recomendação de preço",
             "convencao": (
-                "taxa efetiva ao ano; capitalização composta; 1 mês = 1/12 de ano (21 dias úteis na base 252)"
+                "taxa efetiva ao ano; capitalização composta; prazo em dias úteis (feriados nacionais) "
+                "dividido por 252, contado da data-base da curva até o mesmo dia do mês, `meses` depois"
             ),
         },
         "ancoras": ancoras,

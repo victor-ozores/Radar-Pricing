@@ -63,7 +63,7 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 | **Ver os números completos** | Tela **Mercado**: o Tesouro vencimento a vencimento, Selic, CDI, IPCA e Focus, o crédito de cada banco e as 125 métricas do setor. As tabelas ordenam, buscam e baixam em CSV. |
 | **Fazer uma conta** | Botão **Calcular** no topo (no celular, a barra de baixo): ele abre direto a calculadora que você usou por último, e os campos lembram o que você digitou neste navegador. Mude o *spread de risco* e tudo se refaz, no painel inteiro; o painel lembra o seu valor neste navegador. |
 | **Voltar a um dia anterior** | As setas ao lado da data, no topo. Cada dia fica guardado para sempre, então dá para ver os números daquele dia. |
-| **Abrir no Excel** | O botão da planilha, no topo, gera na hora um arquivo de 13 abas, com fórmulas de verdade. |
+| **Abrir no Excel** | O botão da planilha, no topo, gera na hora um arquivo de 15 abas, com fórmulas de verdade. |
 | **Saber se o robô travou** | Tela **Bastidores → O robô travou?**, ou o selo verde, amarelo ou vermelho no topo de toda página. |
 
 ## 🖼️ Preview
@@ -196,10 +196,11 @@ Todas as fontes são públicas e oficiais. Cada uma foi testada com chamada de v
 
 ## 🧮 As Contas (Em Português)
 
-* **Taxa para um prazo qualquer.** Interpolação linear entre os dois vencimentos vizinhos do Tesouro. O prazo de cada vencimento é medido em anos corridos (dias ÷ 365,25).
-* **Valor de hoje de um valor a receber** = valor ÷ (1 + taxa de desconto) elevado a (meses ÷ 12). A taxa de desconto é a taxa do Tesouro para o prazo mais o *spread* de risco. Se o valor é corrigido pela inflação, a conta usa a curva IPCA+ e o resultado fica em reais de hoje.
+* **Prazo.** Conto como o Tesouro conta: **dias úteis** (segunda a sexta, sem os feriados nacionais), do dia seguinte à data-base da curva até a data do pagamento, **divididos por 252**. A data do pagamento é o mesmo dia do mês, N meses depois. Conferi com o preço que o próprio Tesouro publica (5 vencimentos do Prefixado, 30/10/2026): contando assim o erro é de 0,001%, menos de um centavo em R$ 1.000. Contando dias corridos ÷ 365,25, como eu fazia, o painel descontava demais, de 0,12% a 0,59%.
+* **Taxa para um prazo qualquer.** Interpolação linear entre os dois vencimentos vizinhos do Tesouro, com o prazo de cada vencimento contado do mesmo jeito (dias úteis ÷ 252).
+* **Valor de hoje de um valor a receber** = valor ÷ (1 + taxa de desconto) elevado ao prazo em anos de 252 dias úteis. A taxa de desconto é a taxa do Tesouro para o prazo mais o *spread* de risco. Se o valor é corrigido pela inflação, a conta usa a curva IPCA+ e o resultado fica em reais de hoje.
 * **Mudança em 7 dias.** A mesma conta com a curva de uma semana antes (o robô guarda a taxa de 7 dias atrás de cada vencimento): a diferença é o efeito da semana.
-* **Retorno de uma oferta** = (valor a receber ÷ preço) elevado a (12 ÷ meses) − 1. **Preço máximo** = valor a receber ÷ (1 + retorno desejado) elevado a (meses ÷ 12).
+* **Retorno de uma oferta** = (valor a receber ÷ preço) elevado a (1 ÷ prazo em anos úteis) − 1. **Preço máximo** = valor a receber ÷ (1 + retorno desejado) elevado ao prazo em anos úteis. O que segue um índice por calendário (a correção mês a mês do precatório e a taxa própria de correção) continua em meses corridos, 1 mês = 1/12 de ano.
 * **Cota ativa** = o crédito descontado até o mês da contemplação, menos todas as parcelas descontadas.
 * **O veredito** (**Compensa**, **No limite**, **Não compensa**) = o *lucro no fim* (o que entra menos o que sai do bolso, sem descontar) ao lado do *quanto sobra ou falta sobre o retorno exigido* (o valor de hoje do que entra menos o que sai hoje). Vermelho quando falta, amarelo quando sobra menos de 5%, verde daí para cima. Pode haver lucro em reais e mesmo assim "Não compensa", porque rende menos que o Tesouro mais o spread.
 * **Cota cancelada com taxa própria** = o valor de hoje cresce à taxa que você informar (o índice do bem, como INCC ou tabela FIPE) até a data e depois desconta pela curva Prefixada mais o spread, porque a correção já embute a inflação.
@@ -213,12 +214,12 @@ O que as calculadoras **não** consideram: a chance de ser contemplada, lance, s
 
 | O quê | Como | Resultado |
 |---|---|---|
-| **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 755 números conferidos, 0 divergências, e mais 72 mil em entradas aleatórias ([relatório de 01/11](docs/auditoria/calculos_2026-11-01.md) e [segunda revisão, de 02/11](docs/auditoria/calculos_2026-11-02.md)) |
+| **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 763 números conferidos, 0 divergências, e mais 72 mil em entradas aleatórias ([relatório de 01/11](docs/auditoria/calculos_2026-11-01.md) e [segunda revisão, de 02/11](docs/auditoria/calculos_2026-11-02.md)) |
 | **O dado bruto** | Comparei com as fontes oficiais baixadas de novo | 360 de 360 taxas do Tesouro iguais ao arquivo oficial; 65 valores do SGS e 16 do Focus iguais aos das APIs |
 | **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 224 combinações das três primeiras calculadoras (com a taxa própria) e 576 do precatório contra a conta refeita em Python |
-| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 153 + 51 + 135 testes, todos offline (respostas reais gravadas) |
-| **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 1.401 fórmulas, 0 diferenças contra o painel, em 16 cenários |
-| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 175 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
+| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 161 + 51 + 156 testes, todos offline (respostas reais gravadas) |
+| **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 5.774 fórmulas, 0 diferenças contra o painel, em 16 cenários |
+| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 53 vezes no robô, 193 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
 | **A nuvem** | A rodada de verdade no GitHub Actions, o site publicado e o `npm audit` | verde; 0 vulnerabilidades conhecidas nas dependências |
 
 ## 🧱 Tecnologias
@@ -238,14 +239,14 @@ As dependências do painel têm versão exata, só versões com mais de 14 dias 
 
 ```
 src/radar_pricing/      o robô: http.py (cliente), fontes/ (7 coletores), coleta.py, derivados.py,
-                        mudancas.py, historico.py, foto.py, dados_branch.py, __main__.py
+                        prazo.py (dias úteis, base 252), mudancas.py, historico.py, foto.py, dados_branch.py, __main__.py
 site/                   o painel
   js/                   contas, leitura da foto, frases e Excel (JavaScript simples)
   src/                  telas (Briefing, Mercado, Calculadoras, Bastidores), gráficos e componentes
-  tests/                153 testes de contas e leitura, com a foto real em tests/fixtures
+  tests/                161 testes de contas e leitura, com a foto real em tests/fixtures
 scripts/                verifica_fontes.py (testa cada fonte de verdade), audita_painel.py,
                         confere_excel.py (abre o Excel de verdade, no Windows), grava_amostras.py
-tests/                  135 testes em Python, com respostas reais gravadas
+tests/                  156 testes em Python, com respostas reais gravadas
 docs/                   fluxograma.md, painel.md, robo_diario.md, fontes_de_dados.md, auditoria/
 config.toml             papel de cada fonte e parâmetros de exemplo
 .github/workflows/      coleta-diaria.yml, ci.yml, pages.yml, verifica-fontes.yml
