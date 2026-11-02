@@ -52,7 +52,7 @@ function ChipDoRobo({ compacto = false }: { compacto?: boolean }) {
   );
 }
 
-/** "Calcular": as quatro calculadoras a um clique, de qualquer tela. A última usada vem marcada. */
+/** "Calcular": as calculadoras a um clique, de qualquer tela. A última usada vem marcada. */
 function MenuCalcular({ rota }: { rota: Rota }) {
   const [aberto, setAberto] = useState(false);
   const ultima = ultimaCalculadora();
@@ -137,7 +137,7 @@ function BarraDoTopo({ rota }: { rota: Rota }) {
               <Printer size={17} />
             </button>
           </Dica>
-          <Dica texto={gerando ? "Gerando o Excel…" : "Baixar o Excel desta foto (12 abas, com fórmulas)"}>
+          <Dica texto={gerando ? "Gerando o Excel…" : "Baixar o Excel desta foto (13 abas, com fórmulas)"}>
             <button
               type="button"
               className={botaoIcone}

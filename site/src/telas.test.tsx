@@ -247,12 +247,12 @@ describe("precatório e acesso rápido às calculadoras", () => {
     expect((await screen.findAllByText("R$ 39.324,20")).length).toBeGreaterThan(0);
   });
 
-  it("o menu Calcular, em qualquer tela, lista as quatro calculadoras", async () => {
+  it("o menu Calcular, em qualquer tela, lista as calculadoras e a lista de várias cotas", async () => {
     await abre("#/mercado/tesouro");
     fireEvent.click(screen.getByRole("button", { name: "Abrir as calculadoras" }));
     const menu = await screen.findByText("Retorno de uma oferta", { selector: "span" });
     const lista = menu.closest("ul") as HTMLElement;
-    expect(within(lista).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#/calculadoras/cancelada", "#/calculadoras/ativa", "#/calculadoras/oferta", "#/calculadoras/precatorio"]);
+    expect(within(lista).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#/calculadoras/cancelada", "#/calculadoras/ativa", "#/calculadoras/oferta", "#/calculadoras/precatorio", "#/calculadoras/lote"]);
   });
 
   it("copiar resumo põe o texto da conta na área de transferência", async () => {
@@ -276,6 +276,151 @@ describe("precatório e acesso rápido às calculadoras", () => {
     fireEvent.click(screen.getByRole("switch", { name: /Tenho um preço pedido/ }));
     expect(await screen.findByText(/O ágio pedido, nas duas bases/)).toBeTruthy();
     expect(textoDaPagina()).toMatch(/20,0% do crédito e 17,5% do saldo devedor/);
+  });
+});
+
+describe("taxa própria na cota cancelada e várias cotas de uma vez", () => {
+  it("cota cancelada: 'por uma taxa que eu informo' faz o valor crescer e descontar pela curva Prefixada", async () => {
+    await abre("#/calculadoras/cancelada");
+    fireEvent.change(screen.getByRole("combobox", { name: /Como o valor é corrigido/ }), { target: { value: "propria" } });
+    expect((await screen.findAllByText("R$ 38.468,00")).length).toBeGreaterThan(0); // 50.000 a 5% a.a. por 2 anos = 55.125, descontado a 19,71%
+    expect(textoDaPagina()).toMatch(/que viram R\$ 55\.125 em 2 anos/);
+    fireEvent.change(screen.getByRole("textbox", { name: "Taxa de correção" }), { target: { value: "0" } });
+    expect((await screen.findAllByText("R$ 34.891,61")).length).toBeGreaterThan(0); // 0%: o mesmo que sem correção (50.000 a 19,71%, conta feita à mão)
+    semLixo();
+  });
+
+  it("prazo curto: o aviso diz a faixa da curva e as taxas usadas nas pontas, e some com um prazo dentro da curva", async () => {
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/O Tesouro só tem vencimentos de 2,5 a 23,8 anos\. O que cai fora dessa faixa usa a taxa do vencimento mais próximo \(7,76% no mais curto, 7,13% no mais longo\)/);
+    expect(textoDaPagina()).toMatch(/quadro do spread mostra quanto 1 p\.p\. a mais ou a menos muda o valor/);
+    fireEvent.change(screen.getByRole("textbox", { name: "Quando o grupo devolve em meses" }), { target: { value: "60" } });
+    await waitFor(() => expect(textoDaPagina()).not.toMatch(/O Tesouro só tem vencimentos/));
+  });
+
+  it("a taxa própria entra no resumo copiado", async () => {
+    const escreve = vi.fn(async () => {});
+    Object.defineProperty(navigator, "clipboard", { value: { writeText: escreve }, configurable: true });
+    await abre("#/calculadoras/cancelada");
+    fireEvent.change(screen.getByRole("combobox", { name: /Como o valor é corrigido/ }), { target: { value: "propria" } });
+    fireEvent.click(await screen.findByRole("button", { name: /Copiar resumo/ }));
+    await waitFor(() => expect(escreve).toHaveBeenCalled());
+    expect((escreve.mock.calls as unknown as string[][])[0][0]).toMatch(/corrigido a 5,00% ao ano/);
+  });
+
+  it("várias cotas: abre com o exemplo calculado, com a mesma conta da calculadora de uma cota", async () => {
+    await abre("#/calculadoras/lote");
+    const tabela = await screen.findByRole("table", { name: /Resultado de cada cota da lista \(cotas canceladas\)/ });
+    expect(within(tabela).getAllByRole("row")).toHaveLength(5); // cabeçalho + 4 cotas
+    expect(within(tabela).getAllByText("R$ 39.324,20").length).toBeGreaterThan(0); // igual ao exemplo da cota cancelada
+    expect((await screen.findAllByText("R$ 180.882,65")).length).toBeGreaterThan(0); // a soma
+    expect(textoDaPagina()).toMatch(/Cabem no preço pedido\s*2 de 2/);
+    semLixo();
+  });
+
+  it("várias cotas: uma linha ruim avisa o que está errado e não derruba as outras", async () => {
+    await abre("#/calculadoras/lote");
+    fireEvent.change(screen.getByRole("textbox", { name: /Cole a lista/ }), { target: { value: "0;24\n50.000;24;ipca;38.000;0\n50.000;24;xyz" } });
+    const tabela = await screen.findByRole("table", { name: /Resultado de cada cota/ });
+    await waitFor(() => expect(within(tabela).getAllByRole("row")).toHaveLength(4));
+    expect(within(tabela).getByText("valor a devolver inválido")).toBeTruthy();
+    expect(within(tabela).getByText("correção: use ipca, sem ou uma taxa em % ao ano")).toBeTruthy();
+    expect(within(tabela).getAllByText("R$ 39.324,20").length).toBeGreaterThan(0);
+    expect(textoDaPagina()).toMatch(/2 com erro/);
+    semLixo();
+  });
+
+  it("várias cotas: trocar para cotas ativas usa o exemplo delas, e cada lista fica guardada", async () => {
+    await abre("#/calculadoras/lote");
+    fireEvent.click(screen.getByRole("radio", { name: "Cotas ativas" }));
+    expect((await screen.findAllByText("R$ 78.805,94")).length).toBeGreaterThan(0); // a soma das três cotas ativas do exemplo
+    fireEvent.change(screen.getByRole("textbox", { name: /Cole a lista/ }), { target: { value: "100.000;1.900;60;12" } });
+    expect((await screen.findAllByText("R$ 3.443,01")).length).toBeGreaterThan(0); // o exemplo da cota ativa
+    cleanup();
+    await abre("#/calculadoras/lote");
+    expect((screen.getByRole("textbox", { name: /Cole a lista/ }) as HTMLTextAreaElement).value).toBe("100.000;1.900;60;12");
+    fireEvent.click(screen.getByRole("button", { name: "Voltar aos exemplos" }));
+    expect((screen.getByRole("textbox", { name: /Cole a lista/ }) as HTMLTextAreaElement).value).toContain("50.000;24;ipca");
+  });
+
+  it("os Bastidores não mostram o nome interno da série da ABAC", async () => {
+    await abre("#/bastidores/fontes");
+    await screen.findByText(/Fontes da foto e a situação de cada uma/);
+    expect(textoDaPagina()).not.toMatch(/abac_ticket_medio/);
+    expect(textoDaPagina()).toMatch(/não encontrei ticket médio/);
+  });
+});
+
+describe("pente fino final (o que um diretor repara ao usar o site publicado)", () => {
+  it("o R$ do topo diz com que spread foi calculado, e o 'exemplo' some quando a pessoa põe o dela", async () => {
+    await abre("#/briefing");
+    expect(textoDaPagina()).toMatch(/por cada R\$ 1\.000, com spread de risco de 5,0 p\.p\., de exemplo\)/);
+    await waitFor(() => expect(textoDaPagina()).toMatch(/Em cada prazo, com spread de risco de 5,0 p\.p\. \(exemplo\)\. Variação em %\./));
+    fireEvent.change(screen.getByRole("textbox", { name: /Spread de risco/ }), { target: { value: "7" } });
+    await waitFor(() => expect(textoDaPagina()).toMatch(/com spread de risco de 7,0 p\.p\.\)/));
+    expect(textoDaPagina()).not.toMatch(/7,0 p\.p\., de exemplo/);
+    await waitFor(() => expect(textoDaPagina()).toMatch(/Em cada prazo, com spread de risco de 7,0 p\.p\. Variação em %\./));
+    expect(textoDaPagina()).not.toMatch(/p\.p\.\./);
+    expect(textoDaPagina()).not.toMatch(/7,0 p\.p\. \(exemplo\)/);
+  });
+
+  it("o spread escolhido fica guardado entre as visitas, e voltar ao padrão limpa o que foi guardado", async () => {
+    await abre("#/calculadoras/cancelada");
+    (document.querySelector("main details") as HTMLDetailsElement).open = true;
+    fireEvent.change(screen.getByRole("textbox", { name: "Spread de risco" }), { target: { value: "7" } });
+    await waitFor(() => expect(localStorage.getItem("radar-spread")).toBe("7"));
+    cleanup();
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/do painel: 7,0 p\.p\.\s*\(o seu\)/);
+    (document.querySelector("main details") as HTMLDetailsElement).open = true;
+    fireEvent.click(screen.getByRole("button", { name: /Voltar para 5,0 p\.p\./ }));
+    await waitFor(() => expect(localStorage.getItem("radar-spread")).toBeNull());
+    expect(textoDaPagina()).toMatch(/do painel: 5,0 p\.p\.\s*\(exemplo\)/);
+  });
+
+  it("o resumo copiado não chama de exemplo o spread que a pessoa escolheu", async () => {
+    const escreve = vi.fn(async () => {});
+    Object.defineProperty(navigator, "clipboard", { value: { writeText: escreve }, configurable: true });
+    localStorage.setItem("radar-spread", "7");
+    await abre("#/calculadoras/precatorio");
+    fireEvent.click(await screen.findByRole("button", { name: /Copiar resumo/ }));
+    await waitFor(() => expect(escreve).toHaveBeenCalled());
+    const texto = (escreve.mock.calls as unknown as string[][])[0][0];
+    expect(texto).toMatch(/Spread de risco: 7,0 p\.p\./);
+    expect(texto).not.toMatch(/7,0 p\.p\. \(exemplo\)/);
+  });
+
+  it("um spread guardado estragado é ignorado", async () => {
+    localStorage.setItem("radar-spread", "abc");
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/do painel: 5,0 p\.p\.\s*\(exemplo\)/);
+    cleanup();
+    localStorage.setItem("radar-spread", "-3");
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/do painel: 5,0 p\.p\.\s*\(exemplo\)/);
+  });
+
+  it("o briefing não gasta uma linha do 'o que mexeu' com fonte complementar fora do ar (isso é assunto dos Bastidores)", async () => {
+    await abre("#/briefing");
+    expect(screen.getByText("O que mexeu na semana")).toBeTruthy();
+    expect(textoDaPagina()).not.toMatch(/fonte complementar sem resposta/);
+    cleanup();
+    await abre("#/bastidores/fontes");
+    expect((await screen.findAllByText(/IBGE/)).length).toBeGreaterThan(0);
+  });
+
+  it("as variações da ABAC dizem a unidade (milhões, R$ bilhões)", async () => {
+    await abre("#/briefing");
+    await screen.findByText(/Volume de vendas no ano/);
+    expect(textoDaPagina()).toMatch(/0,38 milhões\s*no mês/);
+    expect(textoDaPagina()).toMatch(/64,54 R\$ bilhões\s*no mês/);
+  });
+
+  it("a oferta com custos mostra o deságio do preço e o deságio contando os custos", async () => {
+    await abre("#/calculadoras/oferta");
+    expect(textoDaPagina()).toMatch(/deságio é de 24,0%\./);
+    fireEvent.change(screen.getByRole("textbox", { name: "Custos de transferência" }), { target: { value: "1.200" } });
+    await waitFor(() => expect(textoDaPagina()).toMatch(/deságio é de 24,0% sobre o preço \(21,6% contando os custos\)/));
   });
 });
 

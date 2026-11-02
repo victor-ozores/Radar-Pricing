@@ -23,7 +23,7 @@ if (comando === "calc") {
   writeFileSync(args[1], excelDaFoto(le(args[0])));
 } else if (comando === "cenarios") {
   // Resultados do calc.js para vários cenários de entrada (stdin ou arquivo); `-` lê do stdin.
-  const { cotaAtiva, cotaCancelada, precatorio, retornoDaOferta } = await carrega("calc.js");
+  const { agioDaCota, avaliaPreco, cotaAtiva, cotaCancelada, precatorio, retornoDaOferta } = await carrega("calc.js");
   const foto = le(args[0]);
   const modeloJs = await carrega("modelo.js");
   const lista = modeloJs.curvas(foto);
@@ -32,9 +32,27 @@ if (comando === "calc") {
   const caminho = modeloJs.caminhoDeCorrecao(foto);
   const cenarios = JSON.parse(args[1] === "-" ? readFileSync(0, "utf-8") : readFileSync(args[1], "utf-8"));
   const saida = cenarios.map(({ calc, entrada }) => {
-    if (calc === "cancelada") return cotaCancelada(entrada, curvas);
+    if (calc === "cancelada") {
+      const r = cotaCancelada(entrada, curvas);
+      const custos = entrada.custos ?? 0;
+      const a = entrada.preco ? avaliaPreco({ valorJusto: r.valor_presente, preco: entrada.preco, custos }) : null;
+      return { ...r, preco_maximo: r.valor_presente - custos, folga: a ? a.folga : "—" };
+    }
     if (calc === "retorno") return retornoDaOferta({ ...entrada, alvoPct: entrada.alvoPct ?? undefined }, curvas, cdi);
-    if (calc === "ativa") return cotaAtiva(entrada, curvas.real);
+    if (calc === "ativa") {
+      const r = cotaAtiva(entrada, curvas.real);
+      const custos = entrada.custos ?? 0;
+      const a = entrada.preco ? avaliaPreco({ valorJusto: r.valor_da_cota, preco: entrada.preco, custos }) : null;
+      const g = entrada.preco ? agioDaCota({ preco: entrada.preco, custos, credito: entrada.credito, saldoDevedor: r.total_das_parcelas }) : null;
+      return {
+        ...r,
+        preco_maximo: r.valor_da_cota - custos,
+        folga: a ? a.folga : "—",
+        agio_credito_pct: g ? g.sobre_credito_pct : "—",
+        agio_saldo_pct: g ? g.sobre_saldo_pct : "—",
+        custo_total: g ? g.custo_total : "—",
+      };
+    }
     if (calc === "precatorio") return precatorio(entrada, curvas.nominal, caminho);
     throw new Error(`calculadora desconhecida: ${calc}`);
   });

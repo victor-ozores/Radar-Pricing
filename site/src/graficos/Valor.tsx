@@ -6,6 +6,7 @@ import type { Estado } from "../tipos";
 import { Segmentado } from "../ui/blocos";
 import { Termo } from "../ui/dicas";
 import { Balao, COR, EIXO, GRADE, Quadro } from "./base";
+import { fimDoSpread } from "../calc/memoria";
 
 const semMovimento = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -30,7 +31,7 @@ export function ImpactoNoValor({ estado }: { estado: Estado }) {
           Quanto mudou, em {linhas[0].dias} dias, o <Termo id="valorPresente">valor de hoje</Termo> de {reais(par.valor_face, 0)} a receber
         </>
       }
-      subtitulo={`Em cada prazo, com spread de risco de ${num(spread, 1)} p.p. (exemplo). Variação em %.`}
+      subtitulo={`Em cada prazo, com spread de risco de ${num(spread, 1)} p.p.${fimDoSpread(spread, par.spread_demonstracao_pp)} Variação em %.`}
       acoes={opcoes.length > 1 ? <Segmentado valor={id} aoMudar={setId} rotulo="Tipo de valor a receber" opcoes={opcoes} /> : null}
       tabela={{
         colunas: ["Prazo", "Taxa de 7 dias atrás", "Taxa de hoje", "Valor há 7 dias", "Valor hoje", "Variação"],
@@ -109,7 +110,7 @@ export function MapaDeSensibilidade({ estado, id = "nominal" }: { estado: Estado
           E se a <Termo id="taxaDeDesconto">taxa de desconto</Termo> andar? O valor de hoje de {reais(par.valor_face, 0)} a receber
         </>
       }
-      subtitulo={`Cada linha é um prazo; cada coluna, quanto a taxa do Tesouro sobe ou cai em todos os prazos. Spread de risco: ${num(spread, 1)} p.p. (exemplo).`}
+      subtitulo={`Cada linha é um prazo; cada coluna, quanto a taxa do Tesouro sobe ou cai em todos os prazos. Spread de risco: ${num(spread, 1)} p.p.${fimDoSpread(spread, par.spread_demonstracao_pp)}`}
       acoes={opcoes.length > 1 ? <Segmentado valor={qual} aoMudar={setQual} rotulo="Tipo de valor a receber" opcoes={opcoes} /> : null}
     >
       <div className="rolagem overflow-x-auto">

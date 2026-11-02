@@ -4,7 +4,7 @@ import { EXEMPLOS, MAX_MESES_PRECATORIO, precatorio } from "../../../js/calc.js"
 import { dataBR, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { somaMeses } from "../../../js/foto.js";
 import { caminhoDeCorrecao } from "../../../js/modelo.js";
-import { mesesDaConta, usePersistido } from "../../calc/memoria";
+import { mesesDaConta, notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Balao, COR, EIXO, GRADE } from "../../graficos/base";
 import { Campo, CampoEscolha } from "../../ui/blocos";
@@ -31,7 +31,7 @@ const AJUDA_DO_INDICE: Record<Indice, string> = {
 const PRAZOS_DO_GRAFICO = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
 
 export function Precatorio() {
-  const { curvas, spread: geral, foto } = useEstado();
+  const { curvas, spread: geral, foto, parametros } = useEstado();
   const caminho = useMemo(() => caminhoDeCorrecao(foto), [foto]);
   const [e, muda, volta] = usePersistido("precatorio", EXEMPLO);
   const indice = (INDICES.find((i) => i.id === e.indice)?.id ?? "selic") as Indice;
@@ -56,7 +56,7 @@ export function Precatorio() {
     [
       `Radar Pricing · Precatório · foto de ${dataBR(foto.data)}`,
       `Valor atualizado hoje: ${reais(e.valor, 0)}; pagamento em ${prazoEmTexto(meses ?? 0)}; correção: ${INDICES.find((i) => i.id === indice)?.nome}${indice === "ipca" ? ` (juros de ${num(e.jurosPP, 1)} p.p.)` : indice === "propria" ? ` (${num(e.propriaPct, 2)}% ao ano)` : ""}${e.retencaoPct > 0 ? `; retenções de ${num(e.retencaoPct, 1)}%` : ""}`,
-      `Spread de risco: ${num(spread, 1)} p.p. (exemplo)`,
+      `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       r ? `Valor esperado no pagamento: ${reais(r.valor_esperado)} (correção de ${num(r.correcao_total_pct, 1)}%, ${num(r.correcao_aa_pct, 2)}% ao ano); vale hoje ${reais(r.valor_presente)} (${num(r.pct_do_valor, 1)}% do valor atualizado: deságio justo de ${num(r.desagio_justo_pct, 1)}%)` : "Sem resultado para estes dados",
       ...(r?.oferta ? [`Oferta de compra com ${num(e.desagioPct, 1)}% de deságio (${reais(r.oferta.preco, 0)}${e.custos > 0 ? ` + ${reais(e.custos, 0)} de custos` : ""}): retorno de ${num(r.oferta.retorno_aa, 2)}% ao ano; deságio mínimo para ganhar Tesouro + spread: ${num(r.oferta.desagio_minimo_pct, 1)}%`] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",

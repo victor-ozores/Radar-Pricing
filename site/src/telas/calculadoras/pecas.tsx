@@ -2,7 +2,7 @@ import * as Switch from "@radix-ui/react-switch";
 import { Check, Copy, RotateCcw } from "lucide-react";
 import { useId, useState, type ReactNode } from "react";
 import { avaliaPreco } from "../../../js/calc.js";
-import { mesAno, num, prazoEmTexto, reais } from "../../../js/formato.js";
+import { mesAno, num, pct, prazoEmTexto, reais } from "../../../js/formato.js";
 import { somaMeses } from "../../../js/foto.js";
 import { copiaTexto } from "../../calc/memoria";
 import { useDados } from "../../dados";
@@ -160,12 +160,13 @@ export function ComoFoiCalculado({ children }: { children: ReactNode }) {
   );
 }
 
-export function Aviso({ extrapolado, curva }: { extrapolado: boolean; curva: { pontos: { anos: number }[] } | null }) {
+export function Aviso({ extrapolado, curva }: { extrapolado: boolean; curva: { pontos: { anos: number; taxa: number }[] } | null }) {
   if (!extrapolado || !curva?.pontos.length) return null;
-  const anos = curva.pontos.map((p) => p.anos);
+  const primeiro = curva.pontos[0];
+  const ultimo = curva.pontos[curva.pontos.length - 1];
   return (
-    <p className="m-0 rounded-xl border border-aviso/30 bg-aviso2 px-3 py-2 text-[0.8125rem] text-aviso" role="note">
-      A curva do Tesouro só cobre prazos de {num(Math.min(...anos), 1)} a {num(Math.max(...anos), 1)} anos. Para este prazo usei a taxa da ponta mais próxima, então o resultado é uma estimativa.
+    <p className="m-0 rounded-xl border border-linha bg-folha2 px-3 py-2 text-[0.8125rem] leading-snug text-tinta2" role="note">
+      O Tesouro só tem vencimentos de {num(primeiro.anos, 1)} a {num(ultimo.anos, 1)} anos. O que cai fora dessa faixa usa a taxa do vencimento mais próximo ({pct(primeiro.taxa)} no mais curto, {pct(ultimo.taxa)} no mais longo), então é uma estimativa. O quadro do spread mostra quanto 1 p.p. a mais ou a menos muda o valor.
     </p>
   );
 }

@@ -4,7 +4,7 @@ Três conferências, nesta ordem:
   1. O arquivo abre e todas as fórmulas, recalculadas pelo Excel, dão o valor que o painel deixou guardado
      (nenhuma com erro, nenhuma diferente).
   2. Exporta cada aba para PDF (opcional, para olhar o visual), ainda com os valores de exemplo.
-  3. Troca as células amarelas das três calculadoras por outros valores e compara os resultados do Excel com
+  3. Troca as células amarelas das quatro calculadoras por outros valores e compara os resultados do Excel com
      os do JavaScript do painel (site/js/calc.js), rodado no Node com os mesmos números.
 
 Uso: python scripts/confere_excel.py radar-pricing-2026-10-31.xlsx foto.json [--pdf pasta]
@@ -31,10 +31,14 @@ SAIDAS = {
     "cancelada": {
         "Taxa do Tesouro no prazo (% a.a.)": "taxa_ancora",
         "Taxa de desconto (% a.a.)": "taxa_desconto",
+        "Valor no pagamento (R$)": "valor_no_pagamento",
         "Valor presente (R$)": "valor_presente",
         "Em % do valor a receber": "pct_do_valor",
+        "Preço máximo (R$)": "preco_maximo",
+        "Folga (R$)": "folga",
     },
     "retorno": {
+        "Total que sai do bolso (R$)": "pago",
         "Retorno ao ano (% a.a.)": "retorno_aa",
         "Retorno no prazo todo (%)": "retorno_total",
         "Taxa do Tesouro no prazo (% a.a.)": "taxa_ancora",
@@ -48,16 +52,54 @@ SAIDAS = {
         "Valor da cota hoje (R$)": "valor_da_cota",
         "Em % do crédito": "pct_do_credito",
         "Total das parcelas, sem descontar (R$)": "total_das_parcelas",
+        "Ágio sobre o crédito (%)": "agio_credito_pct",
+        "Ágio sobre o saldo devedor (%)": "agio_saldo_pct",
+        "Custo total de quem compra (R$)": "custo_total",
+        "Preço máximo (R$)": "preco_maximo",
+        "Folga (R$)": "folga",
+    },
+    "precatorio": {
+        "Valor esperado no pagamento (R$)": "valor_esperado",
+        "Depois das retenções (R$)": "liquido_esperado",
+        "Taxa do Tesouro Prefixado no prazo (% a.a.)": "taxa_ancora",
+        "Taxa de desconto (% a.a.)": "taxa_desconto",
+        "Vale hoje (R$)": "valor_presente",
+        "Em % do valor atualizado": "pct_do_valor",
+        "Deságio justo (%)": "desagio_justo_pct",
+        "Preço da oferta (R$)": "oferta.preco",
+        "Total que sai do bolso (R$)": "oferta.pago",
+        "Retorno de quem compra (% a.a.)": "oferta.retorno_aa",
+        "Folga (R$)": "oferta.folga",
+        "Preço máximo (R$)": "@preco_maximo",
+        "Deságio mínimo (%)": "@desagio_minimo_pct",
     },
 }
-ABAS = {"cancelada": "Cota cancelada", "retorno": "Retorno da oferta", "ativa": "Cota ativa"}
+ABAS = {
+    "cancelada": "Cota cancelada",
+    "retorno": "Retorno da oferta",
+    "ativa": "Cota ativa",
+    "precatorio": "Precatório",
+}
+# o que vale numa célula amarela quando o cenário não a menciona (o cenário anterior não pode vazar para este)
+PADRAO = {
+    "custos": 0,
+    "correcaoPct": None,
+    "preco": None,
+    "alvoPct": None,
+    "desagioPct": None,
+    "retencaoPct": 0,
+}
 ENTRADAS = {
     "cancelada": {
         "valor": "Valor a receber (R$)",
         "meses": "Meses até receber",
         "corrigido": "Corrigido pela inflação?",
+        "correcaoPct": "Taxa própria de correção (% a.a.), se quiser",
+        "preco": "Preço pedido (R$), se quiser",
+        "custos": "Custos de transferência (R$)",
     },
     "retorno": {
+        "custos": "Custos de transferência (R$)",
         "preco": "Preço que vou pagar (R$)",
         "valor": "Valor que vou receber (R$)",
         "meses": "Meses até receber",
@@ -69,6 +111,16 @@ ENTRADAS = {
         "parcela": "Parcela mensal (R$)",
         "parcelas": "Parcelas que faltam",
         "contemplacao": "Contemplação daqui a (meses)",
+        "preco": "Preço pedido (R$), se quiser",
+        "custos": "Custos de transferência (R$)",
+    },
+    "precatorio": {
+        "valor": "Valor atualizado hoje (R$)",
+        "meses": "Meses até o pagamento",
+        "propriaPct": "Correção média até o pagamento (% a.a.)",
+        "retencaoPct": "Retenções e descontos (%)",
+        "desagioPct": "Deságio da oferta de compra (%), se houver",
+        "custos": "Custos de transferência (R$)",
     },
 }
 
@@ -76,6 +128,33 @@ CENARIOS = [
     {"calc": "cancelada", "entrada": {"valor": 12345.67, "meses": 30, "corrigido": False, "spreadPP": 3.5}},
     {"calc": "cancelada", "entrada": {"valor": 80000, "meses": 7, "corrigido": True, "spreadPP": 0}},
     {"calc": "cancelada", "entrada": {"valor": 1000, "meses": 120, "corrigido": True, "spreadPP": 9.25}},
+    {
+        "calc": "cancelada",
+        "entrada": {"valor": 80000, "meses": 36, "corrigido": True, "correcaoPct": 4.5, "spreadPP": 5},
+    },
+    {
+        "calc": "cancelada",
+        "entrada": {
+            "valor": 50000,
+            "meses": 60,
+            "corrigido": False,
+            "correcaoPct": 0,
+            "preco": 30000,
+            "custos": 1200,
+            "spreadPP": 5,
+        },
+    },
+    {
+        "calc": "cancelada",
+        "entrada": {
+            "valor": 120000,
+            "meses": 48,
+            "corrigido": True,
+            "preco": 70000,
+            "custos": 0,
+            "spreadPP": 6,
+        },
+    },
     {
         "calc": "retorno",
         "entrada": {
@@ -99,8 +178,71 @@ CENARIOS = [
         },
     },
     {
+        "calc": "retorno",
+        "entrada": {
+            "preco": 42000,
+            "valor": 60000,
+            "meses": 36,
+            "corrigido": False,
+            "alvoPct": 18,
+            "custos": 1200,
+            "spreadPP": 5,
+        },
+    },
+    {
         "calc": "ativa",
         "entrada": {"credito": 80000, "parcela": 1500, "parcelas": 84, "contemplacao": 30, "spreadPP": 7.5},
+    },
+    {
+        "calc": "ativa",
+        "entrada": {
+            "credito": 80000,
+            "parcela": 1250,
+            "parcelas": 48,
+            "contemplacao": 0,
+            "preco": 15000,
+            "custos": 800,
+            "spreadPP": 5,
+        },
+    },
+    {
+        "calc": "precatorio",
+        "entrada": {
+            "valor": 250000,
+            "meses": 60,
+            "indice": "propria",
+            "propriaPct": 9.5,
+            "retencaoPct": 11,
+            "desagioPct": 35,
+            "custos": 1500,
+            "spreadPP": 4,
+        },
+    },
+    {
+        "calc": "precatorio",
+        "entrada": {
+            "valor": 100000,
+            "meses": 36,
+            "indice": "propria",
+            "propriaPct": 0,
+            "retencaoPct": 0,
+            "desagioPct": None,
+            "custos": 0,
+            "spreadPP": 5,
+        },
+    },
+    {
+        "calc": "precatorio",
+        "entrada": {
+            "valor": 70000,
+            "meses": 120,
+            "indice": "propria",
+            "propriaPct": 6.25,
+            "retencaoPct": 5,
+            "desagioPct": 60,
+            "custos": 0,
+            "spreadPP": 8,
+        },
     },
     {
         "calc": "ativa",
@@ -130,6 +272,25 @@ def parecidos(a: object, b: object) -> bool:
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
         return abs(a - b) <= 1e-9 * max(1.0, abs(b))
     return a == b
+
+
+def pega(resultado: dict, caminho: str, entrada: dict) -> object:
+    """Um campo do resultado do JavaScript; 'oferta.preco' desce um nível. Sem oferta, o Excel mostra traço.
+
+    '@...' é refeito aqui: o Excel mostra o preço máximo e o deságio mínimo mesmo sem oferta
+    (o painel só os mostra com oferta).
+    """
+    custos = entrada.get("custos", 0)
+    if caminho == "@preco_maximo":
+        return resultado["valor_presente"] - custos
+    if caminho == "@desagio_minimo_pct":
+        return (1 - (resultado["valor_presente"] - custos) / entrada["valor"]) * 100
+    atual: object = resultado
+    for parte in caminho.split("."):
+        if atual is None:
+            return "—"
+        atual = atual[parte]
+    return "—" if atual is None else atual
 
 
 def acha_linha(ws, rotulo: str, limite: int = 80) -> int:
@@ -202,16 +363,17 @@ def confere(caminho: Path, foto: Path, pasta_pdf: Path | None) -> int:
             ws = wb.Worksheets(ABAS[tipo])
             hoje.Cells(linha_spread, 3).Value2 = entrada["spreadPP"]
             for campo, rotulo in ENTRADAS[tipo].items():
-                valor = entrada[campo]
+                valor = entrada.get(campo, PADRAO.get(campo))
                 if campo == "corrigido":
                     valor = "Sim" if valor else "Não"
                 ws.Cells(acha_linha(ws, rotulo), 3).Value2 = valor  # None esvazia a célula
             excel.Calculate()
             for rotulo, campo in SAIDAS[tipo].items():
                 do_excel = ws.Cells(acha_linha(ws, rotulo), 3).Value2
-                if not parecidos(do_excel, esperado[campo]):
+                esperado_do_campo = pega(esperado, campo, entrada)
+                if not parecidos(do_excel, esperado_do_campo):
                     falhas += 1
-                    print(f"   DIFERENÇA {tipo} {entrada}: {rotulo}: Excel={do_excel} JS={esperado[campo]}")
+                    print(f"   DIFERENÇA {tipo} {entrada}: {rotulo}: Excel={do_excel} JS={esperado_do_campo}")
         print(f"3. Cenários com outros valores: {len(CENARIOS)} (Excel x JavaScript): {falhas} diferenças")
         problemas += falhas
 

@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { baseDaFoto, buscaFoto, DIAS_DE_BUSCA, diasEntre, hojeEmBrasilia, procuraFoto, somaDias } from "../js/foto.js";
 import { curvas as curvasDaFoto } from "../js/modelo.js";
 import { buscaRodadas } from "../js/robo.js";
+import { guardaSpread, spreadGuardado } from "./calc/memoria";
 import { avaliaSaude } from "../js/saude.js";
 import type { Estado, Foto } from "./tipos";
 
@@ -44,7 +45,7 @@ export function ProvedorDeDados({ children }: { children: ReactNode }) {
   const [foto, setFoto] = useState<Foto | null>(null);
   const [data, setData] = useState<string | null>(null);
   const [maisRecente, setMaisRecente] = useState<string | null>(null);
-  const [spreadEscolhido, setSpreadEscolhido] = useState<number | null>(null);
+  const [spreadEscolhido, setSpreadEscolhido] = useState<number | null>(spreadGuardado);
   const [rodadas, setRodadas] = useState<Rodadas>(undefined);
   const [trabalhando, setTrabalhando] = useState(false);
   const base = useMemo(() => baseDaFoto(), []);
@@ -155,7 +156,12 @@ export function ProvedorDeDados({ children }: { children: ReactNode }) {
     data,
     maisRecente,
     spread: estado?.spread ?? 5,
-    defineSpread: (v) => Number.isFinite(v) && v >= 0 && setSpreadEscolhido(v),
+    defineSpread: (v) => {
+      if (!Number.isFinite(v) || v < 0) return;
+      const volta = v === foto?.derivados.parametros.spread_demonstracao_pp; // o padrão não precisa ficar guardado
+      setSpreadEscolhido(volta ? null : v);
+      guardaSpread(volta ? null : v);
+    },
     rodadas,
     veredito,
     vizinha,

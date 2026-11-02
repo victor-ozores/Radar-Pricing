@@ -7,10 +7,11 @@ import { Campo, Selo } from "../ui/blocos";
 import { Termo } from "../ui/dicas";
 import { Ativa } from "./calculadoras/Ativa";
 import { Cancelada } from "./calculadoras/Cancelada";
+import { Lote } from "./calculadoras/Lote";
 import { Oferta } from "./calculadoras/Oferta";
 import { Precatorio } from "./calculadoras/Precatorio";
 
-const TELAS = { cancelada: Cancelada, ativa: Ativa, oferta: Oferta, precatorio: Precatorio } as const;
+const TELAS = { cancelada: Cancelada, ativa: Ativa, oferta: Oferta, precatorio: Precatorio, lote: Lote } as const;
 
 export function Calculadoras({ sub }: { sub: string | null }) {
   const id: IdDaCalculadora = CALCULADORAS.find((c) => c.id === sub)?.id ?? ultimaCalculadora();
@@ -27,7 +28,7 @@ export function Calculadoras({ sub }: { sub: string | null }) {
       <p className="mb-4 mt-1.5 max-w-[64ch] text-[0.85rem] leading-snug text-tinta2 md:mb-6 md:mt-3 md:text-base">
         Contas simples sobre as taxas do dia, com valores de exemplo: troque pelos seus. A página lembra o que você usou por último. Não é preço nem recomendação.
       </p>
-      <nav aria-label="Calculadoras" className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+      <nav aria-label="Calculadoras" className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-5 md:overflow-visible md:px-0">
         {CALCULADORAS.map((c) => (
           <a
             key={c.id}
@@ -43,7 +44,7 @@ export function Calculadoras({ sub }: { sub: string | null }) {
       <details className="group mb-4 rounded-2xl border border-linha bg-folha2 md:mb-6">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-tinta2 [&::-webkit-details-marker]:hidden">
           <span>
-            <Termo id="spread">Spread de risco</Termo> do painel: <span className="num text-tinta">{num(spread, 1)} p.p.</span> <span className="font-normal text-tinta3">(exemplo)</span>
+            <Termo id="spread">Spread de risco</Termo> do painel: <span className="num text-tinta">{num(spread, 1)} p.p.</span> <span className="font-normal text-tinta3">{spread === padrao ? "(exemplo)" : "(o seu)"}</span>
           </span>
           <span className="text-xs font-semibold text-marca group-open:hidden">Mudar</span>
         </summary>
@@ -52,7 +53,7 @@ export function Calculadoras({ sub }: { sub: string | null }) {
             <Campo rotulo="Spread de risco" valor={spread} aoMudar={defineSpread} sufixo="p.p." casas={1} max={30} passo={0.5} />
           </div>
           <p className="m-0 min-w-[14rem] max-w-[52ch] flex-1 text-[0.8125rem] leading-snug text-tinta3">
-            Adicional somado à taxa do Tesouro para refletir o risco. Vale para as quatro calculadoras e para o briefing; cada conta pode usar outro, só nela.{" "}
+            Adicional somado à taxa do Tesouro para refletir o risco. Vale para todas as calculadoras e para o briefing, e o painel lembra o seu valor neste navegador; cada conta pode usar outro, só nela.{" "}
             {spread !== padrao ? (
               <button type="button" onClick={() => defineSpread(padrao)} className="border-0 bg-transparent p-0 font-semibold text-marca underline underline-offset-2">
                 Voltar para {num(padrao, 1)} p.p.

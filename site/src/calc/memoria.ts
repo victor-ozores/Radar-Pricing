@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
 import { mesesEntre } from "../../js/foto.js";
 
-/** As quatro calculadoras, na ordem em que aparecem em todo lugar (menu do topo, barra do celular e a própria tela). */
+/** As calculadoras, na ordem em que aparecem em todo lugar (menu do topo, barra do celular e a própria tela). */
 export const CALCULADORAS = [
   { id: "cancelada", nome: "Cota cancelada", resumo: "Quanto vale hoje o que o grupo vai devolver" },
   { id: "ativa", nome: "Cota ativa", resumo: "O crédito menos as parcelas, em valor de hoje" },
   { id: "oferta", nome: "Retorno de uma oferta", resumo: "Quanto rende e qual o preço máximo" },
   { id: "precatorio", nome: "Precatório", resumo: "O valor corrigido até receber, em valor de hoje" },
+  { id: "lote", nome: "Várias cotas", resumo: "Cole uma lista e calcule todas de uma vez" },
 ] as const;
 
 export type IdDaCalculadora = (typeof CALCULADORAS)[number]["id"];
@@ -38,6 +39,24 @@ export function ultimaCalculadora(): IdDaCalculadora {
 }
 
 export const guardaUltimaCalculadora = (id: IdDaCalculadora) => gravar(CHAVE_DA_ULTIMA, id);
+
+const CHAVE_DO_SPREAD = "radar-spread";
+
+/** O spread que a pessoa escolheu para o painel todo (null se nunca mudou ou se o valor guardado não presta). */
+export function spreadGuardado(): number | null {
+  const texto = ler(CHAVE_DO_SPREAD);
+  const v = Number(texto);
+  return texto !== null && texto.trim() !== "" && Number.isFinite(v) && v >= 0 && v <= 30 ? v : null;
+}
+
+/** Guarda o spread escolhido; null volta ao padrão do painel. */
+export const guardaSpread = (v: number | null) => gravar(CHAVE_DO_SPREAD, v === null ? null : String(v));
+
+/** " (exemplo)" enquanto o spread é o de demonstração do painel; vazio quando a pessoa pôs o dela. */
+export const notaDoSpread = (spread: number, padrao: number) => (spread === padrao ? " (exemplo)" : "");
+
+/** O que vem depois de "p.p." no fim de uma frase: "(exemplo)." com o spread de demonstração; nada com o da pessoa (o ponto de "p.p." já fecha). */
+export const fimDoSpread = (spread: number, padrao: number) => (spread === padrao ? " (exemplo)." : "");
 
 /**
  * Junta o que estava guardado com os valores de exemplo: cada campo só vale se tem o mesmo tipo do exemplo (e, sendo

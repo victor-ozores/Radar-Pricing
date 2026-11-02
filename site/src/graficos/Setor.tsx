@@ -191,7 +191,7 @@ export function PainelDaAbac({ itens }: { itens: SerieAbac[] }) {
               {s.delta !== null ? (
                 <>
                   {" "}
-                  <Delta valor={s.delta} tipo="num" casas={2} periodo="no mês" tamanho="p" />
+                  <Delta valor={s.delta} tipo="num" casas={2} sufixo={s.unidade} periodo="no mês" tamanho="p" />
                 </>
               ) : null}
             </p>

@@ -19,7 +19,7 @@ export function Mercado({ sub }: { sub: string | null }) {
       <p className="rotulo m-0 mb-2">Mercado</p>
       <h1 className="m-0 max-w-[26ch] text-balance text-[2rem] font-semibold leading-[1.1] md:text-[2.8rem]">Os números por trás da história</h1>
       <p className="mb-6 mt-3 max-w-[62ch] text-tinta2">Gráficos que mostram como cada número andou e tabelas completas, que você pode ordenar, buscar e baixar em CSV. Toque ou passe o mouse sobre os títulos das colunas para ver o que cada uma quer dizer.</p>
-      <nav aria-label="Seções do mercado" className="mb-6 flex gap-2 overflow-x-auto pb-1">
+      <nav aria-label="Seções do mercado" className="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {ABAS.map((a) => (
           <a
             key={a.id}

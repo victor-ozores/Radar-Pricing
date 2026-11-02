@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { agioDaCota, cotaAtiva, EXEMPLOS, MAX_PARCELAS } from "../../../js/calc.js";
 import { dataBR, num, numComMenos, prazoEmTexto, reais } from "../../../js/formato.js";
-import { usePersistido } from "../../calc/memoria";
+import { notaDoSpread, usePersistido } from "../../calc/memoria";
 import { useEstado } from "../../dados";
 import { Balao, COR, EIXO, GRADE } from "../../graficos/base";
 import { Campo } from "../../ui/blocos";
@@ -11,7 +11,7 @@ import { AcoesDaConta, Aviso, BarraDoResultado, ComoFoiCalculado, ESe, Moldura, 
 const EXEMPLO = { ...EXEMPLOS.ativa, usarSpread: false, spread: 5, temPreco: false, preco: 20000, custos: 0 };
 
 export function Ativa() {
-  const { curvas, spread: geral, foto } = useEstado();
+  const { curvas, spread: geral, foto, parametros } = useEstado();
   const [e, muda, volta] = usePersistido("ativa", EXEMPLO);
   const spread = e.usarSpread ? e.spread : geral;
   const k = Math.min(e.contemplacao, e.parcelas);
@@ -23,7 +23,7 @@ export function Ativa() {
     [
       `Radar Pricing · Cota ativa · foto de ${dataBR(foto.data)}`,
       `Crédito de ${reais(e.credito, 0)}, ${e.parcelas} parcelas de ${reais(e.parcela, 0)}, contemplação ${k === 0 ? "já" : `em ${prazoEmTexto(k)}`}`,
-      `Spread de risco: ${num(spread, 1)} p.p. (exemplo)`,
+      `Spread de risco: ${num(spread, 1)} p.p.${notaDoSpread(spread, parametros.spread_demonstracao_pp)}`,
       r ? `A cota vale hoje ${reais(r.valor_da_cota)} (${num(r.pct_do_credito, 1)}% do crédito): crédito em valor de hoje ${reais(r.vp_credito)} menos parcelas em valor de hoje ${reais(r.vp_parcelas)}` : "Sem resultado para estes dados",
       ...(r && agio ? [`Preço pedido ${reais(e.preco, 0)} (+ ${reais(e.custos, 0)} de custos): ágio de ${num(agio.sobre_credito_pct, 1)}% sobre o crédito e ${num(agio.sobre_saldo_pct, 1)}% sobre o saldo devedor; preço máximo para empatar ${reais(r.valor_da_cota - e.custos)}`] : []),
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",

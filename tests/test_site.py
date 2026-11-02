@@ -152,12 +152,15 @@ def _taxa(curva: dict, meses: float) -> float:
 
 
 def _cancelada(e: dict, curvas: dict) -> dict:
-    ancora = _taxa(curvas["real" if e["corrigido"] else "nominal"], e["meses"])
+    propria = e.get("correcaoPct") is not None  # a taxa própria prevalece e desconta pela curva Prefixada
+    ancora = _taxa(curvas["real" if e["corrigido"] and not propria else "nominal"], e["meses"])
     desconto = ancora + e["spreadPP"]
-    vp = valor_presente(e["valor"], desconto, e["meses"])
+    no_pagamento = e["valor"] * (1 + e["correcaoPct"] / 100) ** (e["meses"] / 12) if propria else e["valor"]
+    vp = valor_presente(no_pagamento, desconto, e["meses"])
     return {
         "taxa_ancora": ancora,
         "taxa_desconto": desconto,
+        "valor_no_pagamento": no_pagamento,
         "valor_presente": vp,
         "pct_do_valor": vp / e["valor"] * 100,
     }
@@ -202,6 +205,17 @@ def _cenarios() -> list[dict]:
                 for spread in (0, 5, 12.5):
                     entrada = {"valor": valor, "meses": meses, "corrigido": corrigido, "spreadPP": spread}
                     casos.append({"calc": "cancelada", "entrada": entrada})
+    for meses in (1, 24, 60, 200):  # taxa própria de correção (o índice do bem), com e sem "corrigido" ligado
+        for correcao in (0, 4.5, 12.25, -2):
+            for corrigido in (True, False):
+                entrada = {
+                    "valor": 80000.5,
+                    "meses": meses,
+                    "corrigido": corrigido,
+                    "correcaoPct": correcao,
+                    "spreadPP": 5,
+                }
+                casos.append({"calc": "cancelada", "entrada": entrada})
     for preco, valor in ((800, 1000), (38000, 50000), (100, 99)):
         for meses in (1, 18, 60, 300):
             for corrigido in (True, False):
@@ -222,7 +236,7 @@ def _cenarios() -> list[dict]:
 
 def test_calculadoras_do_painel_batem_com_uma_conta_feita_em_python(foto_json):
     """As três calculadoras (JavaScript) contra a mesma conta escrita de novo em Python, usando a
-    interpolação e o valor presente do próprio robô, em 192 combinações de entrada."""
+    interpolação e o valor presente do próprio robô, em 224 combinações de entrada."""
     foto = json.loads(foto_json.read_text(encoding="utf-8"))
     a = foto["derivados"]["ancoras"]
     curvas = {"nominal": a["curva_nominal"], "real": a["curva_real"]}
@@ -237,7 +251,7 @@ def test_calculadoras_do_painel_batem_com_uma_conta_feita_em_python(foto_json):
     )
     assert r.returncode == 0, r.stderr
     do_js = json.loads(r.stdout)
-    assert len(do_js) == len(casos) == 192
+    assert len(do_js) == len(casos) == 224
     conta = {"cancelada": _cancelada, "retorno": _retorno, "ativa": _ativa}
     for caso, js in zip(casos, do_js, strict=True):
         esperado = conta[caso["calc"]](caso["entrada"], curvas)
@@ -413,6 +427,7 @@ ABAS_DO_EXCEL = [
     "Retorno da oferta",
     "Cota ativa",
     "Cota ativa (cálculo)",
+    "Precatório",
     "Custo do dinheiro",
     "Crédito concorrente",
     "Setor",

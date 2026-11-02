@@ -11,7 +11,7 @@ import { AcoesDaConta, Aviso, BarraDoResultado, CampoDePrazo, ComoFoiCalculado, 
 const EXEMPLO = { ...EXEMPLOS.retorno, prazoEmData: false, prazoData: "", alvoAtivo: false, alvo: 12, custos: 0, usarSpread: false, spread: 5 };
 
 export function Oferta() {
-  const { curvas, spread: geral, foto } = useEstado();
+  const { curvas, spread: geral, foto, parametros } = useEstado();
   const [e, muda, volta] = usePersistido("oferta", EXEMPLO);
   const spread = e.usarSpread ? e.spread : geral;
   const meses = mesesDaConta(e, foto.data);
@@ -26,7 +26,7 @@ export function Oferta() {
       `Radar Pricing · Retorno de uma oferta · foto de ${dataBR(foto.data)}`,
       `Pagando ${reais(e.preco, 0)}${e.custos > 0 ? ` + ${reais(e.custos, 0)} de custos` : ""} para receber ${reais(e.valor, 0)} em ${prazoEmTexto(meses ?? 0)} (${e.corrigido ? "corrigido pela inflação" : "sem correção"})`,
       r ? `Retorno: ${num(r.retorno_aa, 2)}% ao ano (ganho total de ${num(r.retorno_total, 1)}%)` : "Sem resultado para estes dados",
-      r ? `Para ${num(r.alvo, 2)}% ao ano${r.alvo_padrao ? ` (Tesouro + spread de ${num(spread, 1)} p.p., exemplo)` : ""}, o preço máximo é ${reais(r.preco_maximo)}: ${cabe ? "a oferta cabe" : "a oferta não cabe"}` : "",
+      r ? `Para ${num(r.alvo, 2)}% ao ano${r.alvo_padrao ? ` (Tesouro + spread de ${num(spread, 1)} p.p.${spread === parametros.spread_demonstracao_pp ? ", exemplo" : ""})` : ""}, o preço máximo é ${reais(r.preco_maximo)}: ${cabe ? "a oferta cabe" : "a oferta não cabe"}` : "",
       "Demonstração com premissas públicas: não é preço nem recomendação. victor-ozores.github.io/Radar-Pricing",
     ]
       .filter(Boolean)
@@ -56,7 +56,7 @@ export function Oferta() {
             formato={(n) => `${num(n, 2)}% ao ano`}
             nota={
               <>
-                Pagando {reais(r.pago, 0)}{e.custos > 0 ? " (com os custos)" : ""} para receber {reais(e.valor, 0)} em {prazoEmTexto(meses)}, o ganho total é de {num(r.retorno_total, 1)}%{e.corrigido ? ", acima da inflação" : ""}. O <Termo id="desagio">deságio</Termo> é de {num((1 - r.pago / e.valor) * 100, 1)}%.
+                Pagando {reais(r.pago, 0)}{e.custos > 0 ? " (com os custos)" : ""} para receber {reais(e.valor, 0)} em {prazoEmTexto(meses)}, o ganho total é de {num(r.retorno_total, 1)}%{e.corrigido ? ", acima da inflação" : ""}. O <Termo id="desagio">deságio</Termo> é de {num((1 - e.preco / e.valor) * 100, 1)}%{e.custos > 0 ? ` sobre o preço (${num((1 - r.pago / e.valor) * 100, 1)}% contando os custos)` : ""}.
               </>
             }
           />

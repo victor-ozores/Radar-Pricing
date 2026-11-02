@@ -91,17 +91,24 @@ function escolheCurva(curvas, corrigido) {
 
 /**
  * Cota cancelada: a administradora devolve `valor` daqui a `meses` (no fim do grupo). Quanto isso vale hoje?
- * `corrigido`: o valor sobe com a inflação até a data (usa a curva IPCA+, resultado em reais de hoje); senão usa a
- * curva Prefixada. Devolve também o mesmo cálculo em prazos vizinhos e com o spread um ponto abaixo e acima.
+ * Três jeitos de tratar a correção até a data:
+ *  - `corrigido`: o valor sobe com a inflação (curva IPCA+, resultado em reais de hoje);
+ *  - `correcaoPct` (% ao ano, o índice do bem: INCC, tabela FIPE, o que a pessoa quiser): o valor de hoje cresce a essa
+ *    taxa até a data e é descontado pela curva Prefixada mais o spread (prevalece sobre `corrigido`);
+ *  - nenhum dos dois: o valor é fixo em reais e é descontado pela curva Prefixada.
+ * Devolve também o mesmo cálculo em prazos vizinhos e com o spread um ponto abaixo e acima.
  */
-export function cotaCancelada({ valor, meses, corrigido, spreadPP }, curvas) {
-  const curva = escolheCurva(curvas, corrigido);
+export function cotaCancelada({ valor, meses, corrigido, correcaoPct = null, spreadPP }, curvas) {
+  const propria = correcaoPct !== null && correcaoPct !== undefined;
+  if (propria && !(Number.isFinite(correcaoPct) && correcaoPct > -100)) return null;
+  const curva = escolheCurva(curvas, propria ? false : corrigido);
   if (!curva || !positivo(valor) || !(meses >= 1) || !(spreadPP >= 0)) return null;
   const um = (m, s) => {
     const [ancora, extrapolado] = interpola(curva.pontos, m / 12);
     const desconto = ancora + s;
-    const vp = valorPresente(valor, desconto, m);
-    return { meses: m, spread: s, taxa_ancora: ancora, taxa_desconto: desconto, valor_presente: vp, pct_do_valor: (vp / valor) * 100, extrapolado };
+    const noPagamento = propria ? valor * (1 + correcaoPct / 100) ** (m / 12) : valor;
+    const vp = valorPresente(noPagamento, desconto, m);
+    return { meses: m, spread: s, taxa_ancora: ancora, taxa_desconto: desconto, valor_no_pagamento: noPagamento, valor_presente: vp, pct_do_valor: (vp / valor) * 100, extrapolado };
   };
   return {
     ...um(meses, spreadPP),

@@ -307,10 +307,22 @@ export function resumoDoErro(erro) {
   return erro.length > 120 ? `${erro.slice(0, 117)}...` : erro;
 }
 
+/**
+ * Um aviso do robô sem os nomes internos das séries: "Boletim X: não achei abac_ticket_medio" vira
+ * "Boletim X: não encontrei o ticket médio".
+ */
+export function textoDoAviso(texto) {
+  const m = /^(.*): não achei (.+)$/.exec(texto ?? "");
+  if (!m) return texto ?? "";
+  const nomes = new Map(ABAC_SERIES.map(([serie, rotulo]) => [serie, rotulo.toLowerCase()]));
+  const faltaram = m[2].split(", ").map((id) => nomes.get(id.trim()) ?? id.trim());
+  return `${m[1]}: não encontrei ${faltaram.join(", ")}`;
+}
+
 /** O que dizer de cada fonte: o erro em uma frase (sem repetir o texto cru que vem em `falhas`) e os avisos. */
 export function observacoesDaFonte(f) {
   const erro = resumoDoErro(f.erro);
-  return [...(erro ? [erro] : f.falhas ?? []), ...(f.atrasos ?? []), ...(f.avisos ?? [])].filter(Boolean);
+  return [...(erro ? [erro] : f.falhas ?? []), ...(f.atrasos ?? []), ...(f.avisos ?? []).map(textoDoAviso)].filter(Boolean);
 }
 
 export function fontes(foto) {

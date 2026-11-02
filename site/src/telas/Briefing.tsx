@@ -5,7 +5,7 @@ import { dataBR, diaDaSemana, num } from "../../js/formato.js";
 import { fraseDasBarras, fraseDasExcluidas, fraseDoFocus, heroDoDia, leituraDoDia } from "../../js/leitura.js";
 import * as modelo from "../../js/modelo.js";
 import { fraseDoCapituloDaCurva, fraseDoCapituloDoCredito, fraseDoCapituloDoCusto, fraseDoCapituloDoSetor, manchetePrincipal } from "../../js/narrativa.js";
-import { ultimaCalculadora } from "../calc/memoria";
+import { notaDoSpread, ultimaCalculadora } from "../calc/memoria";
 import { useDados, useEstado } from "../dados";
 import { CurvaDeJuros, SelicEmDias, SelicEsperada } from "../graficos/Juros";
 import { FaixasDeCredito } from "../graficos/Credito";
@@ -31,7 +31,7 @@ function Topo() {
   const manchete = useMemo(() => manchetePrincipal(estado), [estado]);
   const hero = useMemo(() => heroDoDia(estado), [estado]);
   const resumo = useMemo(() => leituraDoDia(estado) as { icone: string; texto: string }[], [estado]);
-  const mexidas = useMemo(() => (modelo.movimentos(foto) as { texto: string; severidade: string; peso: number }[]).slice(0, 5), [foto]);
+  const mexidas = useMemo(() => (modelo.movimentos(foto) as { texto: string; severidade: string; peso: number }[]).filter((m) => !/fonte complementar/.test(m.texto)).slice(0, 5), [foto]);
   const cor = manchete?.sentido === "caiu" ? "text-sobe" : manchete?.sentido === "subiu" ? "text-cai" : "text-tinta";
   return (
     <section className="mx-auto max-w-[76rem] px-4 pt-8 md:px-6 md:pt-14" aria-labelledby="manchete">
@@ -60,7 +60,7 @@ function Topo() {
               As premissas de mercado de hoje.
             </h1>
           )}
-          {hero?.porque ? <p className="mb-0 mt-5 max-w-[56ch] text-[1.06rem] leading-relaxed text-tinta2">{hero.porque}{hero.antes && hero.hoje ? ` Em R$: ${hero.antes} há 7 dias, ${hero.hoje} hoje (por cada R$ 1.000).` : ""}</p> : null}
+          {hero?.porque ? <p className="mb-0 mt-5 max-w-[56ch] text-[1.06rem] leading-relaxed text-tinta2">{hero.porque}{hero.antes && hero.hoje ? ` Em R$: ${hero.antes} há 7 dias, ${hero.hoje} hoje (por cada R$ 1.000, com spread de risco de ${num(estado.spread, 1)} p.p.${estado.spread === estado.parametros.spread_demonstracao_pp ? ", de exemplo" : ""}).` : ""}</p> : null}
           <ul className="m-0 mt-6 flex list-none flex-col gap-3 p-0">
             {resumo.map((f) => (
               <li key={f.icone} className="flex gap-3 text-[0.97rem] leading-snug text-tinta">
@@ -150,10 +150,10 @@ function ControleDeSpread() {
   return (
     <div className="nao-imprime mb-5 flex flex-wrap items-end gap-x-6 gap-y-3 rounded-2xl border border-linha bg-folha2 p-4">
       <div className="w-44">
-        <Campo rotulo={<><Termo id="spread">Spread de risco</Termo> (exemplo)</>} valor={spread} aoMudar={defineSpread} sufixo="p.p." casas={1} max={30} passo={0.5} />
+        <Campo rotulo={<><Termo id="spread">Spread de risco</Termo>{notaDoSpread(spread, estado?.parametros.spread_demonstracao_pp ?? 5)}</>} valor={spread} aoMudar={defineSpread} sufixo="p.p." casas={1} max={30} passo={0.5} />
       </div>
       <p className="m-0 max-w-[46ch] flex-1 text-[0.8125rem] leading-snug text-tinta3">
-        É um adicional de risco somado à taxa do Tesouro. O número padrão ({num(estado?.parametros.spread_demonstracao_pp ?? 5, 1)} p.p.) é só para demonstrar: cada empresa define o seu. Mude para ver as contas se refazerem.
+        É um adicional de risco somado à taxa do Tesouro. O número padrão ({num(estado?.parametros.spread_demonstracao_pp ?? 5, 1)} p.p.) é só para demonstrar: cada empresa define o seu. Mude para ver as contas se refazerem; o painel lembra o seu valor neste navegador.
       </p>
     </div>
   );

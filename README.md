@@ -32,7 +32,7 @@ Python + GitHub Actions + React, sem servidor e a custo zero.
 
 Para precificar uma cota de consórcio, não basta olhar a cota: o preço depende de **quanto custa o dinheiro** (a Selic e os juros do Tesouro), de **quanto custa o crédito concorrente** (o financiamento de um carro ou de um imóvel) e de **como anda o setor** (cotas excluídas, inadimplência). Esses números são públicos, mas estão espalhados em várias fontes oficiais e mudam todo dia.
 
-O Radar Pricing junta tudo: um robô lê as fontes oficiais todo dia útil, calcula o que mudou e guarda uma **foto datada** do dia, que nunca é reescrita. Um painel mostra a foto mais nova como uma história (o que aconteceu, de onde vem e quanto pesa no valor de um crédito a receber), com tabelas completas, quatro calculadoras e uma área que diz se o robô está funcionando. Construí o projeto para mostrar uma automação agendada de ponta a ponta, que roda sozinha, **avisa quando para** e deixa cada número conferível.
+O Radar Pricing junta tudo: um robô lê as fontes oficiais todo dia útil, calcula o que mudou e guarda uma **foto datada** do dia, que nunca é reescrita. Um painel mostra a foto mais nova como uma história (o que aconteceu, de onde vem e quanto pesa no valor de um crédito a receber), com tabelas completas, cinco calculadoras e uma área que diz se o robô está funcionando. Construí o projeto para mostrar uma automação agendada de ponta a ponta, que roda sozinha, **avisa quando para** e deixa cada número conferível.
 
 **Resultado da primeira coleta na nuvem (31/10/2026):** 1.236 registros de 6 das 7 fontes (a do IBGE não responde a partir dos servidores do GitHub e é só conferência), 9 mudanças do dia marcadas, status do dia **ok**, em 1 min 7 s. O número que abre o painel nesse dia: **um valor a receber em 3 anos valia 5,2% menos que 7 dias antes**, porque os juros do Tesouro para 3 anos subiram de 12,79% para 14,93% ao ano em uma semana. Conferi esse número contra o arquivo oficial do Tesouro, linha por linha. A primeira rodada agendada é a de segunda-feira, 02/11/2026.
 
@@ -51,7 +51,7 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 * **O que aconteceu hoje, em uma frase?** A manchete diz quanto mudou, em 7 dias, o valor de hoje de um dinheiro que só chega em 3 anos.
 * **De onde vem isso?** Cinco capítulos contam a história na ordem em que o preço se forma: o custo do dinheiro, a curva de juros do Tesouro, quanto isso pesa no valor, o crédito que concorre e o setor.
 * **E se a taxa andar?** Uma tabela mostra o valor de hoje em cada prazo se a taxa subir ou cair até 3 pontos.
-* **Quanto vale, ou quanto rende, esta cota?** Quatro calculadoras: cota cancelada, cota ativa, retorno de uma oferta e precatório, cada uma com a conta escrita com os números.
+* **Quanto vale, ou quanto rende, esta cota?** Cinco calculadoras: cota cancelada, cota ativa, retorno de uma oferta, precatório e uma lista de várias cotas de uma vez, cada uma com a conta escrita com os números.
 * **Dá para confiar nos números?** O painel diz se o robô está em dia (as últimas 14 rodadas), de onde vem cada número, com a data, e o que cada termo técnico quer dizer.
 
 ## 🧭 Como Usar
@@ -61,9 +61,9 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 | **Entender o dia em 1 minuto** | Abra o [painel](https://victor-ozores.github.io/Radar-Pricing/) na tela **Briefing** e leia a manchete e os títulos dos cinco capítulos. Cada título já diz a conclusão. |
 | **Levar para uma reunião** | No Briefing, clique em **Imprimir** (ou no ícone da impressora) para imprimir ou salvar em PDF; o estilo de impressão tira os menus e usa preto sobre branco. |
 | **Ver os números completos** | Tela **Mercado**: o Tesouro vencimento a vencimento, Selic, CDI, IPCA e Focus, o crédito de cada banco e as 125 métricas do setor. As tabelas ordenam, buscam e baixam em CSV. |
-| **Fazer uma conta** | Botão **Calcular** no topo (no celular, a barra de baixo): ele abre direto a calculadora que você usou por último, e os campos lembram o que você digitou neste navegador. Mude o *spread de risco* e tudo se refaz, no painel inteiro. |
+| **Fazer uma conta** | Botão **Calcular** no topo (no celular, a barra de baixo): ele abre direto a calculadora que você usou por último, e os campos lembram o que você digitou neste navegador. Mude o *spread de risco* e tudo se refaz, no painel inteiro; o painel lembra o seu valor neste navegador. |
 | **Voltar a um dia anterior** | As setas ao lado da data, no topo. Cada dia fica guardado para sempre, então dá para ver os números daquele dia. |
-| **Abrir no Excel** | O botão da planilha, no topo, gera na hora um arquivo de 12 abas, com fórmulas de verdade. |
+| **Abrir no Excel** | O botão da planilha, no topo, gera na hora um arquivo de 13 abas, com fórmulas de verdade. |
 | **Saber se o robô travou** | Tela **Bastidores → O robô travou?**, ou o selo verde, amarelo ou vermelho no topo de toda página. |
 
 ## 🖼️ Preview
@@ -83,6 +83,8 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 <br><br>
 <img src="./docs/img/celular.png" width="70%" alt="As calculadoras no celular: barra fina no topo, barra de telas embaixo com o botão Calcular e o resultado sempre à vista">
 <br><br>
+<img src="./docs/img/lote.png" width="100%" alt="Várias cotas de uma vez: a lista colada do Excel, a soma do que valem, quantas cabem no preço pedido e a tabela com o resultado de cada uma">
+<br><br>
 <img src="./docs/img/robo.png" width="100%" alt="Área Bastidores: o robô está em dia, rodadas com sucesso e as últimas rodadas">
 <br><br>
 <img src="./docs/img/painel_escuro.png" width="100%" alt="O mesmo painel no tema escuro">
@@ -96,7 +98,7 @@ Abre direto, sem login e sem servidor: a página lê a foto do dia direto do Git
 |---|---|
 | **Briefing** | A manchete do dia, os números do dia (valor, mudança em 7 dias, linha do tempo, fonte e data), o que mexeu na semana e cinco capítulos: **1** custo do dinheiro (Selic, CDI e o que o Focus espera), **2** curva de juros do Tesouro (hoje, 7 e 30 dias atrás), **3** quanto isso pesa no valor (variação por prazo e tabela de sensibilidade), **4** crédito concorrente (a taxa de cada banco) e **5** o setor (índice de exclusão, inadimplência, vendas da ABAC) |
 | **Mercado** | Quatro abas com gráficos e tabelas completas: Tesouro, Selic e inflação e Focus, crédito por banco e setor de consórcio |
-| **Calculadoras** | Cota cancelada, cota ativa (crédito menos parcelas, por mês de contemplação), retorno de uma oferta (com preço máximo para um retorno desejado e custos de transferência) e precatório (valor corrigido até receber, com a escolha do índice, retenções e a oferta de compra), cada uma com "e se?" e "como foi calculado" |
+| **Calculadoras** | Cota cancelada (corrigida pela inflação, por uma taxa que você informa ou sem correção), cota ativa (crédito menos parcelas, por mês de contemplação), retorno de uma oferta (com preço máximo para um retorno desejado e custos de transferência), precatório (valor corrigido até receber, com a escolha do índice, retenções e a oferta de compra) e **várias cotas**: você cola uma lista copiada do Excel e vê quanto vale cada uma, quais cabem no preço pedido e baixa o resultado em CSV. As quatro primeiras trazem "e se?" e "como foi calculado" |
 | **Bastidores** | O robô travou? (veredito e tira das últimas 14 rodadas), de onde vêm os números (cada fonte e se respondeu), dicionário de 19 termos e como foi feito |
 
 ## 🔄 Como Funciona
@@ -199,6 +201,8 @@ Todas as fontes são públicas e oficiais. Cada uma foi testada com chamada de v
 * **Mudança em 7 dias.** A mesma conta com a curva de uma semana antes (o robô guarda a taxa de 7 dias atrás de cada vencimento): a diferença é o efeito da semana.
 * **Retorno de uma oferta** = (valor a receber ÷ preço) elevado a (12 ÷ meses) − 1. **Preço máximo** = valor a receber ÷ (1 + retorno desejado) elevado a (meses ÷ 12).
 * **Cota ativa** = o crédito descontado até o mês da contemplação, menos todas as parcelas descontadas.
+* **Cota cancelada com taxa própria** = o valor de hoje cresce à taxa que você informar (o índice do bem, como INCC ou tabela FIPE) até a data e depois desconta pela curva Prefixada mais o spread, porque a correção já embute a inflação.
+* **Várias cotas** = a mesma conta de cada calculadora, linha por linha, sobre a lista que você colar; nada de conta nova.
 * **Precatório** = o valor corrigido mês a mês até o pagamento (multiplicando o fator de cada mês, que vem da Selic ou do IPCA que o Focus espera para aquele ano), menos as retenções que você informar, descontado pela curva Prefixada do Tesouro mais o *spread*. O índice de correção é uma escolha sua (Selic, IPCA mais juros limitado pela Selic, taxa própria ou sem correção), porque a regra mudou em 2025 e a transição é discutida: a calculadora mostra a conta e não diz qual vale para o seu caso. O resultado é o valor de hoje e o *deságio justo* (quanto abaixo do valor atualizado o preço teria de ficar para quem compra ganhar o Tesouro mais o spread). Com uma oferta de compra, mostra também o retorno ao ano de quem compra, o *deságio mínimo* e o preço máximo, já separando os custos.
 * **Índice de exclusão** = cotas excluídas ÷ (ativas + excluídas). Confere com o que o Banco Central publica (48,8% em jun/2026).
 
@@ -210,10 +214,10 @@ O que as calculadoras **não** consideram: a chance de ser contemplada, lance, s
 |---|---|---|
 | **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 581 números conferidos, 0 divergências ([relatório](docs/auditoria/calculos_2026-11-01.md)) |
 | **O dado bruto** | Comparei com as fontes oficiais baixadas de novo | 360 de 360 taxas do Tesouro iguais ao arquivo oficial; 65 valores do SGS e 16 do Focus iguais aos das APIs |
-| **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 192 combinações das três primeiras calculadoras e 576 do precatório contra a conta refeita em Python |
-| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 129 + 25 + 135 testes, todos offline (respostas reais gravadas) |
-| **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 1.344 fórmulas, 0 diferenças contra o painel, em 8 cenários |
-| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 111 no painel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
+| **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 224 combinações das três primeiras calculadoras (com a taxa própria) e 576 do precatório contra a conta refeita em Python |
+| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 143 + 39 + 135 testes, todos offline (respostas reais gravadas) |
+| **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 1.401 fórmulas, 0 diferenças contra o painel, em 16 cenários |
+| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 45 vezes no robô, 140 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
 | **A nuvem** | A rodada de verdade no GitHub Actions, o site publicado e o `npm audit` | verde; 0 vulnerabilidades conhecidas nas dependências |
 
 ## 🧱 Tecnologias
@@ -237,7 +241,7 @@ src/radar_pricing/      o robô: http.py (cliente), fontes/ (7 coletores), colet
 site/                   o painel
   js/                   contas, leitura da foto, frases e Excel (JavaScript simples)
   src/                  telas (Briefing, Mercado, Calculadoras, Bastidores), gráficos e componentes
-  tests/                129 testes de contas e leitura, com a foto real em tests/fixtures
+  tests/                143 testes de contas e leitura, com a foto real em tests/fixtures
 scripts/                verifica_fontes.py (testa cada fonte de verdade), audita_painel.py,
                         confere_excel.py (abre o Excel de verdade, no Windows), grava_amostras.py
 tests/                  135 testes em Python, com respostas reais gravadas
