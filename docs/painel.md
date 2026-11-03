@@ -73,7 +73,7 @@ Conferi as contas do histórico contra as do robô, com a foto de verdade: a ân
 
 Duas fontes, que se completam:
 
-1. **A foto.** O robô roda de segunda a sexta, por volta das 10h17 de Brasília. A página calcula qual foto já deveria existir agora: a de hoje, se hoje é dia útil e já passaram 6 horas do horário (no meu outro projeto o agendamento do GitHub chegou a atrasar 5,5 horas); senão, a do último dia útil. Se a foto mais nova é mais velha que isso, o selo fica amarelo ("Robô atrasado") e diz quantos dias úteis faltam.
+1. **A foto.** O robô roda de segunda a sexta, por volta das 10h17 de Brasília. A página calcula qual foto já deveria existir agora: a de hoje, se hoje é dia útil e já passaram 10 horas do horário (o agendamento do GitHub chegou a atrasar 9 horas neste projeto, no primeiro dia, e 5,5 horas no meu outro); senão, a do último dia útil. Se a foto mais nova é mais velha que isso, o selo fica amarelo ("Robô atrasado") e diz quantos dias úteis faltam.
 2. **As rodadas do GitHub Actions.** A página consulta a API pública do GitHub (`.../actions/workflows/coleta-diaria.yml/runs`, 60 consultas por hora por endereço, com `Access-Control-Allow-Origin: *`) e desenha as últimas 14 rodadas: verde deu certo, vermelho falhou, âmbar está rodando. Uma rodada que falhou deixa o selo vermelho ("Última rodada falhou"). Se o GitHub não responder, a página avisa e segue com o que a foto diz.
 
 O que **não** vejo daqui: o vigia externo (Healthchecks), que manda e-mail se o robô parar. A tela diz isso com todas as letras.

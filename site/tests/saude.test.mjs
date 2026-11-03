@@ -20,8 +20,8 @@ test("a data em Brasília de um instante", () => {
 
 test("a foto que já deveria existir: de manhã é a do dia útil anterior; depois da folga do agendamento, a de hoje", () => {
   assert.equal(fotoEsperada(quando("2026-11-02T11:00:00Z")), "2026-10-30"); // segunda 08:00: ainda é a de sexta
-  assert.equal(fotoEsperada(quando("2026-11-02T19:16:00Z")), "2026-10-30"); // segunda 16:16: ainda dentro da folga
-  assert.equal(fotoEsperada(quando("2026-11-02T19:17:00Z")), "2026-11-02"); // segunda 16:17: a de hoje já devia existir
+  assert.equal(fotoEsperada(quando("2026-11-02T22:16:00Z")), "2026-10-30"); // segunda 19:16: ainda dentro da folga (o agendado de 02/11 chegou às 19:19)
+  assert.equal(fotoEsperada(quando("2026-11-02T23:17:00Z")), "2026-11-02"); // segunda 20:17: a de hoje já devia existir
   assert.equal(fotoEsperada(quando("2026-11-03T13:00:00Z")), "2026-11-02"); // terça 10:00
   assert.equal(fotoEsperada(quando("2026-10-31T15:00:00Z")), "2026-10-30"); // sábado
   assert.equal(fotoEsperada(quando("2026-11-01T15:00:00Z")), "2026-10-30"); // domingo

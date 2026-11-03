@@ -267,7 +267,7 @@ flowchart TD
         C1["Ruff: erros e formato"] --> C2["Instala o painel<br/>npm ci --ignore-scripts"]
         C2 --> C3["Tipos, testes de contas e de telas<br/>e a construção do site"]
         C3 --> C4["npm audit<br/>só informa"]
-        C4 --> C5["Pytest: 156 testes offline<br/>inclusive o JavaScript contra o robô"]
+        C4 --> C5["Pytest: 159 testes offline<br/>inclusive o JavaScript contra o robô"]
     end
 
     subgraph PG["pages.yml: Painel (só se algo em site/ mudou)"]

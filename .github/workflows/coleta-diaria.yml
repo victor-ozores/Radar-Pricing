@@ -1,11 +1,15 @@
 name: Coleta diária
 
 # Todo dia útil coleta as premissas públicas de mercado e publica a foto do dia na branch `data`.
-# O horário é UTC. No Radar PNCP medi atrasos de 3 a 5 horas nos agendamentos do GitHub, por isso o horário
-# é cedo (10:17 em Brasília) e o Healthchecks tem 8 horas de tolerância. A foto leva a data de Brasília.
+# O horário é UTC. O GitHub atrasa os agendamentos: no Radar PNCP medi de 3 a 5 horas e aqui, no primeiro dia
+# (02/11/2026), 9 h 02 min. Por isso o horário principal é cedo (10:17 em Brasília), há duas reservas mais tarde
+# e o Healthchecks precisa de uns 12 horas de tolerância. A primeira que começar coleta; as outras veem que a foto
+# do dia já existe (`--pular-se-ja-existe`) e saem em segundos. A foto leva a data de Brasília.
 on:
   schedule:
     - cron: "17 13 * * 1-5"
+    - cron: "47 16 * * 1-5" # reserva 1 (13:47 em Brasília)
+    - cron: "47 19 * * 1-5" # reserva 2 (16:47 em Brasília)
   workflow_dispatch:
 
 permissions:

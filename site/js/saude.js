@@ -4,7 +4,7 @@
 import { somaDias } from "./foto.js";
 
 export const HORA_DO_AGENDAMENTO = 10 + 17 / 60; // 10:17 em Brasília (cron 13:17 UTC)
-export const FOLGA_DO_AGENDAMENTO_H = 6; // o cron do GitHub chegou a atrasar 5,5 h no outro radar
+export const FOLGA_DO_AGENDAMENTO_H = 10; // o cron do GitHub chegou a atrasar 9 h aqui (02/11/2026) e 5,5 h no outro radar
 export const RODADAS_NA_TIRA = 14;
 
 const diaDaSemana = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay();

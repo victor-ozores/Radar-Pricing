@@ -217,9 +217,9 @@ O que as calculadoras **não** consideram: a chance de ser contemplada, lance, s
 | **Os números do painel** | [`scripts/audita_painel.py`](scripts/audita_painel.py) refaz as contas em Python, só com os registros brutos, e compara com o que o JavaScript calculou (roda a cada envio) | 763 números conferidos, 0 divergências, e mais 72 mil em entradas aleatórias ([relatório de 01/11](docs/auditoria/calculos_2026-11-01.md) e [segunda revisão, de 02/11](docs/auditoria/calculos_2026-11-02.md)) |
 | **O dado bruto** | Comparei com as fontes oficiais baixadas de novo | 360 de 360 taxas do Tesouro iguais ao arquivo oficial; 65 valores do SGS e 16 do Focus iguais aos das APIs |
 | **JavaScript contra o robô** | A calculadora do painel contra a conta do robô, com uma foto de verdade | 4.800 combinações iguais ao centavo; mais 224 combinações das três primeiras calculadoras (com a taxa própria) e 576 do precatório contra a conta refeita em Python |
-| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 161 + 51 + 156 testes, todos offline (respostas reais gravadas) |
+| **Testes** | Node para as contas e a leitura, vitest para as telas, pytest para o robô e para a conversa entre os dois | 161 + 51 + 159 testes, todos offline (respostas reais gravadas) |
 | **O Excel** | Aberto no Excel 16 de verdade, com as fórmulas recalculadas | 5.774 fórmulas, 0 diferenças contra o painel, em 16 cenários |
-| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 53 vezes no robô, 193 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
+| **Os testes pegam erro?** | Estraguei o código de propósito, uma coisa por vez | 57 vezes no robô, 194 no painel, no Excel e na auditoria: todas acabaram percebidas (algumas só na segunda tentativa, e cada uma ganhou um teste) |
 | **A nuvem** | A rodada de verdade no GitHub Actions, o site publicado e o `npm audit` | verde; 0 vulnerabilidades conhecidas nas dependências |
 
 ## 🧱 Tecnologias
@@ -246,7 +246,7 @@ site/                   o painel
   tests/                161 testes de contas e leitura, com a foto real em tests/fixtures
 scripts/                verifica_fontes.py (testa cada fonte de verdade), audita_painel.py,
                         confere_excel.py (abre o Excel de verdade, no Windows), grava_amostras.py
-tests/                  156 testes em Python, com respostas reais gravadas
+tests/                  159 testes em Python, com respostas reais gravadas
 docs/                   fluxograma.md, painel.md, robo_diario.md, fontes_de_dados.md, auditoria/
 config.toml             papel de cada fonte e parâmetros de exemplo
 .github/workflows/      coleta-diaria.yml, ci.yml, pages.yml, verifica-fontes.yml
@@ -277,7 +277,7 @@ Para ler fotos locais em vez das da branch `data`, abra o painel com `?base=` ap
 ## ⚠️ Limitações
 
 * **É uma demonstração.** O spread de risco e os valores das calculadoras são de exemplo. Preço de verdade depende de extratos, regras e histórico que só uma empresa tem; não encontrei fonte pública de preço de cota no mercado secundário, nem de valor e credor de precatório. O painel acompanha as **premissas**, não o preço.
-* **O robô tem um dia de vida na nuvem.** A primeira rodada agendada é a de 02/11/2026. O GitHub pode atrasar o agendamento em horas (por isso o painel dá 6 horas de folga antes de dizer que o robô atrasou) e, segundo a documentação do GitHub, desliga agendamentos de repositório público depois de 60 dias sem atividade. O vigia externo (Healthchecks) existe para isso, mas o e-mail de alerta ainda não foi provado de verdade.
+* **O GitHub atrasa o agendamento.** A primeira rodada agendada (02/11/2026) começou **9 h 02 min depois** do horário. Por isso há dois horários de reserva (a primeira rodada que começar coleta; as outras só veem que a foto do dia já existe) e o painel dá 10 horas de folga antes de dizer que o robô atrasou. Segundo a documentação do GitHub, ele também desliga agendamentos de repositório público depois de 60 dias sem atividade. O vigia externo (Healthchecks) existe para isso, e o e-mail de alerta já chegou de verdade (02/11/2026, quando a rodada passou da tolerância de 8 horas, o que mostrou que ela era curta para o atraso do GitHub).
 * **O histórico dos gráficos é o que cada foto traz:** cerca de 5 semanas de Tesouro e 2 meses de Selic. Uma linha do tempo mais longa só faz sentido depois de semanas de fotos.
 * **O IBGE não responde** a partir dos servidores do GitHub. Ele só serve de conferência do IPCA do Banco Central.
 * **Testei o painel só em navegador Chromium** (claro e escuro, em tela larga e simulando celular de 320, 375 e 768 px, sem rolagem lateral em 13 telas). Não testei em um celular de verdade, nem no Safari ou Firefox, nem com leitor de tela. A impressão tem o estilo escrito, mas não conferi o PDF.
