@@ -79,7 +79,7 @@ flowchart TD
     M --> N(["Marca a rodada como falha<br/>e avisa o Healthchecks: fail"])
     L -->|"não"| O(["Rodada verde<br/>e avisa o Healthchecks: sucesso"])
 
-    HC2["Se o robô nem rodar,<br/>o Healthchecks avisa por e-mail<br/>depois de 8 h de tolerância"] -.-> B
+    HC2["Se o robô nem rodar,<br/>o Healthchecks avisa por e-mail<br/>depois de 12 h de tolerância"] -.-> B
 
     classDef fim fill:#e1eee8,stroke:#0b5d4b,color:#15211e
     classDef ruim fill:#fbe4e1,stroke:#b42318,color:#15211e

@@ -136,7 +136,7 @@ function PainelDoRobo() {
             </li>
           ))}
         </ol>
-        <p className="m-0 mt-5 text-sm leading-relaxed text-tinta2">De segunda a sexta o robô roda por volta das 10h17 (Brasília); o agendamento do GitHub pode atrasar algumas horas. Se ele parar de rodar, um vigia externo (Healthchecks) manda um e-mail depois de 8 horas de atraso.</p>
+        <p className="m-0 mt-5 text-sm leading-relaxed text-tinta2">De segunda a sexta o robô é agendado para as 10h17 (Brasília), com duas reservas (13h47 e 16h47). O GitHub atrasa o agendamento em horas (chegou a 9), por isso a tira acima pode mostrar até três rodadas agendadas por dia útil: a primeira que chega coleta e as outras só confirmam que a foto do dia já existe, em uns 15 segundos. Se ele parar de rodar, um vigia externo (Healthchecks) manda um e-mail depois de 12 horas de atraso.</p>
         <p className="m-0 mt-3">
           <a href={ENDERECO_DAS_RODADAS_NO_GITHUB} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-marca underline underline-offset-2">
             Ver todas as rodadas no GitHub <ExternalLink size={14} aria-hidden />
