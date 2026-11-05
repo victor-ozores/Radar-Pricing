@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { num } from "../../js/formato.js";
+import { diasEntre } from "../../js/foto.js";
+import { dataBR, num } from "../../js/formato.js";
 import { CALCULADORAS, guardaUltimaCalculadora, ultimaCalculadora, type IdDaCalculadora } from "../calc/memoria";
 import { useDados } from "../dados";
 import { enderecoDa } from "../rota";
@@ -19,6 +20,10 @@ export function Calculadoras({ sub }: { sub: string | null }) {
   const padrao = estado?.parametros.spread_demonstracao_pp ?? 5;
   useEffect(() => guardaUltimaCalculadora(id), [id]);
   const Tela = TELAS[id];
+  // de que dia são as taxas do Tesouro que as contas usam: o arquivo oficial do Tesouro às vezes fica dias sem andar
+  const base = estado?.curvas.nominal?.base ?? estado?.curvas.real?.base ?? null;
+  const idadeDaCurva = base && estado ? diasEntre(base, estado.foto.data) : 0;
+  const curvaVelha = idadeDaCurva >= 5;
   return (
     <div className="mx-auto max-w-[76rem] px-4 pb-32 pt-5 md:px-6 md:pb-20 md:pt-12">
       <p className="rotulo m-0 mb-1.5 flex items-center gap-2 md:mb-2">
@@ -28,6 +33,13 @@ export function Calculadoras({ sub }: { sub: string | null }) {
       <p className="mb-4 mt-1.5 max-w-[64ch] text-[0.85rem] leading-snug text-tinta2 md:mb-6 md:mt-3 md:text-base">
         Contas simples sobre as taxas do dia, com valores de exemplo: troque pelos seus. A página lembra o que você usou por último. Não é preço nem recomendação.
       </p>
+      {base ? (
+        <p role={curvaVelha ? "status" : undefined} className={`mb-4 mt-0 max-w-[64ch] text-[0.8125rem] leading-snug md:mb-5 ${curvaVelha ? "text-aviso" : "text-tinta3"}`}>
+          As contas usam as taxas do Tesouro Direto de <strong>{dataBR(base)}</strong>
+          {idadeDaCurva >= 2 ? ` (${idadeDaCurva} dias antes desta foto)` : ""}.
+          {curvaVelha ? " O arquivo oficial do Tesouro ainda não trouxe dias mais novos: se os juros mexeram desde então, as contas ainda não mostram." : ""}
+        </p>
+      ) : null}
       <nav aria-label="Calculadoras" className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-5 md:overflow-visible md:px-0">
         {CALCULADORAS.map((c) => (
           <a

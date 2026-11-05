@@ -91,7 +91,7 @@ export function manchetes(foto) {
       data: ancoras.cdi_anualizado.data, delta7: null, fonte: "Banco Central (SGS)", nota: "CDI diário elevado a 252 dias úteis",
     });
   }
-  dosDados("ipca_12m", "IPCA em 12 meses", entradaDeVariacao(foto, "bcb_sgs", "ipca_12_meses"), { fonte: "Banco Central (SGS)", dataEhMes: true });
+  dosDados("ipca_12m", "IPCA em 12 meses", entradaDeVariacao(foto, "bcb_sgs", "ipca_12_meses"), { fonte: "IBGE, pelo Banco Central (SGS)", dataEhMes: true });
 
   const prazo3 = tabela.length ? tabela.reduce((a, b) => (Math.abs(b.meses - 36) < Math.abs(a.meses - 36) ? b : a)) : null;
   if (prazo3) {

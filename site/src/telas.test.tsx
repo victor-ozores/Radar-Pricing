@@ -149,6 +149,40 @@ describe("mercado", () => {
   });
 });
 
+describe("datas e fontes dos números", () => {
+  it("os cartões escrevem a data com o ano, dizem que o IPCA é do IBGE, mostram a idade do dado e não cortam o rodapé", async () => {
+    await abre("#/briefing");
+    await screen.findByText("O que mexeu na semana");
+    const rodapes = [...document.querySelectorAll("button.cursor-help")].filter((b) => /·/.test(b.textContent ?? ""));
+    expect(rodapes.length).toBeGreaterThanOrEqual(6);
+    // o texto quebra de linha em vez de virar "Tesouro Direto · 3..."
+    expect(rodapes.filter((r) => r.classList.contains("truncate"))).toHaveLength(0);
+    const textos = rodapes.map((r) => (r.textContent ?? "").replace(/\s+/g, " ").trim());
+    expect(textos).toContain("IBGE, pelo Banco Central · set/2026");
+    expect(textos.some((x) => /^Tesouro Direto · \d{2}\/\d{2}\/2026 · há \d+ dias$/.test(x))).toBe(true);
+    for (const x of textos) expect(x).not.toMatch(/ · \d{2}\/\d{2}( |$)/); // nenhuma data sem o ano
+  });
+
+  it("as calculadoras dizem de que dia são as taxas do Tesouro e só avisam quando o arquivo do Tesouro parou há dias", async () => {
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/As contas usam as taxas do Tesouro Direto de 29\/10\/2026 \(2 dias antes desta foto\)\./);
+    expect(textoDaPagina()).not.toMatch(/ainda não trouxe dias mais novos/);
+    cleanup();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (String(url).includes("api.github.com")) return { ok: true, status: 200, json: async () => RODADAS };
+        return { ok: true, status: 200, json: async () => ({ ...foto, data: "2026-11-04" }) };
+      }),
+    );
+    await abre("#/calculadoras/cancelada");
+    expect(textoDaPagina()).toMatch(/As contas usam as taxas do Tesouro Direto de 29\/10\/2026 \(6 dias antes desta foto\)\./);
+    expect(textoDaPagina()).toMatch(/O arquivo oficial do Tesouro ainda não trouxe dias mais novos/);
+    const aviso = screen.getByText(/ainda não trouxe dias mais novos/).closest("p") as HTMLElement;
+    expect(aviso.className).toContain("text-aviso"); // em destaque só quando o Tesouro está parado
+  });
+});
+
 describe("calculadoras", () => {
   it("cota cancelada: o exemplo dá o valor que a conta independente dá", async () => {
     await abre("#/calculadoras/cancelada");
