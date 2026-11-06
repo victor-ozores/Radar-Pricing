@@ -411,6 +411,23 @@ def _():
     return f"IPCA {ult}: IBGE {serie[ult]}% = BCB {por_mes[ult]}%"
 
 
+@teste("ibge_sidra", "IBGE, API SIDRA (apisidra.ibge.gov.br): o 2º endereço do IPCA mensal", "complementar")
+def _():
+    # o robô tenta este endereço primeiro; o das agregados (teste acima) não responde a partir dos servidores do GitHub
+    j = pega_json(
+        "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/63/p/last%203?formato=json", timeout=25
+    )
+    serie = {linha["D3C"]: linha["V"] for linha in j[1:]}  # o 1º item da lista é o cabeçalho
+    ult = max(serie)
+    bcb = pega_json("https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados/ultimos/3?formato=json")
+    por_mes = {d["data"][6:] + d["data"][3:5]: float(d["valor"]) for d in bcb}
+    if ult not in por_mes:
+        raise Falha(f"o SIDRA tem {ult}, o BCB (SGS 433) não: {sorted(por_mes)}")
+    if abs(float(serie[ult]) - por_mes[ult]) > 0.011:
+        raise Falha(f"IPCA {ult} difere: SIDRA {serie[ult]} x BCB {por_mes[ult]}")
+    return f"IPCA {ult}: SIDRA {serie[ult]}% = BCB {por_mes[ult]}%"
+
+
 # ----------------------------------------------------------------------------------------------------- ABAC (único caso de "raspagem")
 ABAC_BLOG = "https://blog.abac.org.br/"
 _posts_abac: list[dict] = []
