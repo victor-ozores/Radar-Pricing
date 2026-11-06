@@ -22,7 +22,7 @@ Python + GitHub Actions + React, sem servidor e a custo zero.
 
 &nbsp;
 
-[![Portfólio na Xperiun](docs/img/botoes/portfolio.svg)](https://app.xperiun.com/in/victor-ozores-2)&nbsp;&nbsp;&nbsp;[![GitHub de Victor Ozores](docs/img/botoes/github.svg)](https://github.com/victor-ozores)
+[![Portfólio na Xperiun](docs/img/botoes/portfolio.svg)](https://app.xperiun.com/in/victor-ozores-2)&nbsp;&nbsp;&nbsp;[![GitHub de Victor Ozores](docs/img/botoes/github.svg)](https://github.com/victor-ozores)&nbsp;&nbsp;&nbsp;[![LinkedIn de Victor Ozores](docs/img/botoes/linkedin.svg)](https://www.linkedin.com/in/profissional-victor-ozores/)
 
 </div>
 
@@ -291,4 +291,4 @@ Para ler fotos locais em vez das da branch `data`, abra o painel com `?base=` ap
 
 ## 📄 Licença
 
-[MIT](./LICENSE). Feito por [Victor Ozores](https://github.com/victor-ozores). Usei o Claude Code como ferramenta de desenvolvimento; as decisões, as conferências e o que está escrito aqui são minhas.
+[MIT](./LICENSE). Feito por [Victor Ozores](https://github.com/victor-ozores) ([LinkedIn](https://www.linkedin.com/in/profissional-victor-ozores/)). Usei o Claude Code como ferramenta de desenvolvimento; as decisões, as conferências e o que está escrito aqui são minhas.
