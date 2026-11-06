@@ -150,7 +150,7 @@ def test_limites_so_valem_para_a_fonte_que_pediu(hoje, agora):
 
 
 def test_fonte_que_nao_responde_gasta_so_o_tempo_do_seu_limite(hoje, agora):
-    """O caso real do IBGE a partir do GitHub: não responde. Com limite próprio, são 2 x 20 s e não 3 x 90 s."""
+    """O caso real do IBGE a partir do GitHub: não responde. Com limite próprio, são 2 endereços x 1 x 15 s (30 s) e não 3 x 90 s."""
     chamadas = []
 
     def abre(pedido, timeout=None):
@@ -164,9 +164,9 @@ def test_fonte_que_nao_responde_gasta_so_o_tempo_do_seu_limite(hoje, agora):
         agora,
         {"a": "essencial", "ibge": "complementar"},
         coletores={"a": coletor_que_devolve([reg()]), "ibge": ibge.coletar},
-        limites={"ibge": Limite(tentativas=2, timeout_s=20)},
+        limites={"ibge": Limite(tentativas=1, timeout_s=15)},
     )
-    assert chamadas == [20, 20]
+    assert chamadas == [15, 15]  # o SIDRA e depois as agregados, uma tentativa em cada
     assert {f.id: f.situacao for f in foto.fontes} == {"a": "ok", "ibge": "falhou"}
     assert foto.status == "ok"  # complementar não estraga o dia
 

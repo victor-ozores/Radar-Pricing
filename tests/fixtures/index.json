@@ -5,6 +5,7 @@
  "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4189/dados/ultimos/3?formato=json": "f27ab79b6377.bin",
  "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=31/08/2026&dataFinal=30/10/2026": "fa836076c9cd.bin",
  "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados/ultimos/3?formato=json": "c26ff5e0044c.bin",
+ "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/63/p/last%203?formato=json": "4afaccb42879.bin",
  "https://blog.abac.org.br/wp-json/wp/v2/posts?per_page=30&search=Sistema%20de%20Cons%C3%B3rcios%20em&_fields=id%2Cdate%2Cslug%2Clink%2Ctitle%2Ccontent": "6e92ecd92a0c.bin",
  "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24format=json&%24top=500&%24orderby=Data%20desc&%24filter=Indicador%20eq%20%27IPCA%27%20and%20baseCalculo%20eq%200": "627dab666b40.bin",
  "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24format=json&%24top=500&%24orderby=Data%20desc&%24filter=Indicador%20eq%20%27Selic%27%20and%20baseCalculo%20eq%200": "5d2863940dda.bin",

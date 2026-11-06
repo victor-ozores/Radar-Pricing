@@ -17,9 +17,10 @@ ibge = "complementar"
 abac = "complementar"
 
 # regra própria de uma fonte (o que não aparece aqui usa [geral])
-# IBGE: nos servidores do GitHub não respondeu em 90 s x 3 tentativas (275 s perdidos); é só conferência do BCB
+# IBGE: nos servidores do GitHub o endereço das agregados não respondeu em 90 s x 3 tentativas (275 s perdidos); é só
+# conferência do BCB. A fonte tenta dois endereços (SIDRA e agregados), uma tentativa de 15 s em cada um: no pior caso 30 s.
 [limites]
-ibge = { tentativas = 2, timeout_s = 20 }
+ibge = { tentativas = 1, timeout_s = 15 }
 
 [derivados]
 valor_face = 1000                    # valor recebido no futuro que a tabela traz a valor presente (R$)

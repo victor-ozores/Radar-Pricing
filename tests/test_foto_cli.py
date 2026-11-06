@@ -77,7 +77,7 @@ def test_config_com_papel_invalido_e_recusada(tmp_path):
 
 def test_config_real_da_ao_ibge_um_limite_curto():
     cfg = config.carrega(RAIZ / "config.toml")
-    assert cfg.limites == {"ibge": config.Limite(tentativas=2, timeout_s=20)}
+    assert cfg.limites == {"ibge": config.Limite(tentativas=1, timeout_s=15)}
 
 
 def test_limite_parcial_deixa_o_outro_campo_para_o_padrao(tmp_path):
@@ -146,7 +146,7 @@ def test_comando_passa_os_limites_do_config_para_a_coleta(monkeypatch, agora):
     monkeypatch.setattr(cli_principal, "agora_brt", lambda: agora)
     argumentos = ["coletar", "--config", str(RAIZ / "config.toml"), "--sem-gravar"]
     assert cli_principal.principal(argumentos) == 0
-    assert pedidos == [(2, 20)]  # só o IBGE tem limite próprio
+    assert pedidos == [(1, 15)]  # só o IBGE tem limite próprio
 
 
 class Instavel(ClienteGravado):
